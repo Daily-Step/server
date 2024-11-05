@@ -1,5 +1,6 @@
 package com.challenge.domain.challenge;
 
+import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.member.Member;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Challenge {
+public class Challenge extends BaseDateTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenge_id")

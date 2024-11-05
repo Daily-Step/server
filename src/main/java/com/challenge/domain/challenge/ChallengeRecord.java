@@ -1,5 +1,6 @@
 package com.challenge.domain.challenge;
 
+import com.challenge.domain.BaseDateTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ChallengeRecord {
+public class ChallengeRecord extends BaseDateTimeEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
