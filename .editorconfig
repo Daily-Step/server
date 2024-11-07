@@ -18,7 +18,7 @@ max_line_length = 120                      # 한 줄의 최대 길이 설정 (12
 ij_java_tab_width = 4                      # 탭 너비 설정 (4칸)
 ij_java_indent_size = 4                    # 들여쓰기 크기 (4칸)
 ij_java_continuation_indent_size = 8       # 이어지는 줄에 대한 들여쓰기 크기 (8칸)
-ij_java_keep_indents_on_empty_lines = true # 빈 줄에서도 들여쓰기 유지
+ij_java_keep_indents_on_empty_lines = false # 빈 줄에서도 들여쓰기 유지
 
 # Braces 설정
 ij_java_if_brace_force = always            # if 문에서 중괄호 사용 강제 (항상)
