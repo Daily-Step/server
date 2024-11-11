@@ -42,6 +42,12 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
+    // 소셜로그인 http 요청 전송
+    implementation 'org.json:json:20240303'
+    // 소셜로그인 테스트용 프론트 화면
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+
     // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

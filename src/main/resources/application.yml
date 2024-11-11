@@ -12,6 +12,11 @@ spring:
     hibernate:
       ddl-auto: none
 
+social:
+  kakao:
+    apikey: ${KAKAO_API_KEY}
+    redirect_uri: ${KAKAO_REDIRECT_URI}
+
 ---
 spring:
   config:
