@@ -25,8 +25,13 @@ public class KakaoApiService {
 
     private static final String ACCESS_TOKEN_REQUEST_URL = "https://kauth.kakao.com/oauth/token";
 
+    /**
+     * 인증 code를 가지고 카카오 API 서버로부터 access token을 받아오는 메소드
+     *
+     * @param code
+     * @return
+     */
     public String getAccessToken(String code) {
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -47,12 +52,12 @@ public class KakaoApiService {
 
             if (response.getStatusCode() == HttpStatus.OK) {
                 String responseBody = response.getBody();
-                JSONObject jsonResponse = new JSONObject(response);
+                JSONObject jsonResponse = new JSONObject(responseBody);
 
                 String accessToken = jsonResponse.getString("access_token");
                 String refreshToken = jsonResponse.getString("refresh_token");
 
-                log.info("response JSON: {}", responseBody);
+//                log.info("response JSON: {}", responseBody);
                 log.info("access token: {}", accessToken);
                 log.info("refresh token: {}", refreshToken);
 
