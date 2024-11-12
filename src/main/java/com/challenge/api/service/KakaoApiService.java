@@ -96,15 +96,12 @@ public class KakaoApiService {
                 JSONObject jsonResponse = new JSONObject(responseBody);
 
                 long id = jsonResponse.getLong("id");
-                String nickname = jsonResponse.getJSONObject("kakao_account").getJSONObject("profile").getString(
-                        "nickname");
                 String email = jsonResponse.getJSONObject("kakao_account").getString("email");
 
                 log.info("kakao user id: {}", id);
-                log.info("kakao user nickname: {}", nickname);
                 log.info("kakao user email: {}", email);
 
-                return AuthResponse.kakaoResultDto.builder().socialId(id).nickname(nickname).email(email).build();
+                return AuthResponse.kakaoResultDto.builder().socialId(id).email(email).build();
 
             } else {
                 log.error("Failed to get user info. Status code: {}", response.getStatusCode());
