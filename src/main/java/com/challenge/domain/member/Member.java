@@ -19,6 +19,9 @@ public class Member extends BaseDateTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(name = "social_id")
+    private Long socialId;
+
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
@@ -37,8 +40,9 @@ public class Member extends BaseDateTimeEntity {
     @Column(name = "is_notification_received", nullable = false)
     private Boolean isNotificationReceived;
 
-    @Column(name = "login_type", nullable = false)
-    private String loginType;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(10)", nullable = false)
+    private LoginType loginType;
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
     private Boolean isDeleted;
