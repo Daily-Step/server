@@ -31,6 +31,16 @@ public enum ErrorCode {
     INACTIVE_MEMBER(NOT_FOUND, "AUTH_4006", "탈퇴한 사용자 입니다."),
 
     /**
+     * 소셜 로그인 관련 에러
+     */
+    KAKAO_REQ_FAILED(HttpStatus.BAD_REQUEST, "AUTH4007", "카카오 access token으로 사용자 정보 요청에 실패했습니다."),
+
+    /**
+     * 회원 관련 에러
+     */
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자를 찾을 수 없습니다."),
+
+    /**
      * 사용자 관련 에러
      */
     USER_DUPLICATE_LOGIN_ID(UNPROCESSABLE_ENTITY, "USER_4001", "이미 존재하는 아이디입니다.");
