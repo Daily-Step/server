@@ -7,7 +7,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -27,7 +32,6 @@ public class KakaoApiService {
     private final RestTemplate restTemplate;
 
     private static final String ACCESS_TOKEN_REQUEST_URL = "https://kauth.kakao.com/oauth/token";
-
     private static final String USER_INFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
 
     /**
@@ -64,9 +68,9 @@ public class KakaoApiService {
                 log.info("refresh token: {}", refreshToken);
 
                 return accessToken;
-            } else {
-                log.error("Failed to get access token. Status code: {}", response.getStatusCode());
             }
+
+            log.error("Failed to get access token. Status code: {}", response.getStatusCode());
         } catch (Exception e) {
             log.error("Exception occurred while getting access token: ", e);
         }
@@ -102,11 +106,10 @@ public class KakaoApiService {
                 log.info("kakao user email: {}", email);
 
                 return AuthResponse.kakaoResultDto.builder().socialId(id).email(email).build();
-
-            } else {
-                log.error("Failed to get user info. Status code: {}", response.getStatusCode());
-                throw new GlobalException(ErrorCode.KAKAO_REQ_FAILED);
             }
+            
+            log.error("Failed to get user info. Status code: {}", response.getStatusCode());
+            throw new GlobalException(ErrorCode.KAKAO_REQ_FAILED);
         } catch (Exception e) {
             log.error("Exception occurred while getting user info: ", e);
             throw new GlobalException(ErrorCode.KAKAO_REQ_FAILED);

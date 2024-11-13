@@ -1,6 +1,11 @@
 package com.challenge.utils;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,15 +22,13 @@ import java.util.Date;
 public class JwtUtil {
 
     private final Key key;
-
     private final long accessTokenExpTime;
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     public JwtUtil(
             @Value("${jwt.secret}") String secretKey,
-            @Value("${jwt.access_expiration_time}") long accessTokenExpTime
-    ) {
+            @Value("${jwt.access_expiration_time}") long accessTokenExpTime) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenExpTime = accessTokenExpTime;
@@ -125,6 +128,5 @@ public class JwtUtil {
     public Long getMemberId(String token) {
         return parseClaims(token).get("memberId", Long.class);
     }
-
 
 }

@@ -19,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final KakaoApiService kakaoApiService;
-
     private final MemberRepository memberRepository;
-
     private final JwtUtil jwtUtil;
 
     /**
@@ -46,7 +44,6 @@ public class AuthService {
                 .accessToken(accessToken)
                 .accessTokenExpiresIn(jwtUtil.getTokenExpirationTime(accessToken))
                 .build();
-
     }
 
 }
