@@ -39,5 +39,5 @@ jobs:
           context: . # Dockerfile 위치
           file: ./Dockerfile # Dockerfile 경로
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/challenge:$GITHUB_SHA # 이미지 태그
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }} # 이미지 태그
           platforms: linux/amd64,linux/arm64
