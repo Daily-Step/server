@@ -25,5 +25,5 @@ WORKDIR /app
 COPY --from=build /app/build/libs/*SNAPSHOT.jar /app/challenge.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java"]
-CMD ["-jar", "challenge.jar"]
+# bash -c를 사용하여 nohup과 백그라운드 실행을 처리
+CMD ["bash", "-c", "nohup java -jar challenge.jar > .output.log 2>&1 &"]
