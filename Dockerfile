@@ -4,6 +4,18 @@ FROM gradle:7.6.1-jdk17 AS build
 # 소스코드를 복사할 작업 디렉토리를 생성
 WORKDIR /app
 
+# 빌드 시 전달받은 환경 변수 정의
+# GitHub Actions에서 전달된 빌드 변수들을 ARG로 정의
+ARG KAKAO_API_KEY
+ARG KAKAO_REDIRECT_URI
+ARG JWT_SECRET
+
+# 빌드 시 사용할 환경 변수로 설정
+# 아래 ENV는 런타임에서는 사용되지 않으며, 빌드 과정에서만 활용됨
+ENV KAKAO_API_KEY=${KAKAO_API_KEY}
+ENV KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
+ENV JWT_SECRET=${JWT_SECRET}
+
 # 라이브러리 설치에 필요한 파일만 복사
 COPY build.gradle settings.gradle ./
 

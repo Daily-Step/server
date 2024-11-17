@@ -1,4 +1,4 @@
-name: Challenge CI/CD Pipeline
+  name: Challenge CI/CD Pipeline
 
 #on:
 #  pull_request:
@@ -26,6 +26,11 @@ jobs:
           echo "KAKAO_REDIRECT_URI=" ${{ secrets.KAKAO_REDIRECT_URI }}
           echo "JWT_SECRET=" ${{ secrets.JWT_SECRET }}
           echo "DOCKERHUB_USERNAME=" ${{ secrets.DOCKERHUB_USERNAME }}
+
+      # 1. 권한 설정
+      - name: gradlew 권한 설정
+        run: chmod +x ./gradlew
+        shell: bash
 
       # 1. GitHub Repository 파일 불러오기
       - name: Github Repository 파일 불러오기
@@ -78,7 +83,4 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
 
             docker run -d -p 8080:8080 --name challenge \
-            -e KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }} \
-            -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
