@@ -20,13 +20,6 @@ jobs:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
-      - name: 환경 변수 확인
-        run: |
-          echo "KAKAO_API_KEY=" ${{ secrets.KAKAO_API_KEY }}
-          echo "KAKAO_REDIRECT_URI=" ${{ secrets.KAKAO_REDIRECT_URI }}
-          echo "JWT_SECRET=" ${{ secrets.JWT_SECRET }}
-          echo "DOCKERHUB_USERNAME=" ${{ secrets.DOCKERHUB_USERNAME }}
-
       # 1. 권한 설정
       - name: gradlew 권한 설정
         run: chmod +x ./gradlew
