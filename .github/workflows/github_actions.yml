@@ -20,34 +20,34 @@ jobs:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
-      # 1. 권한 설정
-      - name: gradlew 권한 설정
-        run: chmod +x ./gradlew
-        shell: bash
-
       # 1. GitHub Repository 파일 불러오기
       - name: Github Repository 파일 불러오기
         uses: actions/checkout@v4
 
-      # 2. JDK 17 설치
+      # 2. 권한 설정
+      - name: gradlew 권한 설정
+        run: chmod +x ./gradlew
+        shell: bash
+
+      # 3. JDK 17 설치
       - name: JDK 17 설치
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Docker 확장 기능 추가
+      # 4. Docker 확장 기능 추가
       - name: Docker 확장 기능 추가
         uses: docker/setup-buildx-action@v3
 
-      # 4. Docker Hub 로그인
+      # 5. Docker Hub 로그인
       - name: Docker Hub 로그인
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 5. Docker 이미지 생성 및 Push
+      # 6. Docker 이미지 생성 및 Push
       - name: Docker 이미지 생성 및 push
         uses: docker/build-push-action@v6
         with:
@@ -62,7 +62,7 @@ jobs:
             JWT_SECRET=${{ secrets.JWT_SECRET }}
 
       ## CD (Continuous Deployment) 파트
-      # 6. EC2에 SSH로 접속하여 Docker 컨테이너 실행
+      # 7. EC2에 SSH로 접속하여 Docker 컨테이너 실행
       - name: EC2에 배포
         uses: appleboy/ssh-action@v1.1.0
         with:
