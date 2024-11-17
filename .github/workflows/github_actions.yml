@@ -20,6 +20,12 @@ jobs:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
+      - name: 환경 변수 확인
+        run: |
+          echo "KAKAO_API_KEY=$KAKAO_API_KEY"
+          echo "KAKAO_REDIRECT_URI=$KAKAO_REDIRECT_URI"
+          echo "JWT_SECRET=$JWT_SECRET"
+
       # 1. GitHub Repository 파일 불러오기
       - name: Github Repository 파일 불러오기
         uses: actions/checkout@v4
