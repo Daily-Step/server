@@ -71,9 +71,14 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }} # EC2 SSH Private Key
           script_stop: true # SSH 명령어 실행 중 에러가 발생하면 워크플로 중단
           script: |
+            sudo fuser -k -n tcp 8080 || true
+
             docker rm -f challenge
 
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
 
             docker run -d -p 8080:8080 --name challenge \
+            -e KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }} \
+            -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
