@@ -61,6 +61,13 @@ jobs:
 
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
 
-            docker run -d -p 8080:8080 --name challenge ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
+            docker run -d -p 8080:8080 --name challenge \
+            -e KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }} \
+            -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
+
+
+
 
 
