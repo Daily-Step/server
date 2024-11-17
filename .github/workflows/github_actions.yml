@@ -25,6 +25,7 @@ jobs:
           echo "KAKAO_API_KEY=" ${{ secrets.KAKAO_API_KEY }}
           echo "KAKAO_REDIRECT_URI=" ${{ secrets.KAKAO_REDIRECT_URI }}
           echo "JWT_SECRET=" ${{ secrets.JWT_SECRET }}
+          echo "DOCKERHUB_USERNAME=" ${{ secrets.DOCKERHUB_USERNAME }}
 
       # 1. GitHub Repository 파일 불러오기
       - name: Github Repository 파일 불러오기
