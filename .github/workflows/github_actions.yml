@@ -14,6 +14,11 @@ jobs:
   build-and-deploy: # Job 이름
     runs-on: ubuntu-latest # 실행 환경 - 가장 최신 버전 Ubuntu 환경
 
+    env: # 전체 job에서 사용할 환경 변수 설정
+      KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
+      KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
     steps:
       # 1. GitHub Repository 파일 불러오기
       - name: Github Repository 파일 불러오기
@@ -46,6 +51,10 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }} # 이미지 태그
           platforms: linux/amd64
+          build-args: |  # Dockerfile에서 사용할 환경 변수 전달
+            KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }}
+            KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
 
       ## CD (Continuous Deployment) 파트
       # 6. EC2에 SSH로 접속하여 Docker 컨테이너 실행
@@ -66,8 +75,3 @@ jobs:
             -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
-
-
-
-
-
