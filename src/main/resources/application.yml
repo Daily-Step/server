@@ -2,16 +2,6 @@ spring:
   profiles:
     default: local
 
-  #  datasource:
-  #    url: jdbc:h2:mem:~/ChallengeApplication
-  #    driver-class-name: org.h2.Driver
-  #    username: sa
-  #    password:
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-
 social:
   kakao:
     apikey: ${KAKAO_API_KEY}
@@ -22,6 +12,7 @@ jwt:
   access_expiration_time: 36000000 # 10시간 (10 * 60 * 60 * 1000 밀리초)
 
 ---
+# 로컬 환경
 spring:
   config:
     activate:
@@ -55,15 +46,40 @@ ssh:
   database_port: 3306
 
 ---
+# 개발 환경
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  datasource:
+    url: jdbc:mysql://${RDS_PRIVATE_IP}:${RDS_PORT}/${DB_SCHEMA_NAME}?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+---
 spring:
   config:
     activate:
       on-profile: test
 
+  datasource:
+    url: jdbc:h2:mem:~/ChallengeApplication
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+

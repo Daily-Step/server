@@ -1,10 +1,15 @@
 name: Challenge CI/CD Pipeline
 
 on:
-  pull_request:
+  push:
     branches:
-      - dev
-      - main
+      - feat/6
+
+#on:
+#  pull_request:
+#    branches:
+#      - dev
+#      - main
 
 jobs:
   build-and-deploy: # Job 이름
@@ -14,6 +19,11 @@ jobs:
       KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
       KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      RDS_PRIVATE_IP: ${{ secrets.RDS_PRIVATE_IP }}
+      RDS_PORT: ${{ secrets.RDS_PORT }}
+      DB_SCHEMA_NAME: ${{ secrets.DB_SCHEMA_NAME }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
       # 1. GitHub Repository 파일 불러오기
@@ -74,7 +84,13 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
 
             docker run -d -p 8080:8080 --name challenge \
+            -e SPRING_PROFILES_ACTIVE=dev \
             -e KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }} \
             -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e RDS_PRIVATE_IP=${{ secrets.RDS_PRIVATE_IP }} \
+            -e RDS_PORT=${{ secrets.RDS_PORT }} \
+            -e DB_SCHEMA_NAME=${{ secrets.DB_SCHEMA_NAME }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
