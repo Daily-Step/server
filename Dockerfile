@@ -36,7 +36,6 @@ WORKDIR /app
 COPY --from=build /app/build/libs/*SNAPSHOT.jar /app/challenge.jar
 
 EXPOSE 8080
-# bash -c를 사용하여 nohup과 백그라운드 실행을 처리
-CMD ["java", "-Dspring.profiles.active=dev", "-jar", "/app/challenge.jar"]
+CMD ["java", "-Dspring.profiles.active=dev", "-jar", "challenge.jar"]
 
 
