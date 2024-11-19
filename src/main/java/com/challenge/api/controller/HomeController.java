@@ -8,7 +8,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "Challenge API 서비스 입니다 !!";
+        return "Challenge API 서비스 입니다. 환영합니다.";
     }
 
 }
