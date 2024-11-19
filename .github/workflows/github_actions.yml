@@ -24,6 +24,7 @@ jobs:
       DB_SCHEMA_NAME: ${{ secrets.DB_SCHEMA_NAME }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      SPRING_PROFILES_ACTIVE: dev
 
     steps:
       # 1. GitHub Repository 파일 불러오기

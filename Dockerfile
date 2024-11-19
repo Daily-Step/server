@@ -14,7 +14,7 @@ ARG RDS_PORT
 ARG DB_SCHEMA_NAME
 ARG DB_USERNAME
 ARG DB_PASSWORD
-
+ARG SPRING_PROFILES_ACTIVE
 
 # 라이브러리 설치에 필요한 파일만 복사
 COPY build.gradle settings.gradle ./
@@ -38,4 +38,5 @@ COPY --from=build /app/build/libs/*SNAPSHOT.jar /app/challenge.jar
 
 EXPOSE 8080
 # bash -c를 사용하여 nohup과 백그라운드 실행을 처리
-CMD ["bash", "-c", "nohup java -jar challenge.jar > .output.log 2>&1 &"]
+CMD ["bash", "-c", "nohup java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -jar challenge.jar > .output.log 2>&1 &"]
+
