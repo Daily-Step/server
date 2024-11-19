@@ -16,6 +16,8 @@ ARG DB_USERNAME
 ARG DB_PASSWORD
 ARG SPRING_PROFILES_ACTIVE
 
+RUN echo "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}" >> .env
+
 # 라이브러리 설치에 필요한 파일만 복사
 COPY build.gradle settings.gradle ./
 

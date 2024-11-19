@@ -40,11 +40,6 @@ public class SshTunnelingInitializer {
 
     @PreDestroy // 빈이 삭제될 때 호출
     public void closeSSH() {
-        if (session == null) {
-            log.error("SSH session is not initialized. Please ensure the local profile is active.");
-            throw new IllegalStateException("SSH session is not initialized.");
-        }
-        
         if (session.isConnected()) {
             session.disconnect(); // ssh 연결 종료
         }

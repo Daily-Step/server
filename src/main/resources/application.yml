@@ -63,6 +63,7 @@ spring:
     password: ${DB_PASSWORD}
 
 ---
+# 테스트 환경
 spring:
   config:
     activate:
