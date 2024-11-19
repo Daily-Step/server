@@ -66,11 +66,11 @@ jobs:
             KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }}
             KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
             JWT_SECRET=${{ secrets.JWT_SECRET }}
-            RDS_PRIVATE_IP: ${{ secrets.RDS_PRIVATE_IP }}
-            RDS_PORT: ${{ secrets.RDS_PORT }}
-            DB_SCHEMA_NAME: ${{ secrets.DB_SCHEMA_NAME }}
-            DB_USERNAME: ${{ secrets.DB_USERNAME }}
-            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            RDS_PRIVATE_IP= ${{ secrets.RDS_PRIVATE_IP }}
+            RDS_PORT= ${{ secrets.RDS_PORT }}
+            DB_SCHEMA_NAME= ${{ secrets.DB_SCHEMA_NAME }}
+            DB_USERNAME= ${{ secrets.DB_USERNAME }}
+            DB_PASSWORD= ${{ secrets.DB_PASSWORD }}
 
       ## CD (Continuous Deployment) 파트
       # 7. EC2에 SSH로 접속하여 Docker 컨테이너 실행
