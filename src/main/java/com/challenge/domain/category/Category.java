@@ -1,16 +1,18 @@
 package com.challenge.domain.category;
 
 import com.challenge.domain.BaseDateTimeEntity;
-import com.challenge.domain.member.Member;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "category")
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Category extends BaseDateTimeEntity {
 
     @Id
@@ -18,14 +20,10 @@ public class Category extends BaseDateTimeEntity {
     @Column(name = "category_id")
     private Long id;
 
-    @Column(name = "title", nullable = false, length = 50)
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
-    private Boolean isDeleted;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @Column(nullable = false)
+    private boolean isDeleted;
 
 }
