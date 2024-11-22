@@ -14,11 +14,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name = "member")
+@DynamicInsert
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,34 +39,34 @@ public class Member extends BaseDateTimeEntity {
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
-    @Column(name = "nickname", nullable = false, length = 30)
+    @Column(name = "nickname", length = 30)
     private String nickname;
 
     @Column(name = "birth")
     private Date birth;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(10)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(10)")
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(20)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(20)")
     private Job job;
 
     @Column(name = "profile_img", length = 1000)
     private String profileImg;
 
-    @Column(name = "is_notification_received", nullable = false)
+    @Column(name = "is_notification_received", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isNotificationReceived;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(10)", nullable = false)
     private LoginType loginType;
 
-    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    @Column(name = "is_deleted", columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isDeleted;
 
-    @Column(name = "deleted_at", length = 13)
-    private String deletedAt;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
 }
