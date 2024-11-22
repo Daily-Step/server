@@ -33,6 +33,8 @@ public class KakaoApiService {
 
     private static final String ACCESS_TOKEN_REQUEST_URL = "https://kauth.kakao.com/oauth/token";
     private static final String USER_INFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
 
     /**
      * 인증 code를 가지고 카카오 API 서버로부터 access token을 받아오는 메소드
@@ -87,7 +89,7 @@ public class KakaoApiService {
     public AuthResponse.kakaoResultDto getUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set(AUTHORIZATION_HEADER, "Bearer " + accessToken);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -107,7 +109,7 @@ public class KakaoApiService {
 
                 return AuthResponse.kakaoResultDto.builder().socialId(id).email(email).build();
             }
-            
+
             log.error("Failed to get user info. Status code: {}", response.getStatusCode());
             throw new GlobalException(ErrorCode.KAKAO_REQ_FAILED);
         } catch (Exception e) {

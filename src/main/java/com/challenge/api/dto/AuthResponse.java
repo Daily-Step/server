@@ -15,6 +15,7 @@ public class AuthResponse {
 
         Long memberId;
         String accessToken;
+        String refreshToken;
         Long accessTokenExpiresIn;
 
     }

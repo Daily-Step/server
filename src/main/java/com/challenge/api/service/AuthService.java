@@ -53,10 +53,12 @@ public class AuthService {
      */
     private AuthResponse.authDto login(Member member) {
         String accessToken = jwtUtil.createAccessToken(member.getId());
+        String refreshToken = jwtUtil.createRefreshToken(member.getId());
 
         return AuthResponse.authDto.builder()
                 .memberId(member.getId())
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .accessTokenExpiresIn(jwtUtil.getTokenExpirationTime(accessToken))
                 .build();
     }
@@ -79,10 +81,12 @@ public class AuthService {
 
         // 토큰 발급
         String accessToken = jwtUtil.createAccessToken(member.getId());
+        String refreshToken = jwtUtil.createRefreshToken(member.getId());
 
         return AuthResponse.authDto.builder()
                 .memberId(member.getId())
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .accessTokenExpiresIn(jwtUtil.getTokenExpirationTime(accessToken))
                 .build();
     }

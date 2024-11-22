@@ -6,7 +6,6 @@ import com.challenge.api.dto.AuthResponse;
 import com.challenge.api.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/kakao")
     public ApiResponse<AuthResponse.authDto> kakaoAuth(@RequestBody AuthRequest.kakaoRequest request) {
-        return ApiResponse.of(HttpStatus.OK, authService.kakaoAuth(request.getAccessToken()));
+        return ApiResponse.ok(authService.kakaoAuth(request.getAccessToken()));
     }
 
 }
