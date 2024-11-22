@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Job {
-
     MGMT("경영·비즈니스"),           // Management
     DEV("개발"),                    // Development
     PLNO("기획·운영"),              // Planning & Operations
@@ -29,6 +28,4 @@ public enum Job {
     GOV_WEL_ENV("공공·복지·환경");   // Government, Welfare & Environment
 
     private final String description;
-
 }
-
