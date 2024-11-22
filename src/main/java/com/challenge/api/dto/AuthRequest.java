@@ -7,7 +7,7 @@ public class AuthRequest {
 
     @Getter
     @NoArgsConstructor
-    public static class kakaoLoginRequest {
+    public static class kakaoRequest {
 
         String accessToken;
 

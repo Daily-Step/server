@@ -20,9 +20,9 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/login/kakao")
-    public ApiResponse<AuthResponse.loginDto> kakaoLogin(@RequestBody AuthRequest.kakaoLoginRequest request) {
-        return ApiResponse.of(HttpStatus.OK, authService.kakaoLogin(request.getAccessToken()));
+    @PostMapping("/kakao")
+    public ApiResponse<AuthResponse.authDto> kakaoAuth(@RequestBody AuthRequest.kakaoRequest request) {
+        return ApiResponse.of(HttpStatus.OK, authService.kakaoAuth(request.getAccessToken()));
     }
 
 }

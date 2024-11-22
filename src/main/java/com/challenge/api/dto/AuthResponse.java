@@ -11,7 +11,7 @@ public class AuthResponse {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class loginDto {
+    public static class authDto {
 
         Long memberId;
         String accessToken;
