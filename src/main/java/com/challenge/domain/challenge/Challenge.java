@@ -6,41 +6,20 @@ import com.challenge.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "challenge")
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "title"})
+)
 public class Challenge extends BaseDateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenge_id")
     private Long id;
-
-    @Column(name = "title", nullable = false, length = 50)
-    private String title;
-
-    @Column(name = "content", length = 500)
-    private String content;
-
-    @Column(name = "color", nullable = false, length = 10)
-    private String color;
-
-    @Column(name = "weekly_goal_count", nullable = false)
-    private Integer weeklyGoalCount;
-
-    @Column(name = "total_goal_count", nullable = false)
-    private Integer totalGoalCount;
-
-    @Column(name = "start_date", nullable = false)
-    private Date startDate;
-
-    @Column(name = "end_date", nullable = false)
-    private Date endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -49,5 +28,29 @@ public class Challenge extends BaseDateTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @Column(nullable = false, length = 30)
+    private String title;
+
+    @Column(length = 500)
+    private String content;
+
+    @Column(nullable = false, length = 10)
+    private String color;
+
+    @Column(nullable = false)
+    private boolean isDeleted;
+
+    @Column(nullable = false)
+    private Integer weeklyGoalCount;
+
+    @Column(nullable = false)
+    private Integer totalGoalCount;
+
+    @Column(nullable = false)
+    private LocalDateTime startDateTime;
+
+    @Column(nullable = false)
+    private LocalDateTime endDateTime;
 
 }
