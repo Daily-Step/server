@@ -16,7 +16,7 @@ public class ChallengeService {
 
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public List<Map<String, Object>> getChallenges() {
+    public List<Map<String, Object>> getChallenges(Long memberId) {
         List<Map<String, Object>> challenges = new ArrayList<>();
 
         // 1번 챌린지
