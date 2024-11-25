@@ -1,5 +1,6 @@
 package com.challenge.api.controller.category;
 
+import com.challenge.api.ApiResponse;
 import com.challenge.api.service.category.CategoryService;
 import com.challenge.api.service.category.response.CategoryResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/categories")
-    public List<CategoryResponse> getCategories() {
-        return categoryService.getAllCategories();
+    public ApiResponse<List<CategoryResponse>> getCategories() {
+        return ApiResponse.ok(categoryService.getAllCategories());
     }
 
 }
