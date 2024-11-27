@@ -8,18 +8,18 @@ import lombok.Getter;
 public class CategoryResponse {
 
     private final Long id;
-    private final String title;
+    private final String name;
 
     @Builder
-    private CategoryResponse(Long id, String title) {
+    private CategoryResponse(Long id, String name) {
         this.id = id;
-        this.title = title;
+        this.name = name;
     }
 
     public static CategoryResponse of(Category category) {
         return CategoryResponse.builder()
                 .id(category.getId())
-                .title(category.getTitle())
+                .name(category.getName())
                 .build();
     }
 

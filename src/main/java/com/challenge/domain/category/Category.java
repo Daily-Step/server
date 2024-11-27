@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,9 +22,15 @@ public class Category extends BaseDateTimeEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String title;
+    private String name;
 
     @Column(nullable = false)
     private boolean isDeleted;
+
+    @Builder
+    private Category(String name, boolean isDeleted) {
+        this.name = name;
+        this.isDeleted = isDeleted;
+    }
 
 }
