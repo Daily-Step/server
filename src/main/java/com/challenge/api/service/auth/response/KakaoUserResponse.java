@@ -1,4 +1,4 @@
-package com.challenge.api.controller.auth.response;
+package com.challenge.api.service.auth.response;
 
 import lombok.Builder;
 import lombok.Getter;

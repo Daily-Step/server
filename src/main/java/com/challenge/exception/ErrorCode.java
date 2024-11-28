@@ -4,7 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 @Getter
 @RequiredArgsConstructor
@@ -33,17 +39,25 @@ public enum ErrorCode {
     /**
      * 소셜 로그인 관련 에러
      */
-    KAKAO_REQ_FAILED(HttpStatus.BAD_REQUEST, "AUTH4007", "카카오 access token으로 사용자 정보 요청에 실패했습니다."),
+    KAKAO_REQ_FAILED(BAD_REQUEST, "AUTH_4007", "카카오 access token으로 사용자 정보 요청에 실패했습니다."),
 
     /**
      * 회원 관련 에러
      */
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자를 찾을 수 없습니다."),
+    MEMBER_NOT_FOUND(NOT_FOUND, "MEMBER_4001", "사용자를 찾을 수 없습니다."),
+    MEMBER_EXISTS(BAD_REQUEST, "MEMBER_4002", "이미 존재하는 회원입니다."),
+    DUPLICATED_NICKNAME(BAD_REQUEST, "MEMBER_4003", "이미 사용중인 닉네임입니다."),
+
 
     /**
      * 사용자 관련 에러
      */
-    USER_DUPLICATE_LOGIN_ID(UNPROCESSABLE_ENTITY, "USER_4001", "이미 존재하는 아이디입니다.");
+    USER_DUPLICATE_LOGIN_ID(UNPROCESSABLE_ENTITY, "USER_4001", "이미 존재하는 아이디입니다."),
+
+    /**
+     * 기타 에러
+     */
+    JOB_NOT_FOUND(NOT_FOUND, "ERROR_4001", "직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
 
     private final HttpStatus status;
     private final String code;

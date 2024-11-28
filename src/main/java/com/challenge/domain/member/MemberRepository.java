@@ -8,4 +8,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findBySocialIdAndLoginType(Long socialId, LoginType loginType);
 
+    boolean existsByNickname(String nickname);
+
 }

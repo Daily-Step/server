@@ -61,15 +61,17 @@ public class Member extends BaseDateTimeEntity {
     @Column(length = 1000)
     private String profileImg;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private boolean isNotificationReceived;
-
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(10)", nullable = false)
     private LoginType loginType;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    private boolean isDeleted;
+    @Builder.Default
+    private boolean isNotificationReceived = false;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    @Builder.Default
+    private boolean isDeleted = false;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;

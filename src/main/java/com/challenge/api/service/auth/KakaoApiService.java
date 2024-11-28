@@ -1,6 +1,6 @@
 package com.challenge.api.service.auth;
 
-import com.challenge.api.controller.auth.response.KakaoUserResponse;
+import com.challenge.api.service.auth.response.KakaoUserResponse;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
