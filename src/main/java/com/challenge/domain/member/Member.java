@@ -1,6 +1,10 @@
 package com.challenge.domain.member;
 
 import com.challenge.domain.BaseDateTimeEntity;
+import com.challenge.domain.challenge.Challenge;
+import com.challenge.domain.job.Job;
+import com.challenge.domain.notification.Notification;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,20 +12,21 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "member")
-@DynamicInsert
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,43 +35,48 @@ public class Member extends BaseDateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "social_id")
+    @Column(nullable = false)
     private Long socialId;
 
-    @Column(name = "email", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String email;
 
-    @Column(name = "nickname", length = 30)
+    @Column(nullable = false, length = 30)
     private String nickname;
 
-    @Column(name = "birth")
-    private Date birth;
+    @Column(nullable = false)
+    private LocalDate birth;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(10)")
+    @Column(columnDefinition = "VARCHAR(10)", nullable = false)
     private Gender gender;
 
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(20)")
-    private Job job;
-
-    @Column(name = "profile_img", length = 1000)
+    @Column(length = 1000)
     private String profileImg;
 
-    @Column(name = "is_notification_received", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean isNotificationReceived;
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isNotificationReceived;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(10)", nullable = false)
     private LoginType loginType;
 
-    @Column(name = "is_deleted", columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean isDeleted;
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isDeleted;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @OneToOne
+    @JoinColumn(name = "job_id")
+    private Job job;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Challenge> challenges = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Notification> notifications = new ArrayList<>();
 
 }

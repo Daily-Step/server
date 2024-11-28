@@ -2,11 +2,23 @@ package com.challenge.domain.notification;
 
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.member.Member;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "notification")
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,20 +27,18 @@ public class Notification extends BaseDateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notification_id")
     private Long id;
 
-    @Column(name = "title", nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String title;
 
-    @Column(name = "content", nullable = false, length = 500)
+    @Column(nullable = false, length = 500)
     private String content;
 
-    @Column(name = "is_send", nullable = false, columnDefinition = "boolean default false")
-    private Boolean isSend;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isSend;
 
-    @Column(name = "send_at", length = 13)
-    private String sendAt;
+    private LocalDateTime sendAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
