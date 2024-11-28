@@ -83,16 +83,8 @@ public class AuthService {
         Year year = Year.of(request.getYearId());
 
         // member 엔티티 생성 및 저장
-        Member member = Member.builder()
-                .socialId(userInfo.getSocialId())
-                .email(userInfo.getEmail())
-                .loginType(LoginType.KAKAO)
-                .nickname(request.getNickname())
-                .birth(request.getBirth())
-                .gender(request.getGender())
-                .year(year)
-                .job(job)
-                .build();
+        Member member = Member.create(userInfo.getSocialId(), userInfo.getEmail(), request.getNickname(),
+                request.getBirth(), request.getGender(), year, LoginType.KAKAO, job);
         Member savedMember = memberRepository.save(member);
 
         // 토큰 발급

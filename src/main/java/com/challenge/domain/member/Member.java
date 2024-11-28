@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +28,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Member extends BaseDateTimeEntity {
 
     @Id
@@ -66,17 +64,15 @@ public class Member extends BaseDateTimeEntity {
     private LoginType loginType;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    @Builder.Default
     private boolean isNotificationReceived = false;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    @Builder.Default
     private boolean isDeleted = false;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
@@ -85,5 +81,34 @@ public class Member extends BaseDateTimeEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Notification> notifications = new ArrayList<>();
+
+    public static Member create(Long socialId, String email, String nickname, LocalDate birth, Gender gender, Year year,
+                                LoginType loginType, Job job) {
+        return Member.builder()
+                .socialId(socialId)
+                .email(email)
+                .nickname(nickname)
+                .birth(birth)
+                .gender(gender)
+                .year(year)
+                .loginType(loginType)
+                .job(job)
+                .build();
+    }
+
+    @Builder(access = AccessLevel.PROTECTED)
+    private Member(Long socialId, String email, String nickname, LocalDate birth, Gender gender, Year year,
+                   LoginType loginType, Job job) {
+        this.socialId = socialId;
+        this.email = email;
+        this.nickname = nickname;
+        this.birth = birth;
+        this.gender = gender;
+        this.year = year;
+        this.loginType = loginType;
+        this.isNotificationReceived = false;
+        this.isDeleted = false;
+        this.job = job;
+    }
 
 }
