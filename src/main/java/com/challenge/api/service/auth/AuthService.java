@@ -1,6 +1,7 @@
-package com.challenge.api.service;
+package com.challenge.api.service.auth;
 
-import com.challenge.api.dto.AuthResponse;
+import com.challenge.api.controller.auth.response.KakaoUserResponse;
+import com.challenge.api.controller.auth.response.LoginResponse;
 import com.challenge.domain.member.LoginType;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
@@ -30,9 +31,9 @@ public class AuthService {
      * @return
      */
     @Transactional
-    public AuthResponse.authDto kakaoLogin(String kakaoAccessToken) {
+    public LoginResponse kakaoLogin(String kakaoAccessToken) {
         // 카카오 서버로부터 사용자 정보 가져오기
-        AuthResponse.kakaoResultDto userInfo = kakaoApiService.getUserInfo(kakaoAccessToken);
+        KakaoUserResponse userInfo = kakaoApiService.getUserInfo(kakaoAccessToken);
 
         // socialId와 socialType에 해당하는 회원 조회
         Member member = memberRepository.findBySocialIdAndLoginType(userInfo.getSocialId(), LoginType.KAKAO)
@@ -42,12 +43,10 @@ public class AuthService {
         String accessToken = jwtUtil.createAccessToken(member.getId());
         String refreshToken = jwtUtil.createRefreshToken(member.getId());
 
-        return AuthResponse.authDto.builder()
-                .memberId(member.getId())
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .accessTokenExpiresIn(jwtUtil.getTokenExpirationTime(accessToken))
-                .build();
+        Long memberId = member.getId();
+        Long tokenExpirationTime = jwtUtil.getTokenExpirationTime(accessToken);
+
+        return LoginResponse.of(memberId, accessToken, refreshToken, tokenExpirationTime);
     }
 
 }

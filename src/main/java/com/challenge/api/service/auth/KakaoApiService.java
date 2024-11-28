@@ -1,6 +1,6 @@
-package com.challenge.api.service;
+package com.challenge.api.service.auth;
 
-import com.challenge.api.dto.AuthResponse;
+import com.challenge.api.controller.auth.response.KakaoUserResponse;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
@@ -86,7 +86,7 @@ public class KakaoApiService {
      * @param accessToken
      * @return
      */
-    public AuthResponse.kakaoResultDto getUserInfo(String accessToken) {
+    public KakaoUserResponse getUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set(AUTHORIZATION_HEADER, "Bearer " + accessToken);
@@ -107,7 +107,7 @@ public class KakaoApiService {
                 log.info("kakao user id: {}", id);
                 log.info("kakao user email: {}", email);
 
-                return AuthResponse.kakaoResultDto.builder().socialId(id).email(email).build();
+                return KakaoUserResponse.of(id, email);
             }
 
             log.error("Failed to get user info. Status code: {}", response.getStatusCode());

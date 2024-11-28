@@ -1,6 +1,6 @@
-package com.challenge.api.controller;
+package com.challenge.api.controller.auth;
 
-import com.challenge.api.service.KakaoApiService;
+import com.challenge.api.service.auth.KakaoApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
