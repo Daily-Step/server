@@ -54,6 +54,10 @@ public class Member extends BaseDateTimeEntity {
     @Column(columnDefinition = "VARCHAR(10)", nullable = false)
     private Gender gender;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(10)", nullable = false)
+    private Year year;
+
     @Column(length = 1000)
     private String profileImg;
 
