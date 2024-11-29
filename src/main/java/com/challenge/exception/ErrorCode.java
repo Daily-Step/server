@@ -28,13 +28,17 @@ public enum ErrorCode {
     /**
      * 인증 관련 에러
      */
-    INVALID_REQUEST_BODY(BAD_REQUEST, "AUTH_4000", "잘못된 요청입니다."),
-    EXPIRED_KAKAO_ACCESS_TOKEN(UNAUTHORIZED, "AUTH_4001", "유효하지 않은 액세스 토큰입니다."),
-    INVALID_TOKEN_EXCEPTION(UNAUTHORIZED, "AUTH_4002", "토큰이 올바르지 않습니다."),
-    INVALID_REFRESH_TOKEN(BAD_REQUEST, "AUTH_4003", "리프레쉬 토큰이 유효하지 않습니다. 다시 로그인 해주세요"),
-    EXPIRED_JWT_EXCEPTION(UNAUTHORIZED, "AUTH_4004", "기존 토큰이 만료되었습니다. 토큰을 재발급해주세요."),
-    UNAUTHORIZED_EXCEPTION(UNAUTHORIZED, "AUTH_4005", "로그인 후 이용가능합니다. 토큰을 입력해 주세요"),
-    INACTIVE_MEMBER(NOT_FOUND, "AUTH_4006", "탈퇴한 사용자 입니다."),
+    MISSING_AUTH_HEADER(UNAUTHORIZED, "AUTH_4001", "Authorization 헤더가 없습니다."),
+    INVALID_AUTH_HEADER(UNAUTHORIZED, "AUTH_4002", "Authorization 헤더가 올바르지 않습니다."),
+    INVALID_SIGNATURE(UNAUTHORIZED, "AUTH_4003", "JWT 서명이 유효하지 않습니다."),
+    MALFORMED_TOKEN(UNAUTHORIZED, "AUTH_4004", "JWT의 형식이 올바르지 않습니다."),
+    UNSUPPORTED_TOKEN(UNAUTHORIZED, "AUTH_4005", "지원되지 않는 JWT입니다."),
+    EXPIRED_JWT_EXCEPTION(UNAUTHORIZED, "AUTH_4006", "기존 토큰이 만료되었습니다. 토큰을 재발급해주세요."),
+    INVALID_CLAIMS(UNAUTHORIZED, "AUTH_4007", "JWT의 클레임이 유효하지 않습니다."),
+    INVALID_REFRESH_TOKEN(BAD_REQUEST, "AUTH_4008", "리프레쉬 토큰이 유효하지 않습니다. 다시 로그인 해주세요"),
+    UNAUTHORIZED_EXCEPTION(UNAUTHORIZED, "AUTH_4009", "로그인 후 이용가능합니다. 토큰을 입력해 주세요"),
+    MEMBER_EXTRACTION_FAILED(NOT_FOUND, "AUTH_4010", "회원 정보를 추출할 수 없습니다."),
+    INACTIVE_MEMBER(NOT_FOUND, "AUTH_4011", "탈퇴한 사용자 입니다."),
 
     /**
      * 소셜 로그인 관련 에러

@@ -1,5 +1,7 @@
 package com.challenge.utils;
 
+import com.challenge.exception.ErrorCode;
+import com.challenge.exception.GlobalException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -28,6 +30,7 @@ public class JwtUtil {
     private long refreshExpireDay;
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String BEARER_PREFIX = "Bearer ";
 
     public JwtUtil(
             @Value("${jwt.secret}") String secretKey,
@@ -85,10 +88,18 @@ public class JwtUtil {
      */
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+
+        if (!StringUtils.hasText(bearerToken)) {
+            // Authorization 헤더가 없는 경우
+            throw new GlobalException(ErrorCode.MISSING_AUTH_HEADER);
         }
-        return null;
+
+        if (!bearerToken.startsWith(BEARER_PREFIX)) {
+            // Authorization 헤더 형식이 잘못된 경우
+            throw new GlobalException(ErrorCode.INVALID_AUTH_HEADER);
+        }
+
+        return bearerToken.substring(7);
     }
 
     /**
@@ -101,20 +112,17 @@ public class JwtUtil {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
-            // throw new JwtAuthenticationException(ErrorStatus.INVALID_TOKEN_EXCEPTION);
+        } catch (io.jsonwebtoken.security.SecurityException e) {
+            throw new GlobalException(ErrorCode.INVALID_SIGNATURE);
+        } catch (MalformedJwtException e) {
+            throw new GlobalException(ErrorCode.MALFORMED_TOKEN);
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
-            // throw new JwtAuthenticationException(ErrorStatus.EXPIRED_JWT_EXCEPTION);
+            throw new GlobalException(ErrorCode.EXPIRED_JWT_EXCEPTION);
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
-            // throw new JwtAuthenticationException(ErrorStatus.INVALID_TOKEN_EXCEPTION);
+            throw new GlobalException(ErrorCode.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
-            // throw new JwtAuthenticationException(ErrorStatus.INVALID_TOKEN_EXCEPTION);
+            throw new GlobalException(ErrorCode.INVALID_CLAIMS);
         }
-        return true;
     }
 
     /**
