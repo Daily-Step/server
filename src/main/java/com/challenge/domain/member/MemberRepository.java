@@ -2,11 +2,11 @@ package com.challenge.domain.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findBySocialIdAndLoginType(Long socialId, LoginType loginType);
+    Member findBySocialIdAndLoginType(Long socialId, LoginType loginType);
+
+    boolean existsBySocialIdAndLoginType(Long socialId, LoginType loginType);
 
     boolean existsByNickname(String nickname);
 
