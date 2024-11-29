@@ -7,10 +7,10 @@ import com.challenge.api.service.auth.response.SocialInfoResponse;
 import com.challenge.api.validator.auth.AuthValidator;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
+import com.challenge.domain.member.JobYear;
 import com.challenge.domain.member.LoginType;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
-import com.challenge.domain.member.Year;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import com.challenge.utils.JwtUtil;
@@ -75,11 +75,11 @@ public class AuthService {
                 .orElseThrow(() -> new GlobalException(ErrorCode.JOB_NOT_FOUND));
 
         // 연차 enum 데이터 설정
-        Year year = Year.of(request.getYearId());
+        JobYear jobYear = JobYear.of(request.getYearId());
 
         // member 엔티티 생성 및 저장
         Member member = Member.create(userInfo.getSocialId(), userInfo.getEmail(), request.getNickname(),
-                request.getBirth(), request.getGender(), year, LoginType.KAKAO, job);
+                request.getBirth(), request.getGender(), jobYear, LoginType.KAKAO, job);
         Member savedMember = memberRepository.save(member);
 
         // 토큰 발급
