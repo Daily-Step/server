@@ -19,10 +19,10 @@ public enum ErrorCode {
     /**
      * 공통으로 사용되는 일반적인 에러
      */
-    COMMON_INTERNAL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "COMMON_500", "서버 에러, 관리자에게 문의 바랍니다."),
     COMMON_BAD_REQUEST(BAD_REQUEST, "COMMON_400", "잘못된 요청입니다."),
     COMMON_UNAUTHORIZED(UNAUTHORIZED, "COMMON_401", "인증이 필요합니다."),
     COMMON_FORBIDDEN(FORBIDDEN, "COMMON_403", "금지된 요청입니다."),
+    COMMON_INTERNAL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "COMMON_500", "서버 에러, 관리자에게 문의 바랍니다."),
     COMMON_NETWORK_ERROR(GATEWAY_TIMEOUT, "COMMON_504", "네트워크 오류가 발생하였습니다. 잠시 후 다시 시도해주세요."),
 
     /**
@@ -52,11 +52,15 @@ public enum ErrorCode {
     MEMBER_EXISTS(BAD_REQUEST, "MEMBER_4002", "이미 존재하는 회원입니다."),
     DUPLICATED_NICKNAME(BAD_REQUEST, "MEMBER_4003", "이미 사용중인 닉네임입니다."),
 
-
     /**
      * 사용자 관련 에러
      */
     USER_DUPLICATE_LOGIN_ID(UNPROCESSABLE_ENTITY, "USER_4001", "이미 존재하는 아이디입니다."),
+
+    /**
+     * 챌린지 관련 에러
+     */
+    CHALLENGE_DUPLICATE_TITLE(BAD_REQUEST, "CHALLENGE_4001", "이미 존재하는 챌린지 제목입니다. 다른 제목을 입력해주세요."),
 
     /**
      * 기타 에러
