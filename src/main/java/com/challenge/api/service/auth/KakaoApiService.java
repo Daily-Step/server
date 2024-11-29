@@ -1,6 +1,7 @@
-package com.challenge.api.service;
+package com.challenge.api.service.auth;
 
-import com.challenge.api.dto.AuthResponse;
+import com.challenge.api.service.auth.response.SocialInfoResponse;
+import com.challenge.domain.member.LoginType;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ public class KakaoApiService {
 
     private static final String ACCESS_TOKEN_REQUEST_URL = "https://kauth.kakao.com/oauth/token";
     private static final String USER_INFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
 
     /**
      * 인증 code를 가지고 카카오 API 서버로부터 access token을 받아오는 메소드
@@ -84,10 +87,10 @@ public class KakaoApiService {
      * @param accessToken
      * @return
      */
-    public AuthResponse.kakaoResultDto getUserInfo(String accessToken) {
+    public SocialInfoResponse getUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set(AUTHORIZATION_HEADER, "Bearer " + accessToken);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -105,9 +108,9 @@ public class KakaoApiService {
                 log.info("kakao user id: {}", id);
                 log.info("kakao user email: {}", email);
 
-                return AuthResponse.kakaoResultDto.builder().socialId(id).email(email).build();
+                return SocialInfoResponse.of(id, email, LoginType.KAKAO);
             }
-            
+
             log.error("Failed to get user info. Status code: {}", response.getStatusCode());
             throw new GlobalException(ErrorCode.KAKAO_REQ_FAILED);
         } catch (Exception e) {

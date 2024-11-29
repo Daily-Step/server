@@ -1,8 +1,7 @@
-package com.challenge.api.controller;
+package com.challenge.api.controller.auth;
 
-import com.challenge.api.service.KakaoApiService;
+import com.challenge.api.service.auth.KakaoApiService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public class SocialTestController {
 
     private final KakaoApiService kakaoApiService;

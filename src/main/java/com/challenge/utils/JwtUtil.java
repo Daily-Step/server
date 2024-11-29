@@ -24,6 +24,9 @@ public class JwtUtil {
     private final Key key;
     private final long accessTokenExpTime;
 
+    @Value("${jwt.refresh_expiration_day}")
+    private long refreshExpireDay;
+
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     public JwtUtil(
@@ -41,42 +44,37 @@ public class JwtUtil {
      * @return
      */
     public String createAccessToken(Long memberId) {
-        Claims claims = Jwts.claims();
-        claims.put("memberId", memberId);
-
-        long now = (new Date()).getTime();
-        Date validity = new Date(now + this.accessTokenExpTime);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date(now))
-                .setExpiration(validity)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        return createToken(memberId, accessTokenExpTime);
     }
 
     /**
-     * JWT Claims 추출 메소드
+     * refresh token 생성 메소드
      *
-     * @param accessToken
-     * @return JWT Claims
+     * @param memberId
+     * @return
      */
-    public Claims parseClaims(String accessToken) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
+    public String createRefreshToken(Long memberId) {
+        return createToken(memberId, refreshExpireDay);
     }
 
     /**
-     * token 만료 시간 추출 메소드
+     * token claim에서 만료 시간 추출 메소드
      *
      * @param token
      * @return
      */
-    public long getTokenExpirationTime(String token) {
+    public Long getTokenExpirationTime(String token) {
         return parseClaims(token).getExpiration().getTime();
+    }
+
+    /**
+     * token claim에서 memberId 추출 메소드
+     *
+     * @param token
+     * @return
+     */
+    public Long getMemberId(String token) {
+        return parseClaims(token).get("memberId", Long.class);
     }
 
     /**
@@ -120,13 +118,39 @@ public class JwtUtil {
     }
 
     /**
-     * token claim에서 memberId 추출 메소드
+     * token 생성 메소드
      *
-     * @param token
+     * @param memberId
+     * @param expireTime
      * @return
      */
-    public Long getMemberId(String token) {
-        return parseClaims(token).get("memberId", Long.class);
+    private String createToken(Long memberId, Long expireTime) {
+        Claims claims = Jwts.claims();
+        claims.put("memberId", memberId);
+
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + expireTime);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(now))
+                .setExpiration(validity)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /**
+     * JWT Claims 추출 메소드
+     *
+     * @param accessToken
+     * @return JWT Claims
+     */
+    private Claims parseClaims(String accessToken) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
     }
 
 }
