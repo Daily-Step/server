@@ -3,7 +3,6 @@ package com.challenge.domain.challenge;
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.member.Member;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,7 +36,7 @@ public class Challenge extends BaseDateTimeEntity {
     @Column(name = "challenge_id")
     private Long id;
 
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "challenge")
     private List<Record> records = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -70,5 +70,26 @@ public class Challenge extends BaseDateTimeEntity {
 
     @Column(nullable = false)
     private LocalDateTime endDateTime;
+
+    @Builder
+    private Challenge(List<Record> records, Member member, Category category, String title, String content,
+            String color, boolean isDeleted, int weeklyGoalCount, int totalGoalCount, LocalDateTime startDateTime,
+            LocalDateTime endDateTime) {
+        this.records = records;
+        this.member = member;
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.color = color;
+        this.isDeleted = isDeleted;
+        this.weeklyGoalCount = weeklyGoalCount;
+        this.totalGoalCount = totalGoalCount;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+    }
+
+    public static Challenge create() {
+        return null;
+    }
 
 }

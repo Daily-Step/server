@@ -1,7 +1,12 @@
 package com.challenge.api.service.challenge;
 
+import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
+import com.challenge.api.service.challenge.response.ChallengeResponse;
+import com.challenge.api.validator.ChallengeValidator;
+import com.challenge.domain.challenge.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,9 +17,21 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ChallengeService {
 
+    private final ChallengeValidator challengeValidator;
+    private final ChallengeRepository challengeRepository;
+
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @Transactional
+    public ChallengeResponse createChallenge(Long memberId, ChallengeCreateServiceRequest request,
+            LocalDateTime startDateTime) {
+        challengeValidator.validateDuplicateTitle(memberId, request.getTitle());
+
+        return null;
+    }
 
     public List<Map<String, Object>> getChallenges(Long memberId) {
         List<Map<String, Object>> challenges = new ArrayList<>();
