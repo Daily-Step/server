@@ -23,12 +23,12 @@ public class AuthController {
 
     @PostMapping("/login/kakao")
     public ApiResponse<LoginResponse> kakaoLogin(@RequestBody KakaoLoginRequest request) {
-        return ApiResponse.ok(authService.kakaoLogin(request.getAccessToken()));
+        return ApiResponse.ok(authService.kakaoLogin(request.toServiceRequest()));
     }
 
     @PostMapping("/signin/kakao")
     public ApiResponse<LoginResponse> kakaoSignin(@RequestBody @Valid KakaoSigninRequest request) {
-        return ApiResponse.ok(authService.kakaoSignin(request));
+        return ApiResponse.ok(authService.kakaoSignin(request.toServiceRequest()));
     }
 
 }

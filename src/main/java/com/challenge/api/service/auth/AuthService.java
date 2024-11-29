@@ -1,6 +1,7 @@
 package com.challenge.api.service.auth;
 
-import com.challenge.api.controller.auth.request.KakaoSigninRequest;
+import com.challenge.api.service.auth.request.KakaoLoginServiceRequest;
+import com.challenge.api.service.auth.request.KakaoSigninServiceRequest;
 import com.challenge.api.service.auth.response.LoginResponse;
 import com.challenge.api.service.auth.response.SocialInfoResponse;
 import com.challenge.api.validator.auth.AuthValidator;
@@ -34,13 +35,13 @@ public class AuthService {
      * 카카오 로그인 메소드
      * kakao access token을 이용해 사용자 정보 조회 jwt access token 발급
      *
-     * @param kakaoAccessToken
+     * @param request
      * @return
      */
     @Transactional(readOnly = true)
-    public LoginResponse kakaoLogin(String kakaoAccessToken) {
+    public LoginResponse kakaoLogin(KakaoLoginServiceRequest request) {
         // 카카오 서버로부터 사용자 정보 가져오기
-        SocialInfoResponse userInfo = kakaoApiService.getUserInfo(kakaoAccessToken);
+        SocialInfoResponse userInfo = kakaoApiService.getUserInfo(request.getAccessToken());
 
         // 회원 존재 여부 검증
         authValidator.validateMemberExists(userInfo);
@@ -52,8 +53,15 @@ public class AuthService {
         return generateLoginResponse(member.getId());
     }
 
+    /**
+     * 카카오 회원가입 메소드
+     * kakao access token을 이용해 사용자 정보 조회 및 사용자 데이터 저장 후 jwt access token 발급
+     *
+     * @param request
+     * @return
+     */
     @Transactional
-    public LoginResponse kakaoSignin(KakaoSigninRequest request) {
+    public LoginResponse kakaoSignin(KakaoSigninServiceRequest request) {
         // 카카오 서버로부터 사용자 정보 가져오기
         SocialInfoResponse userInfo = kakaoApiService.getUserInfo(request.getAccessToken());
 

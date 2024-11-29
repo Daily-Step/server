@@ -1,5 +1,7 @@
 package com.challenge.api.controller.auth.request;
 
+import com.challenge.api.service.auth.request.KakaoLoginServiceRequest;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KakaoLoginRequest {
 
-    String accessToken;
+    @NotBlank
+    private String accessToken;
+
+    public KakaoLoginServiceRequest toServiceRequest() {
+        return KakaoLoginServiceRequest.builder()
+                .accessToken(this.accessToken)
+                .build();
+    }
 
 }
