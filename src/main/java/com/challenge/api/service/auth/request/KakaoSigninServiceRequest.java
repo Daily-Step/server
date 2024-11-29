@@ -19,8 +19,8 @@ public class KakaoSigninServiceRequest {
     private int yearId;
 
     @Builder
-    public KakaoSigninServiceRequest(String accessToken, String nickname, LocalDate birth, Gender gender, Long jobId,
-                                     int yearId) {
+    private KakaoSigninServiceRequest(String accessToken, String nickname, LocalDate birth, Gender gender, Long jobId,
+                                      int yearId) {
         this.accessToken = accessToken;
         this.nickname = nickname;
         this.birth = birth;

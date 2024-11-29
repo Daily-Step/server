@@ -38,7 +38,6 @@ public class AuthService {
      * @param request
      * @return
      */
-    @Transactional(readOnly = true)
     public LoginResponse kakaoLogin(KakaoLoginServiceRequest request) {
         // 카카오 서버로부터 사용자 정보 가져오기
         SocialInfoResponse userInfo = kakaoApiService.getUserInfo(request.getAccessToken());

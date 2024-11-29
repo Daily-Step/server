@@ -106,8 +106,6 @@ public class Member extends BaseDateTimeEntity {
         this.gender = gender;
         this.year = year;
         this.loginType = loginType;
-        this.isNotificationReceived = false;
-        this.isDeleted = false;
         this.job = job;
     }
 

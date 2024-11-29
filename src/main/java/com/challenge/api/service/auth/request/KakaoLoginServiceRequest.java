@@ -11,7 +11,7 @@ public class KakaoLoginServiceRequest {
     private String accessToken;
 
     @Builder
-    public KakaoLoginServiceRequest(String accessToken) {
+    private KakaoLoginServiceRequest(String accessToken) {
         this.accessToken = accessToken;
     }
 

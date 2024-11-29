@@ -43,12 +43,12 @@ public class KakaoSigninRequest {
 
     public KakaoSigninServiceRequest toServiceRequest() {
         return KakaoSigninServiceRequest.builder()
-                .accessToken(this.accessToken)
-                .nickname(this.nickname)
-                .birth(this.birth)
-                .gender(this.gender)
-                .jobId(this.jobId)
-                .yearId(this.yearId)
+                .accessToken(accessToken)
+                .nickname(nickname)
+                .birth(birth)
+                .gender(gender)
+                .jobId(jobId)
+                .yearId(yearId)
                 .build();
     }
 

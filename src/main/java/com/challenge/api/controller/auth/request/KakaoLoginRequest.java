@@ -14,7 +14,7 @@ public class KakaoLoginRequest {
 
     public KakaoLoginServiceRequest toServiceRequest() {
         return KakaoLoginServiceRequest.builder()
-                .accessToken(this.accessToken)
+                .accessToken(accessToken)
                 .build();
     }
 

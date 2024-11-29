@@ -39,6 +39,11 @@ public class AuthValidator {
         }
     }
 
+    /**
+     * 닉네임의 중복 여부를 검증하는 메소드
+     *
+     * @param nickname
+     */
     public void validateUniqueNickname(String nickname) {
         boolean existsByNickname = memberRepository.existsByNickname(nickname);
         if (existsByNickname) {
