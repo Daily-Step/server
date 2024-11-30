@@ -83,9 +83,9 @@ public class AuthServiceTest {
                 .build();
     }
 
-    private void mockKakaoApiResponse(Long socialId, LoginType loginType) {
+    private void mockKakaoApiResponse(Long socialId) {
         given(kakaoApiService.getUserInfo(MOCK_KAKAO_ACCESS_TOKEN)).willReturn(createMockSocialInfoResponse(socialId,
-                loginType));
+                LoginType.KAKAO));
     }
 
     @DisplayName("카카오 로그인 성공: 토큰과 회원id가 반환된다.")
@@ -95,7 +95,7 @@ public class AuthServiceTest {
         Member member = createMember();
 
         // 카카오 API 호출 mock 처리
-        mockKakaoApiResponse(MOCK_SOCIAL_ID, LoginType.KAKAO);
+        mockKakaoApiResponse(MOCK_SOCIAL_ID);
 
         // request 값 세팅
         KakaoLoginServiceRequest request = KakaoLoginServiceRequest.builder()
@@ -116,7 +116,7 @@ public class AuthServiceTest {
     void kakaoLoginFailedWhenMemberNotFound() {
         // given
         // 카카오 API 호출 mock 처리
-        mockKakaoApiResponse(MOCK_SOCIAL_ID, LoginType.KAKAO);
+        mockKakaoApiResponse(MOCK_SOCIAL_ID);
 
         // request 값 세팅
         KakaoLoginServiceRequest request = KakaoLoginServiceRequest.builder()
@@ -134,7 +134,7 @@ public class AuthServiceTest {
     void kakaoSigninSucceeds() {
         // given
         // 카카오 API 호출 mock 처리
-        mockKakaoApiResponse(MOCK_SOCIAL_ID, LoginType.KAKAO);
+        mockKakaoApiResponse(MOCK_SOCIAL_ID);
 
         // request 값 세팅
         KakaoSigninServiceRequest request = KakaoSigninServiceRequest.builder()
@@ -164,7 +164,7 @@ public class AuthServiceTest {
         createMember();
 
         // 카카오 API 호출 mock 처리
-        mockKakaoApiResponse(MOCK_SOCIAL_ID, LoginType.KAKAO);
+        mockKakaoApiResponse(MOCK_SOCIAL_ID);
 
         // request 값 세팅
         KakaoSigninServiceRequest request = KakaoSigninServiceRequest.builder()
@@ -190,7 +190,7 @@ public class AuthServiceTest {
         createMember();
 
         // 카카오 API 호출 mock 처리
-        mockKakaoApiResponse(2L, LoginType.KAKAO);
+        mockKakaoApiResponse(2L);
 
         // request 값 세팅
         KakaoSigninServiceRequest request = KakaoSigninServiceRequest.builder()
