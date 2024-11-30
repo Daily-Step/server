@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
-public enum Year {
+public enum JobYear {
 
     LT_1Y(1),
     Y1_2(2),
@@ -17,10 +17,10 @@ public enum Year {
     private final int id;
 
     // id로 Year 객체 조회하기 위한 map
-    private static final Map<Integer, Year> YEAR_MAP = Arrays.stream(values())
-            .collect(Collectors.toUnmodifiableMap(Year::getId, year -> year));
+    private static final Map<Integer, JobYear> YEAR_MAP = Arrays.stream(values())
+            .collect(Collectors.toUnmodifiableMap(JobYear::getId, jobYear -> jobYear));
 
-    Year(int id) {
+    JobYear(int id) {
         this.id = id;
     }
 
@@ -30,12 +30,12 @@ public enum Year {
      * @param id
      * @return
      */
-    public static Year of(int id) {
-        Year year = YEAR_MAP.get(id);
-        if (year == null) {
+    public static JobYear of(int id) {
+        JobYear jobYear = YEAR_MAP.get(id);
+        if (jobYear == null) {
             throw new IllegalArgumentException("Invalid id: " + id);
         }
-        return year;
+        return jobYear;
     }
 
 }

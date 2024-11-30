@@ -54,7 +54,7 @@ public class Member extends BaseDateTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(10)", nullable = false)
-    private Year year;
+    private JobYear jobYear;
 
     @Column(length = 1000)
     private String profileImg;
@@ -82,29 +82,29 @@ public class Member extends BaseDateTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Notification> notifications = new ArrayList<>();
 
-    public static Member create(Long socialId, String email, String nickname, LocalDate birth, Gender gender, Year year,
-                                LoginType loginType, Job job) {
+    public static Member create(Long socialId, String email, String nickname, LocalDate birth, Gender gender,
+            JobYear jobYear, LoginType loginType, Job job) {
         return Member.builder()
                 .socialId(socialId)
                 .email(email)
                 .nickname(nickname)
                 .birth(birth)
                 .gender(gender)
-                .year(year)
+                .jobYear(jobYear)
                 .loginType(loginType)
                 .job(job)
                 .build();
     }
 
-    @Builder(access = AccessLevel.PROTECTED)
-    private Member(Long socialId, String email, String nickname, LocalDate birth, Gender gender, Year year,
-                   LoginType loginType, Job job) {
+    @Builder
+    private Member(Long socialId, String email, String nickname, LocalDate birth, Gender gender, JobYear jobYear,
+            LoginType loginType, Job job) {
         this.socialId = socialId;
         this.email = email;
         this.nickname = nickname;
         this.birth = birth;
         this.gender = gender;
-        this.year = year;
+        this.jobYear = jobYear;
         this.loginType = loginType;
         this.job = job;
     }

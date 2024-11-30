@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,28 +18,27 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class KakaoSigninRequest {
 
-    @NotBlank
+    @NotBlank(message = "access token은 필수 입력값입니다.")
     private String accessToken;
 
-    @NotBlank
     @Pattern(regexp = "^[가-힣a-zA-Z0-9]{4,10}$", message = "닉네임은 4~10자이며, 띄어쓰기와 특수문자를 사용할 수 없습니다.")
     private String nickname;
 
-    @NotNull
-    @Past
+    @NotNull(message = "birth는 필수 입력값입니다.")
+    @Past(message = "birth는 과거 날짜여야 합니다.")
     private LocalDate birth;
 
-    @NotNull
+    @NotNull(message = "gender는 필수 입력값입니다.")
     private Gender gender;
 
-    @NotNull
-    @Min(1)
-    @Max(20)
+    @NotNull(message = "jobId는 필수 입력값입니다.")
+    @Min(value = 1, message = "jobId는 1 이상의 값이어야 합니다.")
+    @Max(value = 20, message = "jobId는 20 이하의 값이어야 합니다.")
     private Long jobId;
 
-    @NotNull
-    @Min(1)
-    @Max(4)
+    @NotNull(message = "yearId는 필수 입력값입니다.")
+    @Min(value = 1, message = "yearId는 1 이상의 값이어야 합니다.")
+    @Max(value = 4, message = "yearId는 4 이하의 값이어야 합니다.")
     private int yearId;
 
     public KakaoSigninServiceRequest toServiceRequest() {
@@ -50,6 +50,17 @@ public class KakaoSigninRequest {
                 .jobId(jobId)
                 .yearId(yearId)
                 .build();
+    }
+
+    @Builder
+    private KakaoSigninRequest(String accessToken, String nickname, LocalDate birth, Gender gender, Long jobId,
+            int yearId) {
+        this.accessToken = accessToken;
+        this.nickname = nickname;
+        this.birth = birth;
+        this.gender = gender;
+        this.jobId = jobId;
+        this.yearId = yearId;
     }
 
 }
