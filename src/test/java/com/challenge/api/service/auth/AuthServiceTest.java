@@ -62,32 +62,6 @@ public class AuthServiceTest {
         job = jobRepository.save(job);
     }
 
-    private Member createMember() {
-        return memberRepository.save(Member.builder()
-                .socialId(MOCK_SOCIAL_ID)
-                .email(MOCK_EMAIL)
-                .loginType(LoginType.KAKAO)
-                .nickname(MOCK_NICKNAME)
-                .birth(MOCK_BIRTH)
-                .gender(Gender.MALE)
-                .jobYear(JobYear.LT_1Y)
-                .job(job)
-                .build());
-    }
-
-    private SocialInfoResponse createMockSocialInfoResponse(Long socialId, LoginType loginType) {
-        return SocialInfoResponse.builder()
-                .socialId(socialId)
-                .email(MOCK_EMAIL)
-                .loginType(loginType)
-                .build();
-    }
-
-    private void mockKakaoApiResponse(Long socialId) {
-        given(kakaoApiService.getUserInfo(MOCK_KAKAO_ACCESS_TOKEN)).willReturn(createMockSocialInfoResponse(socialId,
-                LoginType.KAKAO));
-    }
-
     @DisplayName("카카오 로그인 성공: 토큰과 회원id가 반환된다.")
     @Test
     void kakaoLoginSucceeds() {
@@ -206,6 +180,33 @@ public class AuthServiceTest {
         assertThatThrownBy(() -> authService.kakaoSignin(request))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("이미 사용중인 닉네임입니다.");
+    }
+
+    /*   테스트 공통 메소드   */
+    private Member createMember() {
+        return memberRepository.save(Member.builder()
+                .socialId(MOCK_SOCIAL_ID)
+                .email(MOCK_EMAIL)
+                .loginType(LoginType.KAKAO)
+                .nickname(MOCK_NICKNAME)
+                .birth(MOCK_BIRTH)
+                .gender(Gender.MALE)
+                .jobYear(JobYear.LT_1Y)
+                .job(job)
+                .build());
+    }
+
+    private SocialInfoResponse createMockSocialInfoResponse(Long socialId, LoginType loginType) {
+        return SocialInfoResponse.builder()
+                .socialId(socialId)
+                .email(MOCK_EMAIL)
+                .loginType(loginType)
+                .build();
+    }
+
+    private void mockKakaoApiResponse(Long socialId) {
+        given(kakaoApiService.getUserInfo(MOCK_KAKAO_ACCESS_TOKEN))
+                .willReturn(createMockSocialInfoResponse(socialId, LoginType.KAKAO));
     }
 
 }

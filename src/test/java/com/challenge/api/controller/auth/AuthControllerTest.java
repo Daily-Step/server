@@ -30,7 +30,7 @@ public class AuthControllerTest extends ControllerTestSupport {
 
     private static final String MOCK_KAKAO_ACCESS_TOKEN = "test-kakao-access-token";
     private static final String MOCK_ACCESS_TOKEN = "test-access-token";
-    public static final String MOCK_REFRESH_TOKEN = "test-refresh-token";
+    private static final String MOCK_REFRESH_TOKEN = "test-refresh-token";
 
     private LoginResponse mockLoginResponse;
 
@@ -53,7 +53,9 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoLoginSucceeds() throws Exception {
             // given
-            KakaoLoginRequest request = new KakaoLoginRequest(MOCK_KAKAO_ACCESS_TOKEN);
+            KakaoLoginRequest request = KakaoLoginRequest.builder()
+                    .accessToken(MOCK_ACCESS_TOKEN)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/login/kakao")
@@ -71,7 +73,9 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoLoginFailedWhenAccessTokenIsBlank() throws Exception {
             // given
-            KakaoLoginRequest request = new KakaoLoginRequest(" ");
+            KakaoLoginRequest request = KakaoLoginRequest.builder()
+                    .accessToken(" ")
+                    .build();
 
             // when //then
             mockMvc.perform(post("/api/v1/auth/login/kakao")
@@ -104,8 +108,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninSucceeds() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_KAKAO_ACCESS_TOKEN, MOCK_NICKNAME, MOCK_BIRTH,
-                    Gender.FEMALE, 1L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(1L)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -124,8 +134,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenAccessTokenIsBlank() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(" ", MOCK_NICKNAME, MOCK_BIRTH,
-                    Gender.FEMALE, 1L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(" ")
+                    .nickname(MOCK_NICKNAME)
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(1L)
+                    .yearId(1)
+                    .build();
 
             // when //then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -141,8 +157,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenNicknameIsBlank() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, " ", MOCK_BIRTH,
-                    Gender.FEMALE, 1L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(" ")
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(1L)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -158,8 +180,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenNicknameIsInvalid() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, "abcdefg!!@12", MOCK_BIRTH,
-                    Gender.FEMALE, 1L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname("abcdefg!!@12")
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(1L)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -175,8 +203,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenBirthIsNull() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, MOCK_NICKNAME, null,
-                    Gender.FEMALE, 1L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(null)
+                    .gender(Gender.FEMALE)
+                    .jobId(1L)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -192,8 +226,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenBirthIsNotPast() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, MOCK_NICKNAME, LocalDate.now(),
-                    Gender.FEMALE, 1L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(LocalDate.now())
+                    .gender(Gender.FEMALE)
+                    .jobId(1L)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -209,8 +249,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenGenderIsNull() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, MOCK_NICKNAME, MOCK_BIRTH,
-                    null, 1L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(MOCK_BIRTH)
+                    .gender(null)
+                    .jobId(1L)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -226,8 +272,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenJobIdIsNull() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, MOCK_NICKNAME, MOCK_BIRTH,
-                    Gender.FEMALE, null, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(null)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -243,8 +295,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenJobIdIsLessThanMin() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, MOCK_NICKNAME, MOCK_BIRTH,
-                    Gender.FEMALE, 0L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(0L)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -260,8 +318,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenJobIdIsMoreThanMax() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, MOCK_NICKNAME, MOCK_BIRTH,
-                    Gender.FEMALE, 21L, 1);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(21L)
+                    .yearId(1)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -277,8 +341,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenYearIdIsLessThanMin() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, MOCK_NICKNAME, MOCK_BIRTH,
-                    Gender.FEMALE, 1L, 0);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(1L)
+                    .yearId(0)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")
@@ -294,8 +364,14 @@ public class AuthControllerTest extends ControllerTestSupport {
         @Test
         void kakaoSigninFailedWhenYearIdIsMoreThanMax() throws Exception {
             // given
-            KakaoSigninRequest request = new KakaoSigninRequest(MOCK_ACCESS_TOKEN, MOCK_NICKNAME, MOCK_BIRTH,
-                    Gender.FEMALE, 1L, 5);
+            KakaoSigninRequest request = KakaoSigninRequest.builder()
+                    .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
+                    .nickname(MOCK_NICKNAME)
+                    .birth(MOCK_BIRTH)
+                    .gender(Gender.FEMALE)
+                    .jobId(1L)
+                    .yearId(5)
+                    .build();
 
             // when // then
             mockMvc.perform(post("/api/v1/auth/signin/kakao")

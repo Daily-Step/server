@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +16,6 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class KakaoSigninRequest {
 
     @NotBlank(message = "access token은 필수 입력값입니다.")
@@ -51,6 +50,17 @@ public class KakaoSigninRequest {
                 .jobId(jobId)
                 .yearId(yearId)
                 .build();
+    }
+
+    @Builder
+    private KakaoSigninRequest(String accessToken, String nickname, LocalDate birth, Gender gender, Long jobId,
+            int yearId) {
+        this.accessToken = accessToken;
+        this.nickname = nickname;
+        this.birth = birth;
+        this.gender = gender;
+        this.jobId = jobId;
+        this.yearId = yearId;
     }
 
 }
