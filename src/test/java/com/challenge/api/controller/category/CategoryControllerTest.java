@@ -1,9 +1,12 @@
 package com.challenge.api.controller.category;
 
-import com.challenge.ControllerTestSupport;
+import com.challenge.api.controller.ControllerTestSupport;
+import com.challenge.api.service.category.CategoryService;
 import com.challenge.api.service.category.response.CategoryResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
@@ -13,7 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(CategoryController.class)
 class CategoryControllerTest extends ControllerTestSupport {
+
+    @MockBean
+    private CategoryService categoryService;
 
     @DisplayName("카테고리 목록을 조회한다.")
     @Test
