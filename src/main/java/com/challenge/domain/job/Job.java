@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,5 +25,11 @@ public class Job {
 
     @Column(nullable = false, length = 100)
     private String description;
+
+    @Builder
+    private Job(String code, String description) {
+        this.code = code;
+        this.description = description;
+    }
 
 }
