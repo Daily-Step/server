@@ -129,6 +129,16 @@ public class JwtUtil {
     }
 
     /**
+     * 테스트를 위한 만료 시간이 짧은 refresh token 발급 메소드
+     *
+     * @param memberId
+     * @return
+     */
+    public String createRefreshTokenForTest(Long memberId) {
+        return createToken(memberId, 1L);
+    }
+
+    /**
      * token 생성 메소드
      *
      * @param memberId

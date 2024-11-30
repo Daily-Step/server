@@ -2,7 +2,9 @@ package com.challenge.api.service.auth;
 
 import com.challenge.api.service.auth.request.KakaoLoginServiceRequest;
 import com.challenge.api.service.auth.request.KakaoSigninServiceRequest;
+import com.challenge.api.service.auth.request.ReissueTokenServiceRequest;
 import com.challenge.api.service.auth.response.LoginResponse;
+import com.challenge.api.service.auth.response.ReissueTokenResponse;
 import com.challenge.api.service.auth.response.SocialInfoResponse;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
@@ -12,6 +14,7 @@ import com.challenge.domain.member.LoginType;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
 import com.challenge.exception.GlobalException;
+import com.challenge.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,6 +46,9 @@ public class AuthServiceTest {
 
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private Job job;
 
@@ -180,6 +186,61 @@ public class AuthServiceTest {
         assertThatThrownBy(() -> authService.kakaoSignin(request))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("이미 사용중인 닉네임입니다.");
+    }
+
+    @DisplayName("토큰 재발급 성공: 토큰이 반환된다.")
+    @Test
+    void reissueTokenSucceeds() {
+        // given
+        Member member = createMember();
+        String refreshToken = jwtUtil.createRefreshToken(member.getId());
+
+        // request 값 세팅
+        ReissueTokenServiceRequest request = ReissueTokenServiceRequest.builder()
+                .refreshToken(refreshToken)
+                .build();
+
+        // when
+        ReissueTokenResponse response = authService.reissueToken(request);
+
+        // then
+        assertThat(response.getAccessToken()).isNotEmpty();
+        assertThat(response.getRefreshToken()).isNotEmpty();
+    }
+
+    @DisplayName("토큰 재발급 실패: refresh token이 만료된 경우 예외가 발생한다.")
+    @Test
+    void reissueTokenFailedWhenExpiredToken() {
+        // given
+        Member member = createMember();
+        String refreshToken = jwtUtil.createRefreshTokenForTest(member.getId());
+
+        // request 값 세팅
+        ReissueTokenServiceRequest request = ReissueTokenServiceRequest.builder()
+                .refreshToken(refreshToken)
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> authService.reissueToken(request))
+                .isInstanceOf(GlobalException.class)
+                .hasMessage("리프레쉬 토큰이 만료되었습니다. 다시 로그인 해주세요");
+    }
+
+    @DisplayName("토큰 재발급 실패: 토큰에 담긴 memberId에 해당하는 회원이 존재하지 않는 경우 예외가 발생한다.")
+    @Test
+    void reissueTokenFailedWhenMemberNotFound() {
+        // given
+        String refreshToken = jwtUtil.createRefreshToken(1L);
+
+        // request 값 세팅
+        ReissueTokenServiceRequest request = ReissueTokenServiceRequest.builder()
+                .refreshToken(refreshToken)
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> authService.reissueToken(request))
+                .isInstanceOf(GlobalException.class)
+                .hasMessage("사용자를 찾을 수 없습니다.");
     }
 
     /*   테스트 공통 메소드   */
