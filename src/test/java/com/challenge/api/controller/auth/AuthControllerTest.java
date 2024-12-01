@@ -7,7 +7,6 @@ import com.challenge.api.controller.auth.request.ReissueTokenRequest;
 import com.challenge.api.service.auth.AuthService;
 import com.challenge.api.service.auth.response.LoginResponse;
 import com.challenge.api.service.auth.response.ReissueTokenResponse;
-import com.challenge.domain.member.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -115,9 +114,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
-                    .jobId(1L)
-                    .yearId(1)
+                    .gender(MOCK_GENDER)
+                    .jobId(MOCK_JOB.getId())
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -141,9 +140,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(" ")
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
-                    .jobId(1L)
-                    .yearId(1)
+                    .gender(MOCK_GENDER)
+                    .jobId(MOCK_JOB.getId())
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when //then
@@ -164,9 +163,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(" ")
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
-                    .jobId(1L)
-                    .yearId(1)
+                    .gender(MOCK_GENDER)
+                    .jobId(MOCK_JOB.getId())
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -187,9 +186,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname("abcdefg!!@12")
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
-                    .jobId(1L)
-                    .yearId(1)
+                    .gender(MOCK_GENDER)
+                    .jobId(MOCK_JOB.getId())
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -210,9 +209,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
                     .birth(null)
-                    .gender(Gender.FEMALE)
-                    .jobId(1L)
-                    .yearId(1)
+                    .gender(MOCK_GENDER)
+                    .jobId(MOCK_JOB.getId())
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -233,9 +232,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
                     .birth(LocalDate.now())
-                    .gender(Gender.FEMALE)
-                    .jobId(1L)
-                    .yearId(1)
+                    .gender(MOCK_GENDER)
+                    .jobId(MOCK_JOB.getId())
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -257,8 +256,8 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
                     .gender(null)
-                    .jobId(1L)
-                    .yearId(1)
+                    .jobId(MOCK_JOB.getId())
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -279,9 +278,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
+                    .gender(MOCK_GENDER)
                     .jobId(null)
-                    .yearId(1)
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -302,9 +301,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
+                    .gender(MOCK_GENDER)
                     .jobId(0L)
-                    .yearId(1)
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -325,9 +324,9 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
+                    .gender(MOCK_GENDER)
                     .jobId(21L)
-                    .yearId(1)
+                    .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
             // when // then
@@ -348,8 +347,8 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
-                    .jobId(1L)
+                    .gender(MOCK_GENDER)
+                    .jobId(MOCK_JOB.getId())
                     .yearId(0)
                     .build();
 
@@ -371,8 +370,8 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
-                    .gender(Gender.FEMALE)
-                    .jobId(1L)
+                    .gender(MOCK_GENDER)
+                    .jobId(MOCK_JOB.getId())
                     .yearId(5)
                     .build();
 
