@@ -1,6 +1,7 @@
 package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
+import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.Gender;
@@ -41,17 +42,18 @@ public class MemberServiceTest {
     private static final String MOCK_EMAIL = "test@naver.com";
     private static final String MOCK_NICKNAME = "test";
     private static final LocalDate MOCK_BIRTH = LocalDate.of(2000, 1, 1);
-
-    private Job job;
+    protected static final Gender MOCK_GENDER = Gender.MALE;
+    protected static final JobYear MOCK_JOBYEAR = JobYear.LT_1Y;
+    protected Job MOCK_JOB;
 
     @BeforeEach
     void setUp() {
         // Job 데이터 저장
-        job = Job.builder()
+        Job job = Job.builder()
                 .code("1")
                 .description("1")
                 .build();
-        job = jobRepository.save(job);
+        MOCK_JOB = jobRepository.save(job);
     }
 
     @DisplayName("닉네임 중복 확인 성공: 닉네임 사용 가능 메시지가 반환된다.")
@@ -99,9 +101,9 @@ public class MemberServiceTest {
         // then
         assertThat(response.getNickname()).isEqualTo(MOCK_NICKNAME);
         assertThat(response.getBirth()).isEqualTo(MOCK_BIRTH);
-        assertThat(response.getGender()).isEqualTo(member.getGender());
-        assertThat(response.getJobId()).isEqualTo(job.getId());
-        assertThat(response.getJobYearId()).isEqualTo(member.getJobYear().getId());
+        assertThat(response.getGender()).isEqualTo(MOCK_GENDER);
+        assertThat(response.getJobId()).isEqualTo(MOCK_JOB.getId());
+        assertThat(response.getJobYearId()).isEqualTo(MOCK_JOBYEAR.getId());
     }
 
     /*   테스트 공통 메소드   */
@@ -112,9 +114,9 @@ public class MemberServiceTest {
                 .loginType(LoginType.KAKAO)
                 .nickname(MOCK_NICKNAME)
                 .birth(MOCK_BIRTH)
-                .gender(Gender.MALE)
-                .jobYear(JobYear.LT_1Y)
-                .job(job)
+                .gender(MOCK_GENDER)
+                .jobYear(MOCK_JOBYEAR)
+                .job(MOCK_JOB)
                 .build());
     }
 

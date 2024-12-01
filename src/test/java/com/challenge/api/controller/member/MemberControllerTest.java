@@ -3,6 +3,7 @@ package com.challenge.api.controller.member;
 import com.challenge.api.controller.ControllerTestSupport;
 import com.challenge.api.controller.member.request.CheckNicknameRequest;
 import com.challenge.api.service.member.MemberService;
+import com.challenge.api.service.member.response.MemberInfoResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
