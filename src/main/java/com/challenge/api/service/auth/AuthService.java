@@ -2,7 +2,9 @@ package com.challenge.api.service.auth;
 
 import com.challenge.api.service.auth.request.KakaoLoginServiceRequest;
 import com.challenge.api.service.auth.request.KakaoSigninServiceRequest;
+import com.challenge.api.service.auth.request.ReissueTokenServiceRequest;
 import com.challenge.api.service.auth.response.LoginResponse;
+import com.challenge.api.service.auth.response.ReissueTokenResponse;
 import com.challenge.api.service.auth.response.SocialInfoResponse;
 import com.challenge.api.validator.auth.AuthValidator;
 import com.challenge.domain.job.Job;
@@ -43,7 +45,7 @@ public class AuthService {
         SocialInfoResponse userInfo = kakaoApiService.getUserInfo(request.getAccessToken());
 
         // 회원 존재 여부 검증
-        authValidator.validateMemberExists(userInfo);
+        authValidator.validateMemberExistsBySocialInfo(userInfo);
 
         // socialId와 socialType에 해당하는 회원 조회
         Member member = memberRepository.findBySocialIdAndLoginType(userInfo.getSocialId(), LoginType.KAKAO);
@@ -65,7 +67,7 @@ public class AuthService {
         SocialInfoResponse userInfo = kakaoApiService.getUserInfo(request.getAccessToken());
 
         // 이미 존재하는 회원이 아닌지 검증
-        authValidator.validateMemberNotExists(userInfo);
+        authValidator.validateMemberNotExistsBySocialInfo(userInfo);
 
         // 닉네임 중복 여부 검증
         authValidator.validateUniqueNickname(request.getNickname());
@@ -85,6 +87,40 @@ public class AuthService {
         // 토큰 발급
         return generateLoginResponse(savedMember.getId());
     }
+
+    /**
+     * access token 및 refresh token 재발급 메소드
+     *
+     * @param request
+     * @return
+     */
+    public ReissueTokenResponse reissueToken(ReissueTokenServiceRequest request) {
+        // 요청한 refresh token 검증
+        try {
+            jwtUtil.validateToken(request.getRefreshToken());
+        } catch (GlobalException e) {
+            // refresh 토큰이 만료된 경우
+            if (ErrorCode.EXPIRED_JWT_EXCEPTION.getCode().equals(e.getCode())) {
+                // refresh token 만료 에러 발생
+                throw new GlobalException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+            }
+            throw e;
+        }
+
+        // refresh token에서 memberId 추출
+        Long memberId = jwtUtil.getMemberId(request.getRefreshToken());
+
+        // 회원 존재 여부 검증
+        authValidator.validateMemberExistsById(memberId);
+
+        // 토큰 발급
+        String accessToken = jwtUtil.createAccessToken(memberId);
+        String refreshToken = jwtUtil.createRefreshToken(memberId);
+        Long tokenExpirationTime = jwtUtil.getTokenExpirationTime(accessToken);
+
+        return ReissueTokenResponse.of(accessToken, refreshToken, tokenExpirationTime);
+    }
+
 
     private LoginResponse generateLoginResponse(Long memberId) {
         String accessToken = jwtUtil.createAccessToken(memberId);

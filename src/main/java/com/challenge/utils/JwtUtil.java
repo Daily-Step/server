@@ -57,7 +57,10 @@ public class JwtUtil {
      * @return
      */
     public String createRefreshToken(Long memberId) {
-        return createToken(memberId, refreshExpireDay);
+        // refreshExpireDay를 밀리초 단위로 변환
+        long refreshExpireTimeInMillis = refreshExpireDay * 24 * 60 * 60 * 1000;
+
+        return createToken(memberId, refreshExpireTimeInMillis);
     }
 
     /**
@@ -159,6 +162,16 @@ public class JwtUtil {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    /**
+     * 테스트를 위한 만료 시간이 짧은 refresh token 발급 메소드
+     *
+     * @param memberId
+     * @return
+     */
+    public String createRefreshTokenForTest(Long memberId) {
+        return createToken(memberId, 1L);
     }
 
 }

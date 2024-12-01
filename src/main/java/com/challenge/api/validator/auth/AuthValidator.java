@@ -20,7 +20,7 @@ public class AuthValidator {
      *
      * @param userInfo
      */
-    public void validateMemberExists(SocialInfoResponse userInfo) {
+    public void validateMemberExistsBySocialInfo(SocialInfoResponse userInfo) {
         boolean exists = memberRepository.existsBySocialIdAndLoginType(userInfo.getSocialId(), userInfo.getLoginType());
         if (!exists) {
             throw new GlobalException(ErrorCode.MEMBER_NOT_FOUND);
@@ -32,10 +32,22 @@ public class AuthValidator {
      *
      * @param userInfo
      */
-    public void validateMemberNotExists(SocialInfoResponse userInfo) {
+    public void validateMemberNotExistsBySocialInfo(SocialInfoResponse userInfo) {
         boolean exists = memberRepository.existsBySocialIdAndLoginType(userInfo.getSocialId(), userInfo.getLoginType());
         if (exists) {
             throw new GlobalException(ErrorCode.MEMBER_EXISTS);
+        }
+    }
+
+    /**
+     * memberId에 해당하는 사용자가 존재하는지 검증하는 메소드
+     *
+     * @param memberId
+     */
+    public void validateMemberExistsById(Long memberId) {
+        boolean exists = memberRepository.existsById(memberId);
+        if (!exists) {
+            throw new GlobalException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 

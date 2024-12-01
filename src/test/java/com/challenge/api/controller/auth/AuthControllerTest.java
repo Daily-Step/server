@@ -3,8 +3,10 @@ package com.challenge.api.controller.auth;
 import com.challenge.api.controller.ControllerTestSupport;
 import com.challenge.api.controller.auth.request.KakaoLoginRequest;
 import com.challenge.api.controller.auth.request.KakaoSigninRequest;
+import com.challenge.api.controller.auth.request.ReissueTokenRequest;
 import com.challenge.api.service.auth.AuthService;
 import com.challenge.api.service.auth.response.LoginResponse;
+import com.challenge.api.service.auth.response.ReissueTokenResponse;
 import com.challenge.domain.member.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,6 +35,7 @@ public class AuthControllerTest extends ControllerTestSupport {
     private static final String MOCK_REFRESH_TOKEN = "test-refresh-token";
 
     private LoginResponse mockLoginResponse;
+    private ReissueTokenResponse mockReissueTokenResponse;
 
     @Nested
     @DisplayName("카카오 로그인")
@@ -381,6 +384,60 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.message").value("yearId는 4 이하의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("토큰 재발급")
+    class reissueTokenTests {
+
+        @BeforeEach
+        void setUp() {
+            // 서비스 mock 처리
+            mockReissueTokenResponse = ReissueTokenResponse.builder()
+                    .accessToken(MOCK_ACCESS_TOKEN)
+                    .refreshToken(MOCK_REFRESH_TOKEN)
+                    .build();
+            given(authService.reissueToken(any())).willReturn(mockReissueTokenResponse);
+        }
+
+        @DisplayName("토큰 재발급 성공")
+        @Test
+        void reissueTokenSucceeds() throws Exception {
+            // given
+            ReissueTokenRequest request = ReissueTokenRequest.builder()
+                    .refreshToken(MOCK_REFRESH_TOKEN)
+                    .build();
+
+            // when // then
+            mockMvc.perform(post("/api/v1/auth/reissue")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("OK"))
+                    .andExpect(jsonPath("$.code").isEmpty())
+                    .andExpect(jsonPath("$.url").isEmpty())
+                    .andExpect(jsonPath("$.data.accessToken").value(MOCK_ACCESS_TOKEN))
+                    .andExpect(jsonPath("$.data.refreshToken").value(MOCK_REFRESH_TOKEN));
+        }
+
+        @DisplayName("토큰 재발급 실패: refresh token이 공백인 경우 에러 응답을 반환한다.")
+        @Test
+        void reissueTokenFailedWhenTokenIsBlank() throws Exception {
+            // given
+            ReissueTokenRequest request = ReissueTokenRequest.builder()
+                    .refreshToken(" ")
+                    .build();
+
+            // when // then
+            mockMvc.perform(post("/api/v1/auth/reissue")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("refresh token은 필수 입력값입니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/auth/reissue"));
         }
 
     }
