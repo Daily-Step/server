@@ -3,6 +3,7 @@ package com.challenge.api.controller.member;
 import com.challenge.annotation.AuthMember;
 import com.challenge.api.ApiResponse;
 import com.challenge.api.service.member.MemberService;
+import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public ApiResponse<Object> getMemberInfo(@AuthMember Member member) {
+    public ApiResponse<MemberInfoResponse> getMemberInfo(@AuthMember Member member) {
         return ApiResponse.ok(memberService.getMemberInfo(member));
     }
 
