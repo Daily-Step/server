@@ -1,6 +1,7 @@
 package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
+import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.job.Job;
@@ -153,6 +154,26 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.updateNickname(member2, request))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("이미 사용중인 닉네임입니다.");
+    }
+
+    @DisplayName("생년월일 수정 성공")
+    @Test
+    void updateBirthSucceeds() {
+        // given
+        Member member = createMember();
+        LocalDate newBirth = member.getBirth().plusDays(1);
+
+        // request 값 세팅
+        UpdateBirthServiceRequest request = UpdateBirthServiceRequest.builder()
+                .birth(newBirth)
+                .build();
+
+        // when
+        memberService.updateBirth(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getBirth()).isEqualTo(newBirth);
     }
 
     /*   테스트 공통 메소드   */

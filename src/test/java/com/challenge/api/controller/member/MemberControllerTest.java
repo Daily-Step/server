@@ -2,6 +2,7 @@ package com.challenge.api.controller.member;
 
 import com.challenge.api.controller.ControllerTestSupport;
 import com.challenge.api.controller.member.request.CheckNicknameRequest;
+import com.challenge.api.controller.member.request.UpdateBirthRequest;
 import com.challenge.api.controller.member.request.UpdateNicknameRequest;
 import com.challenge.api.service.member.MemberService;
 import com.challenge.api.service.member.response.MemberInfoResponse;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+
+import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -29,6 +32,7 @@ public class MemberControllerTest extends ControllerTestSupport {
 
     private String checkNicknameResponse;
     private String updateNicknameResponse;
+    private String updateBirthResponse;
 
     @Nested
     @DisplayName("닉네임 중복 확인")
@@ -155,6 +159,56 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.message").value("닉네임은 4~10자이며, 띄어쓰기와 특수문자를 사용할 수 없습니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/nickname"));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("생년월일 수정")
+    class UpdateBirthTests {
+
+        @BeforeEach
+        void setUp() {
+            // 서비스 mock 처리
+            updateBirthResponse = "생년월일 수정 성공";
+            given(memberService.updateBirth(any(), any())).willReturn(updateBirthResponse);
+        }
+
+        @DisplayName("생년월일 수정 성공")
+        @Test
+        void updateBirthSucceeds() throws Exception {
+            // given
+            UpdateBirthRequest request = UpdateBirthRequest.builder()
+                    .birth(MOCK_BIRTH)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/birth")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("OK"))
+                    .andExpect(jsonPath("$.code").isEmpty())
+                    .andExpect(jsonPath("$.url").isEmpty())
+                    .andExpect(jsonPath("$.data").value(updateBirthResponse));
+        }
+
+        @DisplayName("생년월일 수정 실패: birth가 과거 날짜가 아닌 경우 에러 응답을 반환한다.")
+        @Test
+        void checkNicknameIsValidFailed() throws Exception {
+            // given
+            UpdateBirthRequest request = UpdateBirthRequest.builder()
+                    .birth(LocalDate.now())
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/birth")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("birth는 과거 날짜여야 합니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/member/birth"));
         }
 
     }
