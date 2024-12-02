@@ -49,23 +49,25 @@ public class AuthServiceTest {
 
     @Autowired
     private JwtUtil jwtUtil;
-
-    private Job job;
-
+    
+    private static final String MOCK_KAKAO_ACCESS_TOKEN = "test-access-token";
     private static final Long MOCK_SOCIAL_ID = 1L;
     private static final String MOCK_EMAIL = "test@naver.com";
     private static final String MOCK_NICKNAME = "test";
     private static final LocalDate MOCK_BIRTH = LocalDate.of(2000, 1, 1);
-    private static final String MOCK_KAKAO_ACCESS_TOKEN = "test-access-token";
+    protected static final Gender MOCK_GENDER = Gender.MALE;
+    protected static final JobYear MOCK_JOBYEAR = JobYear.LT_1Y;
+    protected Job MOCK_JOB;
+
 
     @BeforeEach
     void setUp() {
         // Job 데이터 저장
-        job = Job.builder()
+        Job job = Job.builder()
                 .code("1")
                 .description("1")
                 .build();
-        job = jobRepository.save(job);
+        MOCK_JOB = jobRepository.save(job);
     }
 
     @DisplayName("카카오 로그인 성공: 토큰과 회원id가 반환된다.")
@@ -121,9 +123,9 @@ public class AuthServiceTest {
                 .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                 .nickname(MOCK_NICKNAME)
                 .birth(MOCK_BIRTH)
-                .gender(Gender.FEMALE)
-                .jobId(job.getId())
-                .yearId(1)
+                .gender(MOCK_GENDER)
+                .jobId(MOCK_JOB.getId())
+                .yearId(MOCK_JOBYEAR.getId())
                 .build();
 
         // when
@@ -151,9 +153,9 @@ public class AuthServiceTest {
                 .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                 .nickname(MOCK_NICKNAME)
                 .birth(MOCK_BIRTH)
-                .gender(Gender.FEMALE)
-                .jobId(job.getId())
-                .yearId(1)
+                .gender(MOCK_GENDER)
+                .jobId(MOCK_JOB.getId())
+                .yearId(MOCK_JOBYEAR.getId())
                 .build();
 
         // when // then
@@ -177,9 +179,9 @@ public class AuthServiceTest {
                 .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                 .nickname(MOCK_NICKNAME) // 동일한 닉네임으로 요청
                 .birth(MOCK_BIRTH)
-                .gender(Gender.FEMALE)
-                .jobId(job.getId())
-                .yearId(1)
+                .gender(MOCK_GENDER)
+                .jobId(MOCK_JOB.getId())
+                .yearId(MOCK_JOBYEAR.getId())
                 .build();
 
         // when // then
@@ -251,9 +253,9 @@ public class AuthServiceTest {
                 .loginType(LoginType.KAKAO)
                 .nickname(MOCK_NICKNAME)
                 .birth(MOCK_BIRTH)
-                .gender(Gender.MALE)
-                .jobYear(JobYear.LT_1Y)
-                .job(job)
+                .gender(MOCK_GENDER)
+                .jobYear(MOCK_JOBYEAR)
+                .job(MOCK_JOB)
                 .build());
     }
 

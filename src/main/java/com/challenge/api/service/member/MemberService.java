@@ -1,6 +1,8 @@
 package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
+import com.challenge.api.service.member.response.MemberInfoResponse;
+import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
@@ -31,6 +33,16 @@ public class MemberService {
         }
 
         return "사용 가능한 닉네임입니다.";
+    }
+
+    /**
+     * 회원 정보 조회 메소드
+     *
+     * @param member
+     * @return
+     */
+    public MemberInfoResponse getMemberInfo(Member member) {
+        return MemberInfoResponse.of(member);
     }
 
 }
