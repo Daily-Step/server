@@ -113,4 +113,8 @@ public class Member extends BaseDateTimeEntity {
         this.nickname = nickname;
     }
 
+    public void updateBirth(LocalDate birth) {
+        this.birth = birth;
+    }
+
 }

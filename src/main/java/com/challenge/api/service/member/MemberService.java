@@ -1,6 +1,7 @@
 package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
+import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.member.Member;
@@ -39,7 +40,9 @@ public class MemberService {
     /**
      * 닉네임 수정 메소드
      *
+     * @param member
      * @param request
+     * @return
      */
     public String updateNickname(Member member, UpdateNicknameServiceRequest request) {
         String nickname = request.getNickname();
@@ -54,6 +57,19 @@ public class MemberService {
         member.updateNickname(nickname);
 
         return "닉네임 수정 성공";
+    }
+
+    /**
+     * 생년월일 수정 메소드
+     *
+     * @param member
+     * @param request
+     * @return
+     */
+    public String updateBirth(Member member, UpdateBirthServiceRequest request) {
+        member.updateBirth(request.getBirth());
+
+        return "생년월일 수정 성공";
     }
 
     /**
