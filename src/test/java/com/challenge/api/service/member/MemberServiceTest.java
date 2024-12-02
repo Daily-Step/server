@@ -38,13 +38,13 @@ public class MemberServiceTest {
     @Autowired
     private JobRepository jobRepository;
 
-    private static final Long MOCK_SOCIAL_ID = 1L;
-    private static final String MOCK_EMAIL = "test@naver.com";
-    private static final String MOCK_NICKNAME = "test";
-    private static final LocalDate MOCK_BIRTH = LocalDate.of(2000, 1, 1);
-    protected static final Gender MOCK_GENDER = Gender.MALE;
-    protected static final JobYear MOCK_JOBYEAR = JobYear.LT_1Y;
-    protected Job MOCK_JOB;
+    private static final Long MEMBER_SOCIAL_ID = 1L;
+    private static final String MEMBER_EMAIL = "test@naver.com";
+    private static final String MEMBER_NICKNAME = "test";
+    private static final LocalDate MEMBER_BIRTH = LocalDate.of(2000, 1, 1);
+    private static final Gender MEMBER_GENDER = Gender.MALE;
+    private static final JobYear MEMBER_JOBYEAR = JobYear.LT_1Y;
+    private Job MEMBER_JOB;
 
     @BeforeEach
     void setUp() {
@@ -53,7 +53,7 @@ public class MemberServiceTest {
                 .code("1")
                 .description("1")
                 .build();
-        MOCK_JOB = jobRepository.save(job);
+        MEMBER_JOB = jobRepository.save(job);
     }
 
     @DisplayName("닉네임 중복 확인 성공: 닉네임 사용 가능 메시지가 반환된다.")
@@ -80,7 +80,7 @@ public class MemberServiceTest {
 
         // request 값 세팅
         CheckNicknameServiceRequest request = CheckNicknameServiceRequest.builder()
-                .nickname(MOCK_NICKNAME)
+                .nickname(MEMBER_NICKNAME)
                 .build();
 
         // when // then
@@ -99,24 +99,24 @@ public class MemberServiceTest {
         MemberInfoResponse response = memberService.getMemberInfo(member);
 
         // then
-        assertThat(response.getNickname()).isEqualTo(MOCK_NICKNAME);
-        assertThat(response.getBirth()).isEqualTo(MOCK_BIRTH);
-        assertThat(response.getGender()).isEqualTo(MOCK_GENDER);
-        assertThat(response.getJobId()).isEqualTo(MOCK_JOB.getId());
-        assertThat(response.getJobYearId()).isEqualTo(MOCK_JOBYEAR.getId());
+        assertThat(response.getNickname()).isEqualTo(MEMBER_NICKNAME);
+        assertThat(response.getBirth()).isEqualTo(MEMBER_BIRTH);
+        assertThat(response.getGender()).isEqualTo(MEMBER_GENDER);
+        assertThat(response.getJobId()).isEqualTo(MEMBER_JOB.getId());
+        assertThat(response.getJobYearId()).isEqualTo(MEMBER_JOBYEAR.getId());
     }
 
     /*   테스트 공통 메소드   */
     private Member createMember() {
         return memberRepository.save(Member.builder()
-                .socialId(MOCK_SOCIAL_ID)
-                .email(MOCK_EMAIL)
+                .socialId(MEMBER_SOCIAL_ID)
+                .email(MEMBER_EMAIL)
                 .loginType(LoginType.KAKAO)
-                .nickname(MOCK_NICKNAME)
-                .birth(MOCK_BIRTH)
-                .gender(MOCK_GENDER)
-                .jobYear(MOCK_JOBYEAR)
-                .job(MOCK_JOB)
+                .nickname(MEMBER_NICKNAME)
+                .birth(MEMBER_BIRTH)
+                .gender(MEMBER_GENDER)
+                .jobYear(MEMBER_JOBYEAR)
+                .job(MEMBER_JOB)
                 .build());
     }
 
