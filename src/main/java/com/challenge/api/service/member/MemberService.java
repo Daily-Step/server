@@ -3,8 +3,11 @@ package com.challenge.api.service.member;
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
 import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
 import com.challenge.api.service.member.request.UpdateGenderServiceRequest;
+import com.challenge.api.service.member.request.UpdateJobServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
+import com.challenge.domain.job.Job;
+import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
 import com.challenge.exception.ErrorCode;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final JobRepository jobRepository;
 
     /**
      * 해당 닉네임이 사용 가능 여부를 조회하는 메소드
@@ -84,6 +88,23 @@ public class MemberService {
         member.updateGender(request.getGender());
 
         return "성별 수정 성공";
+    }
+
+    /**
+     * 직업 수정 메소드
+     *
+     * @param member
+     * @param request
+     * @return
+     */
+    public String updateJob(Member member, UpdateJobServiceRequest request) {
+        // 직무 데이터 조회
+        Job job = jobRepository.findById(request.getJobId())
+                .orElseThrow(() -> new GlobalException(ErrorCode.JOB_NOT_FOUND));
+
+        member.updateJob(job);
+
+        return "직업 수정 성공";
     }
 
     /**
