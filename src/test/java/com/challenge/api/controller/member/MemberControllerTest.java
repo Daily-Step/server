@@ -5,6 +5,7 @@ import com.challenge.api.controller.member.request.CheckNicknameRequest;
 import com.challenge.api.controller.member.request.UpdateBirthRequest;
 import com.challenge.api.controller.member.request.UpdateGenderRequest;
 import com.challenge.api.controller.member.request.UpdateJobRequest;
+import com.challenge.api.controller.member.request.UpdateJobYearRequest;
 import com.challenge.api.controller.member.request.UpdateNicknameRequest;
 import com.challenge.api.service.member.MemberService;
 import com.challenge.api.service.member.response.MemberInfoResponse;
@@ -37,6 +38,7 @@ public class MemberControllerTest extends ControllerTestSupport {
     private String updateBirthResponse;
     private String updateGenderResponse;
     private String updateJobResponse;
+    private String updateJobYearResponse;
 
     @Nested
     @DisplayName("닉네임 중복 확인")
@@ -349,6 +351,74 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.message").value("jobId는 20 이하의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/job"));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("연차 수정")
+    class UpdateJobYearTests {
+
+        @BeforeEach
+        void setUp() {
+            // 서비스 mock 처리
+            updateJobYearResponse = "연차 수정 성공";
+            given(memberService.updateJobYear(any(), any())).willReturn(updateJobYearResponse);
+        }
+
+        @DisplayName("연차 수정 성공")
+        @Test
+        void updateJobYearSucceeds() throws Exception {
+            // given
+            UpdateJobYearRequest request = UpdateJobYearRequest.builder()
+                    .yearId(1)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/jobyear")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("OK"))
+                    .andExpect(jsonPath("$.code").isEmpty())
+                    .andExpect(jsonPath("$.url").isEmpty())
+                    .andExpect(jsonPath("$.data").value(updateJobYearResponse));
+        }
+
+        @DisplayName("연차 수정 실패: yearId가 1 미만인 경우 에러 응답을 반환한다.")
+        @Test
+        void updateJobYearFailedWhenIdIsLessThanMin() throws Exception {
+            // given
+            UpdateJobYearRequest request = UpdateJobYearRequest.builder()
+                    .yearId(0)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/jobyear")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("yearId는 1 이상의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/member/jobyear"));
+        }
+
+        @DisplayName("연차 수정 실패: yearId가 4 초과인 경우 에러 응답을 반환한다.")
+        @Test
+        void updateJobYearFailedWhenIdIsMoreThanMax() throws Exception {
+            // given
+            UpdateJobYearRequest request = UpdateJobYearRequest.builder()
+                    .yearId(5)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/jobyear")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("yearId는 4 이하의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/member/jobyear"));
         }
 
     }

@@ -4,6 +4,7 @@ import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
 import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
 import com.challenge.api.service.member.request.UpdateGenderServiceRequest;
 import com.challenge.api.service.member.request.UpdateJobServiceRequest;
+import com.challenge.api.service.member.request.UpdateJobYearServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.job.Job;
@@ -236,6 +237,25 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.updateJob(member, request))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
+    }
+
+    @DisplayName("연차 수정 성공")
+    @Test
+    void updateJobYearSucceeds() {
+        // given
+        Member member = createMember();
+
+        // request 값 세팅
+        UpdateJobYearServiceRequest request = UpdateJobYearServiceRequest.builder()
+                .yearId(4)
+                .build();
+
+        // when
+        memberService.updateJobYear(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getJobYear()).isEqualTo(JobYear.of(4));
     }
 
     /*   테스트 공통 메소드   */
