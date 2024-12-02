@@ -1,6 +1,7 @@
 package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
+import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
@@ -104,6 +105,54 @@ public class MemberServiceTest {
         assertThat(response.getGender()).isEqualTo(MEMBER_GENDER);
         assertThat(response.getJobId()).isEqualTo(MEMBER_JOB.getId());
         assertThat(response.getJobYearId()).isEqualTo(MEMBER_JOBYEAR.getId());
+    }
+
+    @DisplayName("닉네임 수정 성공")
+    @Test
+    void updateNicknameSucceeds() {
+        // given
+        Member member = createMember();
+
+        // request 값 세팅
+        UpdateNicknameServiceRequest request = UpdateNicknameServiceRequest.builder()
+                .nickname("newName")
+                .build();
+
+        // when
+        memberService.updateNickname(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getNickname()).isEqualTo("newName");
+    }
+
+    @DisplayName("닉네임 수정 실패: 이미 사용중인 닉네임인 경우 예외가 발생한다.")
+    @Test
+    void updateNicknameFailed() {
+        // given
+        Member member1 = createMember();
+
+        // 회원 추가 생성
+        Member member2 = memberRepository.save(Member.builder()
+                .socialId(2L)
+                .email("test2@naver.com")
+                .loginType(LoginType.KAKAO)
+                .nickname("member2")
+                .birth(MEMBER_BIRTH)
+                .gender(MEMBER_GENDER)
+                .jobYear(MEMBER_JOBYEAR)
+                .job(MEMBER_JOB)
+                .build());
+
+        // request 값 세팅
+        UpdateNicknameServiceRequest request = UpdateNicknameServiceRequest.builder()
+                .nickname(member1.getNickname())
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> memberService.updateNickname(member2, request))
+                .isInstanceOf(GlobalException.class)
+                .hasMessage("이미 사용중인 닉네임입니다.");
     }
 
     /*   테스트 공통 메소드   */
