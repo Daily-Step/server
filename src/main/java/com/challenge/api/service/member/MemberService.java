@@ -1,6 +1,7 @@
 package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
+import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
@@ -33,6 +34,26 @@ public class MemberService {
         }
 
         return "사용 가능한 닉네임입니다.";
+    }
+
+    /**
+     * 닉네임 수정 메소드
+     *
+     * @param request
+     */
+    public String updateNickname(Member member, UpdateNicknameServiceRequest request) {
+        String nickname = request.getNickname();
+
+        // 다른 회원이 사용중인 닉네임인 경우
+        boolean exists = memberRepository.existsByNickname(nickname);
+        if (exists) {
+            throw new GlobalException(ErrorCode.DUPLICATED_NICKNAME);
+        }
+
+        // 닉네임 수정
+        member.updateNickname(nickname);
+
+        return "닉네임 수정 성공";
     }
 
     /**
