@@ -2,6 +2,7 @@ package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
 import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
+import com.challenge.api.service.member.request.UpdateGenderServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.job.Job;
@@ -174,6 +175,26 @@ public class MemberServiceTest {
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
         assertThat(resultMember.getBirth()).isEqualTo(newBirth);
+    }
+
+    @DisplayName("성별 수정 성공")
+    @Test
+    void updateGenderSucceeds() {
+        // given
+        Member member = createMember();
+        Gender newGender = Gender.FEMALE;
+
+        // request 값 세팅
+        UpdateGenderServiceRequest request = UpdateGenderServiceRequest.builder()
+                .gender(newGender)
+                .build();
+
+        // when
+        memberService.updateGender(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getGender()).isEqualTo(newGender);
     }
 
     /*   테스트 공통 메소드   */

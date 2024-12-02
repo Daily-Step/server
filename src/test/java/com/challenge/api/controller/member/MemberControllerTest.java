@@ -3,6 +3,7 @@ package com.challenge.api.controller.member;
 import com.challenge.api.controller.ControllerTestSupport;
 import com.challenge.api.controller.member.request.CheckNicknameRequest;
 import com.challenge.api.controller.member.request.UpdateBirthRequest;
+import com.challenge.api.controller.member.request.UpdateGenderRequest;
 import com.challenge.api.controller.member.request.UpdateNicknameRequest;
 import com.challenge.api.service.member.MemberService;
 import com.challenge.api.service.member.response.MemberInfoResponse;
@@ -33,6 +34,7 @@ public class MemberControllerTest extends ControllerTestSupport {
     private String checkNicknameResponse;
     private String updateNicknameResponse;
     private String updateBirthResponse;
+    private String updateGenderResponse;
 
     @Nested
     @DisplayName("닉네임 중복 확인")
@@ -209,6 +211,56 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.message").value("birth는 과거 날짜여야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/birth"));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("성별 수정")
+    class UpdateGenderTests {
+
+        @BeforeEach
+        void setUp() {
+            // 서비스 mock 처리
+            updateGenderResponse = "성별 수정 성공";
+            given(memberService.updateGender(any(), any())).willReturn(updateGenderResponse);
+        }
+
+        @DisplayName("성별 수정 성공")
+        @Test
+        void updateGenderSucceeds() throws Exception {
+            // given
+            UpdateGenderRequest request = UpdateGenderRequest.builder()
+                    .gender(MOCK_GENDER)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/gender")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("OK"))
+                    .andExpect(jsonPath("$.code").isEmpty())
+                    .andExpect(jsonPath("$.url").isEmpty())
+                    .andExpect(jsonPath("$.data").value(updateGenderResponse));
+        }
+
+        @DisplayName("성별 수정 실패: gender가 null인 경우 에러 응답을 반환한다.")
+        @Test
+        void checkNicknameIsValidFailed() throws Exception {
+            // given
+            UpdateGenderRequest request = UpdateGenderRequest.builder()
+                    .gender(null)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/gender")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("gender는 필수 입력값입니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/member/gender"));
         }
 
     }
