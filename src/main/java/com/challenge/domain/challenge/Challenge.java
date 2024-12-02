@@ -3,17 +3,7 @@ package com.challenge.domain.challenge;
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.member.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,9 +16,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "title"})
-)
 public class Challenge extends BaseDateTimeEntity {
 
     @Id
@@ -53,17 +40,20 @@ public class Challenge extends BaseDateTimeEntity {
     @Column(length = 500)
     private String content;
 
-    @Column(nullable = false, length = 10)
-    private String color;
-
     @Column(nullable = false)
-    private boolean isDeleted;
+    private int durationInWeeks;
 
     @Column(nullable = false)
     private int weeklyGoalCount;
 
     @Column(nullable = false)
     private int totalGoalCount;
+
+    @Column(nullable = false, length = 10)
+    private String color;
+
+    @Column(nullable = false)
+    private boolean isDeleted;
 
     @Column(nullable = false)
     private LocalDateTime startDateTime;
@@ -73,23 +63,20 @@ public class Challenge extends BaseDateTimeEntity {
 
     @Builder
     private Challenge(List<Record> records, Member member, Category category, String title, String content,
-            String color, boolean isDeleted, int weeklyGoalCount, int totalGoalCount, LocalDateTime startDateTime,
-            LocalDateTime endDateTime) {
+                      int durationInWeeks, int weeklyGoalCount, int totalGoalCount, String color, boolean isDeleted,
+                      LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.records = records;
         this.member = member;
         this.category = category;
         this.title = title;
         this.content = content;
-        this.color = color;
-        this.isDeleted = isDeleted;
+        this.durationInWeeks = durationInWeeks;
         this.weeklyGoalCount = weeklyGoalCount;
         this.totalGoalCount = totalGoalCount;
+        this.color = color;
+        this.isDeleted = isDeleted;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-    }
-
-    public static Challenge create() {
-        return null;
     }
 
 }

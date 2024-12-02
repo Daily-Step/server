@@ -8,15 +8,10 @@ import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.domain.member.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,16 +22,17 @@ public class ChallengeController {
 
     @PostMapping("/challenges")
     public ApiResponse<ChallengeResponse> createChallenge(@RequestBody @Valid ChallengeCreateRequest request,
-            @AuthMember Member member) {
+                                                          @AuthMember Member member) {
         Long memberId = member.getId();
         LocalDateTime startDateTime = LocalDateTime.now();
         return ApiResponse.ok(challengeService.createChallenge(memberId, request.toServiceRequest(), startDateTime));
     }
 
     @GetMapping("/challenges")
-    public ApiResponse<List<Map<String, Object>>> getChallenges(@AuthMember Member member) {
+    public ApiResponse<List<ChallengeResponse>> getChallenges(@AuthMember Member member) {
         Long memberId = member.getId();
-        return ApiResponse.ok(challengeService.getChallenges(memberId));
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        return ApiResponse.ok(challengeService.getChallenges(memberId, currentDateTime));
     }
 
 
