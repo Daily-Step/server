@@ -6,6 +6,7 @@ import com.challenge.api.controller.member.request.CheckNicknameRequest;
 import com.challenge.api.controller.member.request.UpdateBirthRequest;
 import com.challenge.api.controller.member.request.UpdateGenderRequest;
 import com.challenge.api.controller.member.request.UpdateJobRequest;
+import com.challenge.api.controller.member.request.UpdateJobYearRequest;
 import com.challenge.api.controller.member.request.UpdateNicknameRequest;
 import com.challenge.api.service.member.MemberService;
 import com.challenge.api.service.member.response.MemberInfoResponse;
@@ -56,6 +57,12 @@ public class MemberController {
     @PatchMapping("/job")
     public ApiResponse<String> updateJob(@RequestBody @Valid UpdateJobRequest request, @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateJob(member, request.toServiceRequest()));
+    }
+
+    @PatchMapping("/jobyear")
+    public ApiResponse<String> updateJobYear(@RequestBody @Valid UpdateJobYearRequest request,
+            @AuthMember Member member) {
+        return ApiResponse.ok(memberService.updateJobYear(member, request.toServiceRequest()));
     }
 
 }

@@ -4,10 +4,12 @@ import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
 import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
 import com.challenge.api.service.member.request.UpdateGenderServiceRequest;
 import com.challenge.api.service.member.request.UpdateJobServiceRequest;
+import com.challenge.api.service.member.request.UpdateJobYearServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
+import com.challenge.domain.member.JobYear;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
 import com.challenge.exception.ErrorCode;
@@ -23,6 +25,16 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JobRepository jobRepository;
+
+    /**
+     * 회원 정보 조회 메소드
+     *
+     * @param member
+     * @return
+     */
+    public MemberInfoResponse getMemberInfo(Member member) {
+        return MemberInfoResponse.of(member);
+    }
 
     /**
      * 해당 닉네임이 사용 가능 여부를 조회하는 메소드
@@ -108,13 +120,18 @@ public class MemberService {
     }
 
     /**
-     * 회원 정보 조회 메소드
+     * 연차 수정 메소드
      *
      * @param member
+     * @param request
      * @return
      */
-    public MemberInfoResponse getMemberInfo(Member member) {
-        return MemberInfoResponse.of(member);
+    public String updateJobYear(Member member, UpdateJobYearServiceRequest request) {
+        JobYear jobYear = JobYear.of(request.getYearId());
+
+        member.updateJobYear(jobYear);
+
+        return "연차 수정 성공";
     }
 
 }

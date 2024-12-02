@@ -125,4 +125,8 @@ public class Member extends BaseDateTimeEntity {
         this.job = job;
     }
 
+    public void updateJobYear(JobYear jobYear) {
+        this.jobYear = jobYear;
+    }
+
 }
