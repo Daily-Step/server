@@ -4,6 +4,7 @@ import com.challenge.api.controller.ControllerTestSupport;
 import com.challenge.api.controller.member.request.CheckNicknameRequest;
 import com.challenge.api.controller.member.request.UpdateBirthRequest;
 import com.challenge.api.controller.member.request.UpdateGenderRequest;
+import com.challenge.api.controller.member.request.UpdateJobRequest;
 import com.challenge.api.controller.member.request.UpdateNicknameRequest;
 import com.challenge.api.service.member.MemberService;
 import com.challenge.api.service.member.response.MemberInfoResponse;
@@ -35,6 +36,7 @@ public class MemberControllerTest extends ControllerTestSupport {
     private String updateNicknameResponse;
     private String updateBirthResponse;
     private String updateGenderResponse;
+    private String updateJobResponse;
 
     @Nested
     @DisplayName("닉네임 중복 확인")
@@ -261,6 +263,92 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.message").value("gender는 필수 입력값입니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/gender"));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("직무 수정")
+    class UpdateJobTests {
+
+        @BeforeEach
+        void setUp() {
+            // 서비스 mock 처리
+            updateJobResponse = "직무 수정 성공";
+            given(memberService.updateJob(any(), any())).willReturn(updateJobResponse);
+        }
+
+        @DisplayName("직무 수정 성공")
+        @Test
+        void updateJobSucceeds() throws Exception {
+            // given
+            UpdateJobRequest request = UpdateJobRequest.builder()
+                    .jobId(1L)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/job")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("OK"))
+                    .andExpect(jsonPath("$.code").isEmpty())
+                    .andExpect(jsonPath("$.url").isEmpty())
+                    .andExpect(jsonPath("$.data").value(updateJobResponse));
+        }
+
+        @DisplayName("직무 수정 실패: jobId가 null인 경우 에러 응답을 반환한다.")
+        @Test
+        void updateJobFailedWhenIdIsNull() throws Exception {
+            // given
+            UpdateJobRequest request = UpdateJobRequest.builder()
+                    .jobId(null)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/job")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("jobId는 필수 입력값입니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/member/job"));
+        }
+
+        @DisplayName("직무 수정 실패: jobId가 1 미만인 경우 에러 응답을 반환한다.")
+        @Test
+        void updateJobFailedWhenJobIdIsLessThanMin() throws Exception {
+            // given
+            UpdateJobRequest request = UpdateJobRequest.builder()
+                    .jobId(0L)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/job")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("jobId는 1 이상의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/member/job"));
+        }
+
+        @DisplayName("직무 수정 실패: jobId가 20 초과인 경우 에러 응답을 반환한다.")
+        @Test
+        void updateJobFailedWhenJobIdIsMoreThanMax() throws Exception {
+            // given
+            UpdateJobRequest request = UpdateJobRequest.builder()
+                    .jobId(21L)
+                    .build();
+
+            // when // then
+            mockMvc.perform(patch("/api/v1/member/job")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("jobId는 20 이하의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/member/job"));
         }
 
     }

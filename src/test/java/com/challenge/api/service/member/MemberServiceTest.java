@@ -3,6 +3,7 @@ package com.challenge.api.service.member;
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
 import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
 import com.challenge.api.service.member.request.UpdateGenderServiceRequest;
+import com.challenge.api.service.member.request.UpdateJobServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.job.Job;
@@ -195,6 +196,46 @@ public class MemberServiceTest {
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
         assertThat(resultMember.getGender()).isEqualTo(newGender);
+    }
+
+    @DisplayName("직무 수정 성공")
+    @Test
+    void updateJobSucceeds() {
+        // given
+        Member member = createMember();
+        Job newJob = jobRepository.save(Job.builder()
+                .code("2")
+                .description("2")
+                .build());
+
+        // request 값 세팅
+        UpdateJobServiceRequest request = UpdateJobServiceRequest.builder()
+                .jobId(newJob.getId())
+                .build();
+
+        // when
+        memberService.updateJob(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getJob()).isEqualTo(newJob);
+    }
+
+    @DisplayName("직무 수정 실패: 직무 정보를 찾을 수 없는 경우 예외가 발생한다.")
+    @Test
+    void updateJobFailed() {
+        // given
+        Member member = createMember();
+
+        // request 값 세팅
+        UpdateJobServiceRequest request = UpdateJobServiceRequest.builder()
+                .jobId(21L)
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> memberService.updateJob(member, request))
+                .isInstanceOf(GlobalException.class)
+                .hasMessage("직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
     }
 
     /*   테스트 공통 메소드   */
