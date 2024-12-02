@@ -4,6 +4,7 @@ import com.challenge.annotation.AuthMember;
 import com.challenge.api.ApiResponse;
 import com.challenge.api.controller.member.request.CheckNicknameRequest;
 import com.challenge.api.controller.member.request.UpdateBirthRequest;
+import com.challenge.api.controller.member.request.UpdateGenderRequest;
 import com.challenge.api.controller.member.request.UpdateNicknameRequest;
 import com.challenge.api.service.member.MemberService;
 import com.challenge.api.service.member.response.MemberInfoResponse;
@@ -43,6 +44,12 @@ public class MemberController {
     @PatchMapping("/birth")
     public ApiResponse<String> updateBirth(@RequestBody @Valid UpdateBirthRequest request, @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateBirth(member, request.toServiceRequest()));
+    }
+
+    @PatchMapping("/gender")
+    public ApiResponse<String> updateGender(@RequestBody @Valid UpdateGenderRequest request,
+            @AuthMember Member member) {
+        return ApiResponse.ok(memberService.updateGender(member, request.toServiceRequest()));
     }
 
 }

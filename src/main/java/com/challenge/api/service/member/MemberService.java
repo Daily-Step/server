@@ -2,6 +2,7 @@ package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
 import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
+import com.challenge.api.service.member.request.UpdateGenderServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.member.Member;
@@ -70,6 +71,19 @@ public class MemberService {
         member.updateBirth(request.getBirth());
 
         return "생년월일 수정 성공";
+    }
+
+    /**
+     * 성별 수정 메소드
+     *
+     * @param member
+     * @param request
+     * @return
+     */
+    public String updateGender(Member member, UpdateGenderServiceRequest request) {
+        member.updateGender(request.getGender());
+
+        return "성별 수정 성공";
     }
 
     /**
