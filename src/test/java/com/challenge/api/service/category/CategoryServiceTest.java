@@ -54,7 +54,6 @@ class CategoryServiceTest {
     private Category createCategory(String name) {
         return Category.builder()
                 .name(name)
-                .isDeleted(false)
                 .build();
     }
 
