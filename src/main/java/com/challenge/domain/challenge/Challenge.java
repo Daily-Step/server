@@ -1,9 +1,18 @@
 package com.challenge.domain.challenge;
 
+import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.member.Member;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -62,21 +71,38 @@ public class Challenge extends BaseDateTimeEntity {
     private LocalDateTime endDateTime;
 
     @Builder
-    private Challenge(List<Record> records, Member member, Category category, String title, String content,
-                      int durationInWeeks, int weeklyGoalCount, int totalGoalCount, String color, boolean isDeleted,
-                      LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.records = records;
+    private Challenge(Member member, Category category, String title, String content, int durationInWeeks,
+            int weeklyGoalCount, String color, LocalDateTime startDateTime) {
+        this.records = new ArrayList<>();
         this.member = member;
         this.category = category;
         this.title = title;
         this.content = content;
         this.durationInWeeks = durationInWeeks;
         this.weeklyGoalCount = weeklyGoalCount;
-        this.totalGoalCount = totalGoalCount;
+        this.totalGoalCount = durationInWeeks * weeklyGoalCount;
         this.color = color;
-        this.isDeleted = isDeleted;
+        this.isDeleted = false;
         this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.endDateTime = startDateTime.plusWeeks(durationInWeeks)
+                .toLocalDate()
+                .plusDays(1)
+                .atStartOfDay()
+                .minusSeconds(1);
+    }
+
+    public static Challenge create(Member member, Category category, ChallengeCreateServiceRequest request,
+            LocalDateTime startDateTime) {
+        return Challenge.builder()
+                .member(member)
+                .category(category)
+                .title(request.getTitle())
+                .content(request.getContent())
+                .durationInWeeks(request.getDurationInWeeks())
+                .weeklyGoalCount(request.getWeeklyGoalCount())
+                .color(request.getColor())
+                .startDateTime(startDateTime)
+                .build();
     }
 
 }
