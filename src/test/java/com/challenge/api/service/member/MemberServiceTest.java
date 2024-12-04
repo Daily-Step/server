@@ -1,6 +1,11 @@
 package com.challenge.api.service.member;
 
 import com.challenge.api.service.member.request.CheckNicknameServiceRequest;
+import com.challenge.api.service.member.request.UpdateBirthServiceRequest;
+import com.challenge.api.service.member.request.UpdateGenderServiceRequest;
+import com.challenge.api.service.member.request.UpdateJobServiceRequest;
+import com.challenge.api.service.member.request.UpdateJobYearServiceRequest;
+import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
@@ -104,6 +109,153 @@ public class MemberServiceTest {
         assertThat(response.getGender()).isEqualTo(MEMBER_GENDER);
         assertThat(response.getJobId()).isEqualTo(MEMBER_JOB.getId());
         assertThat(response.getJobYearId()).isEqualTo(MEMBER_JOBYEAR.getId());
+    }
+
+    @DisplayName("닉네임 수정 성공")
+    @Test
+    void updateNicknameSucceeds() {
+        // given
+        Member member = createMember();
+
+        // request 값 세팅
+        UpdateNicknameServiceRequest request = UpdateNicknameServiceRequest.builder()
+                .nickname("newName")
+                .build();
+
+        // when
+        memberService.updateNickname(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getNickname()).isEqualTo("newName");
+    }
+
+    @DisplayName("닉네임 수정 실패: 이미 사용중인 닉네임인 경우 예외가 발생한다.")
+    @Test
+    void updateNicknameFailed() {
+        // given
+        Member member1 = createMember();
+
+        // 회원 추가 생성
+        Member member2 = memberRepository.save(Member.builder()
+                .socialId(2L)
+                .email("test2@naver.com")
+                .loginType(LoginType.KAKAO)
+                .nickname("member2")
+                .birth(MEMBER_BIRTH)
+                .gender(MEMBER_GENDER)
+                .jobYear(MEMBER_JOBYEAR)
+                .job(MEMBER_JOB)
+                .build());
+
+        // request 값 세팅
+        UpdateNicknameServiceRequest request = UpdateNicknameServiceRequest.builder()
+                .nickname(member1.getNickname())
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> memberService.updateNickname(member2, request))
+                .isInstanceOf(GlobalException.class)
+                .hasMessage("이미 사용중인 닉네임입니다.");
+    }
+
+    @DisplayName("생년월일 수정 성공")
+    @Test
+    void updateBirthSucceeds() {
+        // given
+        Member member = createMember();
+        LocalDate newBirth = member.getBirth().plusDays(1);
+
+        // request 값 세팅
+        UpdateBirthServiceRequest request = UpdateBirthServiceRequest.builder()
+                .birth(newBirth)
+                .build();
+
+        // when
+        memberService.updateBirth(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getBirth()).isEqualTo(newBirth);
+    }
+
+    @DisplayName("성별 수정 성공")
+    @Test
+    void updateGenderSucceeds() {
+        // given
+        Member member = createMember();
+        Gender newGender = Gender.FEMALE;
+
+        // request 값 세팅
+        UpdateGenderServiceRequest request = UpdateGenderServiceRequest.builder()
+                .gender(newGender)
+                .build();
+
+        // when
+        memberService.updateGender(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getGender()).isEqualTo(newGender);
+    }
+
+    @DisplayName("직무 수정 성공")
+    @Test
+    void updateJobSucceeds() {
+        // given
+        Member member = createMember();
+        Job newJob = jobRepository.save(Job.builder()
+                .code("2")
+                .description("2")
+                .build());
+
+        // request 값 세팅
+        UpdateJobServiceRequest request = UpdateJobServiceRequest.builder()
+                .jobId(newJob.getId())
+                .build();
+
+        // when
+        memberService.updateJob(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getJob()).isEqualTo(newJob);
+    }
+
+    @DisplayName("직무 수정 실패: 직무 정보를 찾을 수 없는 경우 예외가 발생한다.")
+    @Test
+    void updateJobFailed() {
+        // given
+        Member member = createMember();
+
+        // request 값 세팅
+        UpdateJobServiceRequest request = UpdateJobServiceRequest.builder()
+                .jobId(21L)
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> memberService.updateJob(member, request))
+                .isInstanceOf(GlobalException.class)
+                .hasMessage("직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
+    }
+
+    @DisplayName("연차 수정 성공")
+    @Test
+    void updateJobYearSucceeds() {
+        // given
+        Member member = createMember();
+
+        // request 값 세팅
+        UpdateJobYearServiceRequest request = UpdateJobYearServiceRequest.builder()
+                .yearId(4)
+                .build();
+
+        // when
+        memberService.updateJobYear(member, request);
+
+        // then
+        Member resultMember = memberRepository.findById(member.getId()).get();
+        assertThat(resultMember.getJobYear()).isEqualTo(JobYear.of(4));
     }
 
     /*   테스트 공통 메소드   */
