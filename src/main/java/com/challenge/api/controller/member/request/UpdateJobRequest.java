@@ -24,7 +24,7 @@ public class UpdateJobRequest {
     }
 
     @Builder
-    private UpdateJobRequest(@NotNull(message = "jobId는 필수 입력값입니다.") Long jobId) {
+    private UpdateJobRequest(Long jobId) {
         this.jobId = jobId;
     }
 
