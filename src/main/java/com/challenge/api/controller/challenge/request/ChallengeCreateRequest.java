@@ -23,7 +23,7 @@ public class ChallengeCreateRequest {
 
     @Min(value = 1, message = "주간 목표 횟수는 최소 1회 이상이어야 합니다.")
     @Max(value = 7, message = "주간 목표 횟수는 최대 7회 이하여야 합니다.")
-    private int weekGoalCount;
+    private int weeklyGoalCount;
 
     @NotNull(message = "카테고리는 필수 입력값입니다.")
     private Long categoryId;
@@ -39,7 +39,7 @@ public class ChallengeCreateRequest {
         return ChallengeCreateServiceRequest.builder()
                 .title(title)
                 .durationInWeeks(durationInWeeks)
-                .weekGoalCount(weekGoalCount)
+                .weeklyGoalCount(weeklyGoalCount)
                 .color(color)
                 .content(content)
                 .build();
