@@ -14,8 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,7 +72,7 @@ public class Member extends BaseDateTimeEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
@@ -109,5 +109,24 @@ public class Member extends BaseDateTimeEntity {
         this.job = job;
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateBirth(LocalDate birth) {
+        this.birth = birth;
+    }
+
+    public void updateGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void updateJob(Job job) {
+        this.job = job;
+    }
+
+    public void updateJobYear(JobYear jobYear) {
+        this.jobYear = jobYear;
+    }
 
 }

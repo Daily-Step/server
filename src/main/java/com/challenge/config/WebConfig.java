@@ -17,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final AuthMemberArgumentResolver authMemberArgumentResolver;
     private final AuthInterceptor authInterceptor;
-    private final List<String> excludeEndpoints = Arrays.asList("/api/v1/auth/**");
+    private final List<String> excludeEndpoints = Arrays.asList("/api/v1/auth/**", "/api/v1/member/nickname/valid");
 
     // 인터셉터 설정
     @Override

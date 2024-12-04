@@ -27,7 +27,8 @@ public class Job {
     private String description;
 
     @Builder
-    private Job(String code, String description) {
+    private Job(Long id, String code, String description) {
+        this.id = id;
         this.code = code;
         this.description = description;
     }
