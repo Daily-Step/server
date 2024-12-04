@@ -1,17 +1,20 @@
 package com.challenge.api.service.challenge.response;
 
 import com.challenge.api.service.category.response.CategoryResponse;
+import com.challenge.api.service.record.response.RecordResponse;
 import com.challenge.domain.challenge.Challenge;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class ChallengeResponse {
 
     private final Long id;
     private final CategoryResponse category;
+    private final List<RecordResponse> records;
     private final String title;
     private final String content;
     private final int durationInWeeks;
@@ -22,11 +25,12 @@ public class ChallengeResponse {
     private final LocalDateTime endDateTime;
 
     @Builder
-    private ChallengeResponse(Long id, CategoryResponse category, String title, String content, int durationInWeeks,
-                              int weekGoalCount, int totalGoalCount, String color, LocalDateTime startDateTime,
-                              LocalDateTime endDateTime) {
+    private ChallengeResponse(Long id, CategoryResponse category, List<RecordResponse> records, String title,
+            String content, int durationInWeeks, int weekGoalCount, int totalGoalCount, String color,
+            LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.id = id;
         this.category = category;
+        this.records = records;
         this.title = title;
         this.content = content;
         this.durationInWeeks = durationInWeeks;
