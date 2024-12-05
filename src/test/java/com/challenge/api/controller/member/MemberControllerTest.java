@@ -22,8 +22,8 @@ import java.time.LocalDate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -139,7 +139,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/nickname")
+            mockMvc.perform(put("/api/v1/member/nickname")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isOk())
@@ -158,7 +158,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/nickname")
+            mockMvc.perform(put("/api/v1/member/nickname")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
@@ -189,7 +189,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/birth")
+            mockMvc.perform(put("/api/v1/member/birth")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isOk())
@@ -208,7 +208,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/birth")
+            mockMvc.perform(put("/api/v1/member/birth")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
@@ -239,7 +239,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/gender")
+            mockMvc.perform(put("/api/v1/member/gender")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isOk())
@@ -258,7 +258,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/gender")
+            mockMvc.perform(put("/api/v1/member/gender")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
@@ -289,7 +289,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/job")
+            mockMvc.perform(put("/api/v1/member/job")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isOk())
@@ -308,7 +308,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/job")
+            mockMvc.perform(put("/api/v1/member/job")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
@@ -326,7 +326,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/job")
+            mockMvc.perform(put("/api/v1/member/job")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
@@ -344,7 +344,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/job")
+            mockMvc.perform(put("/api/v1/member/job")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
@@ -375,7 +375,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/jobyear")
+            mockMvc.perform(put("/api/v1/member/jobyear")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isOk())
@@ -394,7 +394,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/jobyear")
+            mockMvc.perform(put("/api/v1/member/jobyear")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
@@ -412,7 +412,7 @@ public class MemberControllerTest extends ControllerTestSupport {
                     .build();
 
             // when // then
-            mockMvc.perform(patch("/api/v1/member/jobyear")
+            mockMvc.perform(put("/api/v1/member/jobyear")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))

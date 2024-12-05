@@ -14,8 +14,8 @@ import com.challenge.domain.member.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,29 +37,29 @@ public class MemberController {
         return ApiResponse.ok(memberService.checkNicknameIsValid(request.toServiceRequest()));
     }
 
-    @PatchMapping("/nickname")
+    @PutMapping("/nickname")
     public ApiResponse<String> updateNickname(@RequestBody @Valid UpdateNicknameRequest request,
             @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateNickname(member, request.toServiceRequest()));
     }
 
-    @PatchMapping("/birth")
+    @PutMapping("/birth")
     public ApiResponse<String> updateBirth(@RequestBody @Valid UpdateBirthRequest request, @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateBirth(member, request.toServiceRequest()));
     }
 
-    @PatchMapping("/gender")
+    @PutMapping("/gender")
     public ApiResponse<String> updateGender(@RequestBody @Valid UpdateGenderRequest request,
             @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateGender(member, request.toServiceRequest()));
     }
 
-    @PatchMapping("/job")
+    @PutMapping("/job")
     public ApiResponse<String> updateJob(@RequestBody @Valid UpdateJobRequest request, @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateJob(member, request.toServiceRequest()));
     }
 
-    @PatchMapping("/jobyear")
+    @PutMapping("/jobyear")
     public ApiResponse<String> updateJobYear(@RequestBody @Valid UpdateJobYearRequest request,
             @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateJobYear(member, request.toServiceRequest()));
