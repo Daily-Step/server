@@ -3,6 +3,7 @@ package com.challenge.api.validator;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
 import com.challenge.exception.GlobalException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ class CategoryValidatorTest {
 
     @Autowired
     private CategoryValidator categoryValidator;
+
+    @AfterEach
+    void tearDown() {
+        categoryRepository.deleteAllInBatch();
+    }
 
     @DisplayName("존재하는 카테고리 ID로 조회하는 경우 예외가 발생하지 않는다.")
     @Test

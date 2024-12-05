@@ -4,7 +4,12 @@ import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
-import com.challenge.domain.member.*;
+import com.challenge.domain.member.Gender;
+import com.challenge.domain.member.JobYear;
+import com.challenge.domain.member.LoginType;
+import com.challenge.domain.member.Member;
+import com.challenge.domain.member.MemberRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +38,14 @@ class ChallengeRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @AfterEach
+    void tearDown() {
+        challengeRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
+        jobRepository.deleteAllInBatch();
+        categoryRepository.deleteAllInBatch();
+    }
+
     @DisplayName("진행중인 챌린지 목록을 조회한다.")
     @Test
     void findChallengesBy() {
@@ -48,40 +61,27 @@ class ChallengeRepositoryTest {
         Member member = createMember(job);
         memberRepository.save(member);
 
-        Challenge challenge1 = createChallenge(
-                member,
-                category,
-                1,
-                currentDateTime,
-                LocalDateTime.of(2024, 11, 30, 23, 59, 59)
-        );
-        Challenge challenge2 = createChallenge(
-                member,
-                category,
-                2,
+        Challenge challenge1 = createChallenge(member, category, currentDateTime, 1);
+        Challenge challenge2 = createChallenge(member, category,
                 LocalDateTime.of(2024, 11, 16, 14, 0, 0),
-                LocalDateTime.of(2024, 11, 23, 14, 0, 0)
-        );
-        Challenge challenge3 = createChallenge(
-                member,
+                2);
+        Challenge challenge3 = createChallenge(member,
                 category,
-                1,
-                LocalDateTime.of(2024, 11, 16, 14, 0, 0),
-                LocalDateTime.of(2024, 11, 23, 23, 59, 59)
-        );
+                LocalDateTime.of(2024, 12, 1, 0, 0, 0),
+                1);
+
         challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3));
 
         // when
-        List<Challenge> challenges = challengeRepository.findChallengesBy(member.getId(), currentDateTime);
+        List<Challenge> challenges = challengeRepository.findChallengesBy(member, currentDateTime);
 
         // then
-        assertThat(challenges).hasSize(1);
+        assertThat(challenges).hasSize(2);
     }
 
     private Category createCategory() {
         return Category.builder()
                 .name("운동")
-                .isDeleted(false)
                 .build();
     }
 
@@ -105,19 +105,16 @@ class ChallengeRepositoryTest {
                 .build();
     }
 
-    private Challenge createChallenge(Member member, Category category, int durationInWeeks,
-                                      LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    private Challenge createChallenge(Member member, Category category, LocalDateTime startDateTime,
+            int durationInWeeks) {
         return Challenge.builder()
                 .member(member)
                 .category(category)
                 .durationInWeeks(durationInWeeks)
                 .title("제목")
                 .color("#30B0C7")
-                .isDeleted(false)
                 .weeklyGoalCount(1)
-                .totalGoalCount(1)
                 .startDateTime(startDateTime)
-                .endDateTime(endDateTime)
                 .build();
     }
 
