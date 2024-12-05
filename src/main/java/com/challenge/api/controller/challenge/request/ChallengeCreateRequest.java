@@ -29,7 +29,6 @@ public class ChallengeCreateRequest {
     private Long categoryId;
 
     @NotBlank(message = "색상은 필수 입력값입니다.")
-    @Size(max = 10, message = "색상 값은 최대 10자 이하여야 합니다.")
     private String color;
 
     @Size(max = 500, message = "상세 내용은 공백 포함 최대 500자 이하여야 합니다.")
