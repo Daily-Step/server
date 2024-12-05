@@ -3,10 +3,10 @@ package com.challenge.api.service.challenge.response;
 import com.challenge.api.service.category.response.CategoryResponse;
 import com.challenge.api.service.record.response.RecordResponse;
 import com.challenge.domain.challenge.Challenge;
+import com.challenge.utils.DateUtils;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,13 +21,13 @@ public class ChallengeResponse {
     private final int weekGoalCount;
     private final int totalGoalCount;
     private final String color;
-    private final LocalDateTime startDateTime;
-    private final LocalDateTime endDateTime;
+    private final String startDateTime;
+    private final String endDateTime;
 
     @Builder
     private ChallengeResponse(Long id, CategoryResponse category, List<RecordResponse> records, String title,
             String content, int durationInWeeks, int weekGoalCount, int totalGoalCount, String color,
-            LocalDateTime startDateTime, LocalDateTime endDateTime) {
+            String startDateTime, String endDateTime) {
         this.id = id;
         this.category = category;
         this.records = records;
@@ -45,14 +45,18 @@ public class ChallengeResponse {
         return ChallengeResponse.builder()
                 .id(challenge.getId())
                 .category(CategoryResponse.of(challenge.getCategory()))
+                .records(challenge.getRecords().stream()
+                        .map(RecordResponse::of)
+                        .toList()
+                )
                 .title(challenge.getTitle())
                 .content(challenge.getContent())
                 .durationInWeeks(challenge.getDurationInWeeks())
                 .weekGoalCount(challenge.getWeeklyGoalCount())
                 .totalGoalCount(challenge.getTotalGoalCount())
                 .color(challenge.getColor())
-                .startDateTime(challenge.getStartDateTime())
-                .endDateTime(challenge.getEndDateTime())
+                .startDateTime(DateUtils.toDateTimeString(challenge.getStartDateTime()))
+                .endDateTime(DateUtils.toDateTimeString(challenge.getEndDateTime()))
                 .build();
     }
 
