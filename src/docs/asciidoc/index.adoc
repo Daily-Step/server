@@ -1,0 +1,19 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+
+= DailyStep API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[Challenge-API]]
+== Challenge API
+
+include::api/challenge/challenge-success.adoc[]
+include::api/challenge/challenge-fail.adoc[]
+
+
