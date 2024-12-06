@@ -33,7 +33,7 @@ import static org.mockito.BDDMockito.given;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-public class AuthServiceTest {
+class AuthServiceTest {
 
     @Autowired
     private AuthService authService;
@@ -49,7 +49,7 @@ public class AuthServiceTest {
 
     @Autowired
     private JwtUtil jwtUtil;
-    
+
     private static final String MOCK_KAKAO_ACCESS_TOKEN = "test-access-token";
     private static final Long MOCK_SOCIAL_ID = 1L;
     private static final String MOCK_EMAIL = "test@naver.com";
@@ -58,7 +58,6 @@ public class AuthServiceTest {
     protected static final Gender MOCK_GENDER = Gender.MALE;
     protected static final JobYear MOCK_JOBYEAR = JobYear.LT_1Y;
     protected Job MOCK_JOB;
-
 
     @BeforeEach
     void setUp() {

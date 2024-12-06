@@ -28,9 +28,9 @@ public class Category extends BaseDateTimeEntity {
     private boolean isDeleted;
 
     @Builder
-    private Category(String name, boolean isDeleted) {
+    private Category(String name) {
         this.name = name;
-        this.isDeleted = isDeleted;
+        this.isDeleted = false;
     }
 
 }

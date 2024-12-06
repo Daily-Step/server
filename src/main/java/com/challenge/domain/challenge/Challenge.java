@@ -1,9 +1,9 @@
 package com.challenge.domain.challenge;
 
+import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.member.Member;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,9 +13,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,9 +25,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "title"})
-)
 public class Challenge extends BaseDateTimeEntity {
 
     @Id
@@ -36,7 +32,7 @@ public class Challenge extends BaseDateTimeEntity {
     @Column(name = "challenge_id")
     private Long id;
 
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "challenge")
     private List<Record> records = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,11 +49,8 @@ public class Challenge extends BaseDateTimeEntity {
     @Column(length = 500)
     private String content;
 
-    @Column(nullable = false, length = 10)
-    private String color;
-
     @Column(nullable = false)
-    private boolean isDeleted;
+    private int durationInWeeks;
 
     @Column(nullable = false)
     private int weeklyGoalCount;
@@ -65,10 +58,51 @@ public class Challenge extends BaseDateTimeEntity {
     @Column(nullable = false)
     private int totalGoalCount;
 
+    @Column(nullable = false, length = 10)
+    private String color;
+
+    @Column(nullable = false)
+    private boolean isDeleted;
+
     @Column(nullable = false)
     private LocalDateTime startDateTime;
 
     @Column(nullable = false)
     private LocalDateTime endDateTime;
+
+    @Builder
+    private Challenge(Member member, Category category, String title, String content, int durationInWeeks,
+            int weeklyGoalCount, String color, LocalDateTime startDateTime) {
+        this.records = new ArrayList<>();
+        this.member = member;
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.durationInWeeks = durationInWeeks;
+        this.weeklyGoalCount = weeklyGoalCount;
+        this.totalGoalCount = durationInWeeks * weeklyGoalCount;
+        this.color = color;
+        this.isDeleted = false;
+        this.startDateTime = startDateTime;
+        this.endDateTime = startDateTime.plusWeeks(durationInWeeks)
+                .toLocalDate()
+                .plusDays(1)
+                .atStartOfDay()
+                .minusSeconds(1);
+    }
+
+    public static Challenge create(Member member, Category category, ChallengeCreateServiceRequest request,
+            LocalDateTime startDateTime) {
+        return Challenge.builder()
+                .member(member)
+                .category(category)
+                .title(request.getTitle())
+                .content(request.getContent())
+                .durationInWeeks(request.getDurationInWeeks())
+                .weeklyGoalCount(request.getWeeklyGoalCount())
+                .color(request.getColor())
+                .startDateTime(startDateTime)
+                .build();
+    }
 
 }

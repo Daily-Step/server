@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.given;
 
 @ActiveProfiles("test")
 @WebMvcTest
-public class ControllerTestSupport {
+public abstract class ControllerTestSupport {
 
     @Autowired
     protected MockMvc mockMvc;

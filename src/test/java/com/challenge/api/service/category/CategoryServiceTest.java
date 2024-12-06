@@ -3,6 +3,7 @@ package com.challenge.api.service.category;
 import com.challenge.api.service.category.response.CategoryResponse;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ class CategoryServiceTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @AfterEach
+    void tearDown() {
+        categoryRepository.deleteAllInBatch();
+    }
 
     @DisplayName("카테고리 목록을 조회한다.")
     @Test
@@ -54,7 +60,6 @@ class CategoryServiceTest {
     private Category createCategory(String name) {
         return Category.builder()
                 .name(name)
-                .isDeleted(false)
                 .build();
     }
 

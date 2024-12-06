@@ -10,13 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = CategoryController.class)
+@WebMvcTest(CategoryController.class)
 class CategoryControllerTest extends ControllerTestSupport {
 
     @MockBean
@@ -27,7 +27,7 @@ class CategoryControllerTest extends ControllerTestSupport {
     void getCategories() throws Exception {
         // given
         List<CategoryResponse> mockCategories = List.of();
-        when(categoryService.getAllCategories()).thenReturn(mockCategories);
+        given(categoryService.getAllCategories()).willReturn(mockCategories);
 
         // when // then
         mockMvc.perform(get("/api/v1/categories"))
