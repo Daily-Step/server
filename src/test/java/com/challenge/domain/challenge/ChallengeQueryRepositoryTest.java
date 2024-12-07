@@ -1,16 +1,13 @@
-package com.challenge.api.validator;
+package com.challenge.domain.challenge;
 
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
-import com.challenge.domain.challenge.Challenge;
-import com.challenge.domain.challenge.ChallengeRepository;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.*;
 import com.challenge.domain.record.Record;
 import com.challenge.domain.record.RecordRepository;
-import com.challenge.exception.GlobalException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,14 +18,14 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class ChallengeValidatorTest {
+class ChallengeQueryRepositoryTest {
 
     @Autowired
-    private ChallengeValidator challengeValidator;
+    private ChallengeQueryRepository challengeQueryRepository;
 
     @Autowired
     private ChallengeRepository challengeRepository;
@@ -54,21 +51,9 @@ class ChallengeValidatorTest {
         jobRepository.deleteAllInBatch();
     }
 
-    @DisplayName("존재하지 않는 챌린지 ID로 조회하는 경우 예외가 발생한다.")
+    @DisplayName("이미 챌린지를 달성해 중복된 챌린지 기록이 존재하면 true를 반환한다.")
     @Test
-    void validateChallengeExists_when_NotExistsChallengeId() {
-        // given
-        Long notExistsChallengeId = 999L;
-
-        // when // then
-        assertThatThrownBy(() -> challengeValidator.validateChallengeExists(notExistsChallengeId))
-                .isInstanceOf(GlobalException.class)
-                .hasMessage("챌린지 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
-    }
-
-    @DisplayName("챌린지 달성 기록에 중복된 기록이 있는 경우 예외가 발생한다.")
-    @Test
-    void validateDuplicateRecordBy_when_ExistsDuplicateRecord() {
+    void existsDuplicateRecordBy() {
         // given
         LocalDate currentDate = LocalDate.now();
 
@@ -86,10 +71,11 @@ class ChallengeValidatorTest {
         Record record = createRecord(challenge, currentDate);
         recordRepository.save(record);
 
-        // when // then
-        assertThatThrownBy(() -> challengeValidator.validateDuplicateRecordBy(challenge, currentDate))
-                .isInstanceOf(GlobalException.class)
-                .hasMessage("오늘 이미 해당 챌린지를 달성했습니다.");
+        // when
+        boolean result = challengeQueryRepository.existsDuplicateRecordBy(challenge, currentDate);
+
+        // then
+        assertThat(result).isTrue();
     }
 
     private Member createMember() {
