@@ -72,7 +72,7 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                 .build())
                         .records(List.of(RecordResponse.builder()
                                 .id(1L)
-                                .successDate(LocalDate.now())
+                                .successDate(DateUtils.toDayString(LocalDate.now()))
                                 .build()))
                         .title("챌린지 제목")
                         .content("챌린지 내용")

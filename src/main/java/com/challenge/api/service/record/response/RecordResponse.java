@@ -1,19 +1,18 @@
 package com.challenge.api.service.record.response;
 
 import com.challenge.domain.record.Record;
+import com.challenge.utils.DateUtils;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 public class RecordResponse {
 
     private final Long id;
-    private final LocalDate successDate;
+    private final String successDate;
 
     @Builder
-    private RecordResponse(Long id, LocalDate successDate) {
+    private RecordResponse(Long id, String successDate) {
         this.id = id;
         this.successDate = successDate;
     }
@@ -21,7 +20,7 @@ public class RecordResponse {
     public static RecordResponse of(Record record) {
         return RecordResponse.builder()
                 .id(record.getId())
-                .successDate(record.getSuccessDate())
+                .successDate(DateUtils.toDayString(record.getSuccessDate()))
                 .build();
     }
 
