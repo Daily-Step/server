@@ -4,13 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @RequiredArgsConstructor
@@ -56,6 +50,11 @@ public enum ErrorCode {
      * 사용자 관련 에러
      */
     USER_DUPLICATE_LOGIN_ID(UNPROCESSABLE_ENTITY, "USER_4001", "이미 존재하는 아이디입니다."),
+
+    /**
+     * 챌린지 관련 에러
+     */
+    CHALLENGE_NOT_FOUND(NOT_FOUND, "CHALLENGE_4001", "챌린지 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다."),
 
     /**
      * 카테고리 관련 에러
