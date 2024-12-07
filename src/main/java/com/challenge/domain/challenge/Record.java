@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"record_id", "success_date"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"challenge_id", "success_date"})
 )
 public class Record extends BaseDateTimeEntity {
 
