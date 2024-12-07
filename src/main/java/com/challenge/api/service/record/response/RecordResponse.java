@@ -1,6 +1,6 @@
 package com.challenge.api.service.record.response;
 
-import com.challenge.domain.challenge.Record;
+import com.challenge.domain.record.Record;
 import lombok.Builder;
 import lombok.Getter;
 

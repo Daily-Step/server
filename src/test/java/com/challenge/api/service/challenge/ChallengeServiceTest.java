@@ -7,11 +7,7 @@ import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.challenge.ChallengeRepository;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
-import com.challenge.domain.member.Gender;
-import com.challenge.domain.member.JobYear;
-import com.challenge.domain.member.LoginType;
-import com.challenge.domain.member.Member;
-import com.challenge.domain.member.MemberRepository;
+import com.challenge.domain.member.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -99,6 +95,16 @@ class ChallengeServiceTest {
         assertThat(challengeResponse)
                 .extracting("startDateTime", "totalGoalCount")
                 .contains("2024-11-11 10:10:30", 6);
+    }
+
+    @DisplayName("오늘 날짜에 대해 챌린지를 달성 한다.")
+    @Test
+    void successChallenge() throws Exception {
+        // given
+
+        // when
+
+        // then
     }
 
     private Member createMember() {
