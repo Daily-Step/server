@@ -62,6 +62,11 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND(NOT_FOUND, "CATEGORY_4001", "카테고리 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다."),
 
     /**
+     * 기록 관련 에러
+     */
+    DUPLICATE_RECORD(BAD_REQUEST, "RECORD_4001", "오늘 이미 해당 챌린지를 달성했습니다."),
+
+    /**
      * 기타 에러
      */
     JOB_NOT_FOUND(NOT_FOUND, "ERROR_4001", "직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
