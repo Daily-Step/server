@@ -6,7 +6,7 @@ import com.challenge.api.service.auth.request.ReissueTokenServiceRequest;
 import com.challenge.api.service.auth.response.LoginResponse;
 import com.challenge.api.service.auth.response.ReissueTokenResponse;
 import com.challenge.api.service.auth.response.SocialInfoResponse;
-import com.challenge.api.validator.auth.AuthValidator;
+import com.challenge.api.validator.AuthValidator;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.JobYear;

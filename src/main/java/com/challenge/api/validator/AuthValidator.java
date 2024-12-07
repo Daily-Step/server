@@ -1,4 +1,4 @@
-package com.challenge.api.validator.auth;
+package com.challenge.api.validator;
 
 import com.challenge.api.service.auth.response.SocialInfoResponse;
 import com.challenge.domain.member.MemberRepository;
