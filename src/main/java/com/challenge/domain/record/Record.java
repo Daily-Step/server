@@ -1,6 +1,7 @@
-package com.challenge.domain.challenge;
+package com.challenge.domain.record;
 
 import com.challenge.domain.BaseDateTimeEntity;
+import com.challenge.domain.challenge.Challenge;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,6 +34,7 @@ public class Record extends BaseDateTimeEntity {
     private Record(LocalDate successDate, Challenge challenge) {
         this.successDate = successDate;
         this.challenge = challenge;
+        challenge.addRecord(this);
     }
 
 }
