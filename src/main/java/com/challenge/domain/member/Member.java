@@ -69,7 +69,6 @@ public class Member extends BaseDateTimeEntity {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private boolean isDeleted = false;
 
-    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

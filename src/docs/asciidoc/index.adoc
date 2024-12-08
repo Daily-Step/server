@@ -10,10 +10,8 @@ endif::[]
 :toclevels: 2
 :sectlinks:
 
-[[Challenge-API]]
 == Challenge API
 
-include::api/challenge/challenge-success.adoc[]
-include::api/challenge/challenge-fail.adoc[]
+include::api/challenge.adoc[]
 
 

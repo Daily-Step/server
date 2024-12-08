@@ -6,7 +6,7 @@ import com.challenge.api.service.category.response.CategoryResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CategoryController.class)
 class CategoryControllerTest extends ControllerTestSupport {
 
-    @MockBean
+    @MockitoBean
     private CategoryService categoryService;
 
     @DisplayName("카테고리 목록을 조회한다.")

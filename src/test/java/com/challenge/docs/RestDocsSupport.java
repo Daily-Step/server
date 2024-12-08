@@ -11,6 +11,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
+/**
+ * Spring REST Docs
+ *
+ * @see https://docs.spring.io/spring-restdocs/docs/current/reference/htmlsingle/#introduction
+ */
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class RestDocsSupport {
 

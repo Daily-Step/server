@@ -6,8 +6,8 @@ import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ChallengeController.class)
 class ChallengeControllerTest extends ControllerTestSupport {
 
-    @MockBean
+    @MockitoBean
     private ChallengeService challengeService;
 
     @DisplayName("챌린지를 생성한다.")
@@ -289,6 +289,24 @@ class ChallengeControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.message").value("상세 내용은 공백 포함 최대 500자 이하여야 합니다."))
                 .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                 .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("챌린지를 달성한다.")
+    @Test
+    void successChallenge() throws Exception {
+        // given
+        Long challengeId = 1L;
+
+        // when // then
+        mockMvc.perform(
+                        post("/api/v1/challenges/{challengeId}/success", challengeId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.code").isEmpty())
+                .andExpect(jsonPath("$.url").isEmpty());
     }
 
 }

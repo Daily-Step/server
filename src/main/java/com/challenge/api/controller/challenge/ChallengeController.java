@@ -8,12 +8,9 @@ import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.domain.member.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,17 +21,23 @@ public class ChallengeController {
 
     private final ChallengeService challengeService;
 
-    @PostMapping("/challenges")
-    public ApiResponse<ChallengeResponse> createChallenge(@RequestBody @Valid ChallengeCreateRequest request,
-            @AuthMember Member member) {
-        LocalDateTime startDateTime = LocalDateTime.now();
-        return ApiResponse.ok(challengeService.createChallenge(member, request.toServiceRequest(), startDateTime));
-    }
-
     @GetMapping("/challenges")
     public ApiResponse<List<ChallengeResponse>> getChallenges(@AuthMember Member member) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         return ApiResponse.ok(challengeService.getChallenges(member, currentDateTime));
+    }
+
+    @PostMapping("/challenges")
+    public ApiResponse<ChallengeResponse> createChallenge(@AuthMember Member member,
+            @RequestBody @Valid ChallengeCreateRequest request) {
+        LocalDateTime startDateTime = LocalDateTime.now();
+        return ApiResponse.ok(challengeService.createChallenge(member, request.toServiceRequest(), startDateTime));
+    }
+
+    @PostMapping("/challenges/{challengeId}/success")
+    public ApiResponse<ChallengeResponse> successChallenge(@PathVariable Long challengeId) {
+        LocalDate currentDate = LocalDate.now();
+        return ApiResponse.ok(challengeService.successChallenge(challengeId, currentDate));
     }
 
 }

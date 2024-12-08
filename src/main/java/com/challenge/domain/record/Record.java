@@ -1,6 +1,7 @@
-package com.challenge.domain.challenge;
+package com.challenge.domain.record;
 
 import com.challenge.domain.BaseDateTimeEntity;
+import com.challenge.domain.challenge.Challenge;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"record_id", "success_date"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"challenge_id", "success_date"})
 )
 public class Record extends BaseDateTimeEntity {
 
@@ -33,6 +34,7 @@ public class Record extends BaseDateTimeEntity {
     private Record(LocalDate successDate, Challenge challenge) {
         this.successDate = successDate;
         this.challenge = challenge;
+        challenge.addRecord(this);
     }
 
 }
