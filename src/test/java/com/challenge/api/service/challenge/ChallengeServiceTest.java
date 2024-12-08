@@ -15,7 +15,6 @@ import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
 import com.challenge.domain.record.Record;
 import com.challenge.domain.record.RecordRepository;
-import com.challenge.utils.DateUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -73,17 +71,21 @@ class ChallengeServiceTest {
         Category category = createCategory();
         categoryRepository.save(category);
 
-        ChallengeCreateServiceRequest request = createChallengeServiceRequest();
+        ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
+                .title("제목")
+                .durationInWeeks(2)
+                .weeklyGoalCount(3)
+                .categoryId(category.getId())
+                .color("색상")
+                .content("내용")
+                .build();
 
         // when
         ChallengeResponse challengeResponse = challengeService.createChallenge(member, request, startDateTime);
 
         // then
         assertThat(challengeResponse.getId()).isNotNull();
-        assertThat(challengeResponse.getCategory())
-                .extracting("id", "name")
-                .contains(1L, "카테고리");
-        assertThat(challengeResponse.getRecords()).isEmpty();
+        assertThat(challengeResponse.getRecord()).isNull();
         assertThat(challengeResponse)
                 .extracting("startDateTime", "totalGoalCount")
                 .contains("2024-11-11 10:10:30", 6);
@@ -99,7 +101,14 @@ class ChallengeServiceTest {
         Category category = createCategory();
         categoryRepository.save(category);
 
-        ChallengeCreateServiceRequest request = createChallengeServiceRequest();
+        ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
+                .title("제목")
+                .durationInWeeks(2)
+                .weeklyGoalCount(3)
+                .categoryId(category.getId())
+                .color("색상")
+                .content("내용")
+                .build();
 
         Challenge challenge = Challenge.create(member, category, request, LocalDateTime.of(2024, 11, 11, 10, 10, 30));
         challengeRepository.save(challenge);
@@ -118,13 +127,12 @@ class ChallengeServiceTest {
         // then
         assertThat(challengeResponse.getId()).isNotNull();
         assertThat(challengeResponse.getTitle()).isEqualTo("제목");
-        assertThat(challengeResponse.getRecords()).hasSize(4)
-                .extracting("id", "successDate")
+        assertThat(challengeResponse.getRecord().getSuccessDates())
                 .containsExactlyInAnyOrder(
-                        tuple(1L, DateUtils.toDayString(LocalDate.of(2024, 11, 11))),
-                        tuple(2L, DateUtils.toDayString(LocalDate.of(2024, 11, 12))),
-                        tuple(3L, DateUtils.toDayString(LocalDate.of(2024, 11, 13))),
-                        tuple(4L, DateUtils.toDayString(LocalDate.of(2024, 11, 14)))
+                        "2024-11-11",
+                        "2024-11-12",
+                        "2024-11-13",
+                        "2024-11-14"
                 );
     }
 
@@ -157,17 +165,6 @@ class ChallengeServiceTest {
         return Record.builder()
                 .challenge(challenge)
                 .successDate(currentDate)
-                .build();
-    }
-
-    private ChallengeCreateServiceRequest createChallengeServiceRequest() {
-        return ChallengeCreateServiceRequest.builder()
-                .title("제목")
-                .durationInWeeks(2)
-                .weeklyGoalCount(3)
-                .categoryId(1L)
-                .color("색상")
-                .content("내용")
                 .build();
     }
 

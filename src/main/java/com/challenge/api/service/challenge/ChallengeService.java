@@ -67,7 +67,6 @@ public class ChallengeService {
         challenge.addRecord(savedRecord);
 
         Challenge savedChallenge = challengeRepository.save(challenge);
-
         return ChallengeResponse.of(savedChallenge);
     }
 

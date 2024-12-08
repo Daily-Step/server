@@ -7,14 +7,12 @@ import com.challenge.utils.DateUtils;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 public class ChallengeResponse {
 
     private final Long id;
     private final CategoryResponse category;
-    private final List<RecordResponse> records;
+    private final RecordResponse record;
     private final String title;
     private final String content;
     private final int durationInWeeks;
@@ -25,12 +23,12 @@ public class ChallengeResponse {
     private final String endDateTime;
 
     @Builder
-    private ChallengeResponse(Long id, CategoryResponse category, List<RecordResponse> records, String title,
+    private ChallengeResponse(Long id, CategoryResponse category, RecordResponse record, String title,
             String content, int durationInWeeks, int weekGoalCount, int totalGoalCount, String color,
             String startDateTime, String endDateTime) {
         this.id = id;
         this.category = category;
-        this.records = records;
+        this.record = record;
         this.title = title;
         this.content = content;
         this.durationInWeeks = durationInWeeks;
@@ -45,10 +43,7 @@ public class ChallengeResponse {
         return ChallengeResponse.builder()
                 .id(challenge.getId())
                 .category(CategoryResponse.of(challenge.getCategory()))
-                .records(challenge.getRecords().stream()
-                        .map(RecordResponse::of)
-                        .toList()
-                )
+                .record(RecordResponse.of(challenge))
                 .title(challenge.getTitle())
                 .content(challenge.getContent())
                 .durationInWeeks(challenge.getDurationInWeeks())
