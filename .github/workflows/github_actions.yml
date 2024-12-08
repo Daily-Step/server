@@ -1,13 +1,17 @@
 name: Challenge CI/CD Pipeline
 
+#on:
+#  pull_request:
+#    types: [ closed ]
+#    branches:
+#      - develop
 on:
-  pull_request:
-    types: [ closed ]
+  push:
     branches:
-      - develop
+      - feat/48
 
 jobs:
-  build-and-deploy: # Job 이름
+  build-and-deploy: # Job 이2름
     runs-on: ubuntu-latest # 실행 환경 - 가장 최신 버전 Ubuntu 환경
 
     env: # 전체 job에서 사용할 환경 변수 설정
