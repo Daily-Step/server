@@ -8,11 +8,12 @@ import com.challenge.domain.member.JobYear;
 import com.challenge.domain.member.LoginType;
 import com.challenge.domain.member.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -27,11 +28,14 @@ public abstract class ControllerTestSupport {
     @Autowired
     protected MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     protected AuthInterceptor authInterceptor;
 
-    @MockBean
+    @MockitoBean
     protected AuthMemberArgumentResolver authMemberArgumentResolver;
+
+    @MockitoBean
+    protected JPAQueryFactory queryFactory;
 
     @Autowired
     protected ObjectMapper objectMapper;
