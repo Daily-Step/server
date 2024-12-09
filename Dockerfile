@@ -18,7 +18,7 @@ ARG DB_PASSWORD
 # 라이브러리 설치에 필요한 파일만 복사
 COPY build.gradle settings.gradle ./
 
-#RUN gradle dependencies --no-daemon
+RUN gradle dependencies --no-daemon
 
 # 호스트 머신의 소스코드를 작업 디렉토리로 복사
 COPY . /app
