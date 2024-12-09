@@ -1,5 +1,5 @@
 # 빌드 이미지로 OpenJDK 17 & Gradle을 지정
-FROM gradle:7.6.1-jdk17 AS build
+FROM gradle:8.10.2-jdk17 AS build
 
 # 소스코드를 복사할 작업 디렉토리를 생성
 WORKDIR /app
@@ -18,7 +18,7 @@ ARG DB_PASSWORD
 # 라이브러리 설치에 필요한 파일만 복사
 COPY build.gradle settings.gradle ./
 
-RUN gradle dependencies --no-daemon
+#RUN gradle dependencies --no-daemon
 
 # 호스트 머신의 소스코드를 작업 디렉토리로 복사
 COPY . /app
