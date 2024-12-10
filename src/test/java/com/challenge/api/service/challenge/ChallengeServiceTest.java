@@ -15,6 +15,7 @@ import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
 import com.challenge.domain.record.Record;
 import com.challenge.domain.record.RecordRepository;
+import com.challenge.domain.record.RecordStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -119,9 +120,10 @@ class ChallengeServiceTest {
         recordRepository.saveAll(List.of(record1, record2, record3));
 
         // when
-        ChallengeResponse challengeResponse = challengeService.successChallenge(
+        ChallengeResponse challengeResponse = challengeService.achieveChallenge(
+                member,
                 challenge.getId(),
-                LocalDate.of(2024, 11, 14)
+                "2024-11-14"
         );
 
         // then
@@ -164,6 +166,7 @@ class ChallengeServiceTest {
     private Record createRecord(Challenge challenge, LocalDate currentDate) {
         return Record.builder()
                 .challenge(challenge)
+                .status(RecordStatus.ACHIEVEMENT_COMPLETED)
                 .successDate(currentDate)
                 .build();
     }

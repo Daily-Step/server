@@ -296,11 +296,13 @@ class ChallengeControllerTest extends ControllerTestSupport {
     void successChallenge() throws Exception {
         // given
         Long challengeId = 1L;
+        String achieveDate = "2024-11-11";
 
         // when // then
         mockMvc.perform(
-                        post("/api/v1/challenges/{challengeId}/success", challengeId)
+                        post("/api/v1/challenges/{challengeId}/achieve", challengeId)
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .param("achieveDate", achieveDate)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

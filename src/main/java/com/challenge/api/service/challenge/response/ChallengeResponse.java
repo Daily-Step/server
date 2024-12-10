@@ -3,7 +3,7 @@ package com.challenge.api.service.challenge.response;
 import com.challenge.api.service.category.response.CategoryResponse;
 import com.challenge.api.service.record.response.RecordResponse;
 import com.challenge.domain.challenge.Challenge;
-import com.challenge.utils.DateUtils;
+import com.challenge.utils.date.DateUtils;
 import lombok.Builder;
 import lombok.Getter;
 

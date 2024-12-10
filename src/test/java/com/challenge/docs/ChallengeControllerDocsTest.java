@@ -1,4 +1,4 @@
-package com.challenge.docs.challenge;
+package com.challenge.docs;
 
 import com.challenge.api.controller.challenge.ChallengeController;
 import com.challenge.api.service.category.response.CategoryResponse;
@@ -6,9 +6,8 @@ import com.challenge.api.service.challenge.ChallengeService;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.api.service.record.response.RecordResponse;
-import com.challenge.docs.RestDocsSupport;
 import com.challenge.domain.member.Member;
-import com.challenge.utils.DateUtils;
+import com.challenge.utils.date.DateUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -34,6 +33,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -208,9 +208,10 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
     @DisplayName("챌린지를 달성 완료 하는 API")
     @Test
     void successChallenge() throws Exception {
-        given(challengeService.successChallenge(
+        given(challengeService.achieveChallenge(
+                any(Member.class),
                 any(Long.class),
-                any(LocalDate.class)
+                any(String.class)
         ))
                 .willReturn(ChallengeResponse
                         .builder()
@@ -238,17 +239,20 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                         .build());
 
         mockMvc.perform(
-                        post("/api/v1/challenges/{challengeId}/success", 1L)
+                        post("/api/v1/challenges/{challengeId}/achieve?achieveDate", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .param("achieveDate", DateUtils.toDayString(LocalDate.now()))
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("challenge-success",
+                .andDo(document("challenge-achieve",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("challengeId").
-                                        description("챌린지 아이디")
+                                parameterWithName("challengeId").description("챌린지 아이디")
+                        ),
+                        queryParameters(
+                                parameterWithName("achieveDate").description("달성 날짜 (yyyy-MM-dd)")
                         ),
                         responseFields(
                                 fieldWithPath("status").type(NUMBER)
