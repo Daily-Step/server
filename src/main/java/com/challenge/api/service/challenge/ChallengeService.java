@@ -66,11 +66,7 @@ public class ChallengeService {
 
         challengeValidator.duplicateRecordBy(challenge, DateUtils.toLocalDate(achieveDate));
 
-        Record record = Record.builder()
-                .challenge(challenge)
-                .successDate(DateUtils.toLocalDate(achieveDate))
-                .status(RecordStatus.ACHIEVEMENT_COMPLETED)
-                .build();
+        Record record = Record.create(challenge, achieveDate, RecordStatus.ACHIEVEMENT_COMPLETED);
         Record savedRecord = recordRepository.save(record);
         challenge.addRecord(savedRecord);
 

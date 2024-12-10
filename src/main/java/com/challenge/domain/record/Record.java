@@ -2,6 +2,7 @@ package com.challenge.domain.record;
 
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.challenge.Challenge;
+import com.challenge.utils.date.DateUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -51,6 +52,14 @@ public class Record extends BaseDateTimeEntity {
         this.status = status;
         this.challenge = challenge;
         challenge.addRecord(this);
+    }
+
+    public static Record create(Challenge challenge, String achieveDate, RecordStatus recordStatus) {
+        return Record.builder()
+                .challenge(challenge)
+                .successDate(DateUtils.toLocalDate(achieveDate))
+                .status(recordStatus)
+                .build();
     }
 
 }
