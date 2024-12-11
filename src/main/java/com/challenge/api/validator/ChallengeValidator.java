@@ -3,6 +3,7 @@ package com.challenge.api.validator;
 import com.challenge.domain.challenge.Challenge;
 import com.challenge.domain.challenge.ChallengeQueryRepository;
 import com.challenge.domain.challenge.ChallengeRepository;
+import com.challenge.domain.member.Member;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,14 @@ public class ChallengeValidator {
     private final ChallengeRepository challengeRepository;
     private final ChallengeQueryRepository challengeQueryRepository;
 
-    public void validateChallengeExists(Long challengeId) {
-        boolean exists = challengeRepository.existsById(challengeId);
+    public void challengeExists(Member member, Long challengeId) {
+        boolean exists = challengeRepository.existsByMemberAndId(member, challengeId);
         if (!exists) {
             throw new GlobalException(ErrorCode.CHALLENGE_NOT_FOUND);
         }
     }
 
-    public void validateDuplicateRecordBy(Challenge challenge, LocalDate currentDate) {
+    public void duplicateRecordBy(Challenge challenge, LocalDate currentDate) {
         boolean exists = challengeQueryRepository.existsDuplicateRecordBy(challenge, currentDate);
         if (exists) {
             throw new GlobalException(ErrorCode.DUPLICATE_RECORD);

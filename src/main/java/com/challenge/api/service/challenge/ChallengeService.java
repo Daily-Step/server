@@ -7,15 +7,18 @@ import com.challenge.api.validator.ChallengeValidator;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.challenge.Challenge;
+import com.challenge.domain.challenge.ChallengeQueryRepository;
 import com.challenge.domain.challenge.ChallengeRepository;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.record.Record;
 import com.challenge.domain.record.RecordRepository;
+import com.challenge.domain.record.RecordStatus;
+import com.challenge.utils.date.DateUtils;
+import com.challenge.validator.DateValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,15 +27,17 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChallengeService {
 
+    private final ChallengeQueryRepository challengeQueryRepository;
+
     private final ChallengeRepository challengeRepository;
     private final CategoryRepository categoryRepository;
     private final RecordRepository recordRepository;
 
-    private final CategoryValidator categoryValidator;
     private final ChallengeValidator challengeValidator;
+    private final CategoryValidator categoryValidator;
 
     public List<ChallengeResponse> getChallenges(Member member, LocalDateTime currentDateTime) {
-        List<Challenge> challenges = challengeRepository.findChallengesBy(member, currentDateTime);
+        List<Challenge> challenges = challengeQueryRepository.findChallengesBy(member, currentDateTime);
 
         return challenges.stream()
                 .map(ChallengeResponse::of)
@@ -52,17 +57,16 @@ public class ChallengeService {
     }
 
     @Transactional
-    public ChallengeResponse successChallenge(Long challengeId, LocalDate currentDate) {
-        challengeValidator.validateChallengeExists(challengeId);
+    public ChallengeResponse achieveChallenge(Member member, Long challengeId, String achieveDate) {
+        DateValidator.isLocalDateFormatter(achieveDate);
+        DateValidator.isBeforeOrEqualToTodayFrom(achieveDate);
+        challengeValidator.challengeExists(member, challengeId);
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
 
-        challengeValidator.validateDuplicateRecordBy(challenge, currentDate);
+        challengeValidator.duplicateRecordBy(challenge, DateUtils.toLocalDate(achieveDate));
 
-        Record record = Record.builder()
-                .challenge(challenge)
-                .successDate(currentDate)
-                .build();
+        Record record = Record.create(challenge, achieveDate, RecordStatus.ACHIEVEMENT_COMPLETED);
         Record savedRecord = recordRepository.save(record);
         challenge.addRecord(savedRecord);
 

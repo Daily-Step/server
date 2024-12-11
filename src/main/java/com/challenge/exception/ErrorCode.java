@@ -4,7 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 @Getter
 @RequiredArgsConstructor
@@ -65,6 +71,12 @@ public enum ErrorCode {
      * 기록 관련 에러
      */
     DUPLICATE_RECORD(BAD_REQUEST, "RECORD_4001", "오늘 이미 해당 챌린지를 달성했습니다."),
+
+    /**
+     * 날짜 관련 에러
+     */
+    INVALID_DATE_FORMAT(BAD_REQUEST, "DATE_4001", "날짜 형식이 올바르지 않습니다."),
+    INVALID_DATE(BAD_REQUEST, "DATE_4002", "날짜가 올바르지 않습니다."),
 
     /**
      * 기타 에러

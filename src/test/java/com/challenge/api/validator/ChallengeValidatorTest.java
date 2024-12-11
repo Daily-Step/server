@@ -7,9 +7,14 @@ import com.challenge.domain.challenge.Challenge;
 import com.challenge.domain.challenge.ChallengeRepository;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
-import com.challenge.domain.member.*;
+import com.challenge.domain.member.Gender;
+import com.challenge.domain.member.JobYear;
+import com.challenge.domain.member.LoginType;
+import com.challenge.domain.member.Member;
+import com.challenge.domain.member.MemberRepository;
 import com.challenge.domain.record.Record;
 import com.challenge.domain.record.RecordRepository;
+import com.challenge.domain.record.RecordStatus;
 import com.challenge.exception.GlobalException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,23 +61,26 @@ class ChallengeValidatorTest {
 
     @DisplayName("존재하지 않는 챌린지 ID로 조회하는 경우 예외가 발생한다.")
     @Test
-    void validateChallengeExists_when_NotExistsChallengeId() {
+    void challengeId() {
         // given
+        Member member = createMember("nickname");
+        Member savedMember = memberRepository.save(member);
+
         Long notExistsChallengeId = 999L;
 
         // when // then
-        assertThatThrownBy(() -> challengeValidator.validateChallengeExists(notExistsChallengeId))
+        assertThatThrownBy(() -> challengeValidator.challengeExists(savedMember, notExistsChallengeId))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("챌린지 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
     }
 
     @DisplayName("챌린지 달성 기록에 중복된 기록이 있는 경우 예외가 발생한다.")
     @Test
-    void validateDuplicateRecordBy_when_ExistsDuplicateRecord() {
+    void duplicateRecord() {
         // given
         LocalDate currentDate = LocalDate.now();
 
-        Member member = createMember();
+        Member member = createMember("nickname");
         memberRepository.save(member);
 
         Category category = createCategory();
@@ -87,12 +95,12 @@ class ChallengeValidatorTest {
         recordRepository.save(record);
 
         // when // then
-        assertThatThrownBy(() -> challengeValidator.validateDuplicateRecordBy(challenge, currentDate))
+        assertThatThrownBy(() -> challengeValidator.duplicateRecordBy(challenge, currentDate))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("오늘 이미 해당 챌린지를 달성했습니다.");
     }
 
-    private Member createMember() {
+    private Member createMember(String nickname) {
         Job job = Job.builder()
                 .code("1")
                 .description("1")
@@ -103,7 +111,7 @@ class ChallengeValidatorTest {
                 .socialId(1L)
                 .email("eamil")
                 .loginType(LoginType.KAKAO)
-                .nickname("nickname")
+                .nickname(nickname)
                 .birth(LocalDate.of(2000, 1, 1))
                 .gender(Gender.MALE)
                 .jobYear(JobYear.LT_1Y)
@@ -120,6 +128,7 @@ class ChallengeValidatorTest {
     private Record createRecord(Challenge challenge, LocalDate currentDate) {
         return Record.builder()
                 .challenge(challenge)
+                .status(RecordStatus.ACHIEVEMENT_COMPLETED)
                 .successDate(currentDate)
                 .build();
     }
