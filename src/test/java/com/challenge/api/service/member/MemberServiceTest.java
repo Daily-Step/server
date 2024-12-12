@@ -7,6 +7,7 @@ import com.challenge.api.service.member.request.UpdateJobServiceRequest;
 import com.challenge.api.service.member.request.UpdateJobYearServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
+import com.challenge.api.service.s3.S3ClientService;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.Gender;
@@ -14,19 +15,28 @@ import com.challenge.domain.member.JobYear;
 import com.challenge.domain.member.LoginType;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
+import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -35,6 +45,9 @@ class MemberServiceTest {
 
     @Autowired
     private MemberService memberService;
+
+    @MockitoBean
+    private S3ClientService s3ClientService;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -255,6 +268,55 @@ class MemberServiceTest {
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
         assertThat(resultMember.getJobYear()).isEqualTo(JobYear.of(4));
+    }
+
+
+    @DisplayName("프로필 사진 등록 성공")
+    @Test
+    void uploadProfileImgSucceeds() {
+        // given
+        Member member = createMember();
+
+        String imgUrl = "img_url";
+        given(s3ClientService.upload(any())).willReturn(imgUrl);
+
+        // MockMultipartFile 생성
+        MultipartFile image = new MockMultipartFile(
+                "image",
+                "profile.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "dummy image content".getBytes()
+        );
+
+        // when
+        String result = memberService.uploadProfileImg(member, image);
+
+        // then
+        assertEquals(imgUrl, result);
+        assertEquals(member.getProfileImg(), imgUrl);
+    }
+
+    @DisplayName("프로필 사진 등록 실패: s3 이미지 업로드에 실패한 경우 예외가 발생한다.")
+    @Test
+    void uploadProfileImgFailed() {
+        // given
+        Member member = createMember();
+
+        // MockMultipartFile 생성
+        MultipartFile image = new MockMultipartFile(
+                "image",
+                "profile.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "dummy image content".getBytes()
+        );
+
+        willThrow(new GlobalException(ErrorCode.S3_UPLOAD_ERROR))
+                .given(s3ClientService).upload(any());
+
+        // when // then
+        assertThatThrownBy(() -> memberService.uploadProfileImg(member, image))
+                .isInstanceOf(GlobalException.class)
+                .hasMessage(ErrorCode.S3_UPLOAD_ERROR.getMessage());
     }
 
     /*   테스트 공통 메소드   */
