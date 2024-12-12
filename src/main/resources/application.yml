@@ -2,46 +2,6 @@ spring:
   profiles:
     default: local
 
-social:
-  kakao:
-    apikey: ${KAKAO_API_KEY}
-    redirect_uri: ${KAKAO_REDIRECT_URI}
-
-jwt:
-  secret: ${JWT_SECRET}
-  access_expiration_time: 36000000 # 10시간 (10 * 60 * 60 * 1000 밀리초)
-  refresh_expiration_day: 14 # 2주
-
----
-# 로컬 환경
-spring:
-  config:
-    activate:
-      on-profile: local
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-
-  datasource:
-    url: jdbc:mysql://127.0.0.1:[forwardedPort]/${DB_SCHEMA_NAME}?useSSL=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
-ssh:
-  remote_jump_host: ${EC2_IP}
-  ssh_port: 22
-  user: ubuntu
-  private_key: ${EC2_PRIVATE_KEY_PATH}
-  database_url: ${DB_URL}
-  database_port: 3306
-
 ---
 # 개발 환경
 spring:
@@ -58,3 +18,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+social:
+  kakao:
+    apikey: ${KAKAO_API_KEY}
+    redirect_uri: ${KAKAO_REDIRECT_URI}
+
+jwt:
+  secret: ${JWT_SECRET}
+  access_expiration_time: 36000000 # 10시간 (10 * 60 * 60 * 1000 밀리초)
+  refresh_expiration_day: 14 # 2주
