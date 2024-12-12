@@ -26,9 +26,9 @@ include::{snippets}/challenge-create-fail/response-fields.adoc[]
 === 1-3. 챌린지 달성 완료
 
 ==== HTTP Request
-include::{snippets}/challenge-success/http-request.adoc[]
-include::{snippets}/challenge-success/path-parameters.adoc[]
+include::{snippets}/challenge-achieve/http-request.adoc[]
+include::{snippets}/challenge-achieve/path-parameters.adoc[]
 
 ==== HTTP Response
-include::{snippets}/challenge-success/http-response.adoc[]
-include::{snippets}/challenge-success/response-fields.adoc[]
+include::{snippets}/challenge-achieve/http-response.adoc[]
+include::{snippets}/challenge-achieve/response-fields.adoc[]
