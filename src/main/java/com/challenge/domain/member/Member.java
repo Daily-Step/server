@@ -128,4 +128,8 @@ public class Member extends BaseDateTimeEntity {
         this.jobYear = jobYear;
     }
 
+    public void updateProfileImg(String imgUrl) {
+        this.profileImg = imgUrl;
+    }
+
 }

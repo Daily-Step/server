@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,6 +65,12 @@ public class MemberController {
     public ApiResponse<String> updateJobYear(@RequestBody @Valid UpdateJobYearRequest request,
             @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateJobYear(member, request.toServiceRequest()));
+    }
+
+    @PostMapping("/profile/img")
+    public ApiResponse<String> uploadProfileImg(@RequestPart(value = "image") MultipartFile image,
+            @AuthMember Member member) {
+        return ApiResponse.ok(memberService.uploadProfileImg(member, image));
     }
 
 }
