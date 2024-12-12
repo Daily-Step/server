@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -419,6 +421,46 @@ class MemberControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.message").value("yearId는 4 이하의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/jobyear"));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("회원 프로필 이미지 등록")
+    class UploadProfileImg {
+
+        @DisplayName("회원 프로필 이미지 등록 성공")
+        @Test
+        void uploadProfileImgSucceeds() throws Exception {
+            // given
+            given(memberService.uploadProfileImg(any(), any())).willReturn("img_url");
+
+            // MockMultipartFile 생성
+            MockMultipartFile image = new MockMultipartFile(
+                    "image",
+                    "profile.jpg",
+                    MediaType.IMAGE_JPEG_VALUE,
+                    "dummy image content".getBytes()
+            );
+
+            // when // then
+            mockMvc.perform(multipart("/api/v1/member/profile/img")
+                            .file(image)
+                            .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("OK"))
+                    .andExpect(jsonPath("$.code").isEmpty())
+                    .andExpect(jsonPath("$.url").isEmpty())
+                    .andExpect(jsonPath("$.data").value("img_url"));
+        }
+
+        @DisplayName("회원 프로필 이미지 등록 실패: 이미지 파일이 누락된 경우 에러 응답을 반환한다.")
+        @Test
+        void uploadProfileImgFailsWhenImageIsMissing() throws Exception {
+            // when // then
+            mockMvc.perform(multipart("/api/v1/member/profile/img")
+                            .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andExpect(status().isBadRequest());
         }
 
     }
