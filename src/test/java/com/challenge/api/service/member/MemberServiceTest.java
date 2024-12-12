@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -86,7 +85,7 @@ class MemberServiceTest {
         String response = memberService.checkNicknameIsValid(request);
 
         // then
-        assertThat(response).isEqualTo("사용 가능한 닉네임입니다.");
+        assertEquals(response, "사용 가능한 닉네임입니다.");
     }
 
     @DisplayName("닉네임 중복 확인 실패: 이미 사용중인 닉네임인 경우 예외가 발생한다.")
@@ -103,7 +102,7 @@ class MemberServiceTest {
         // when // then
         assertThatThrownBy(() -> memberService.checkNicknameIsValid(request))
                 .isInstanceOf(GlobalException.class)
-                .hasMessage("이미 사용중인 닉네임입니다.");
+                .hasMessage(ErrorCode.DUPLICATED_NICKNAME.getMessage());
     }
 
     @DisplayName("회원 정보 조회 성공: 회원 정보가 반환된다.")
@@ -116,11 +115,11 @@ class MemberServiceTest {
         MemberInfoResponse response = memberService.getMemberInfo(member);
 
         // then
-        assertThat(response.getNickname()).isEqualTo(MEMBER_NICKNAME);
-        assertThat(response.getBirth()).isEqualTo(MEMBER_BIRTH);
-        assertThat(response.getGender()).isEqualTo(MEMBER_GENDER);
-        assertThat(response.getJobId()).isEqualTo(MEMBER_JOB.getId());
-        assertThat(response.getJobYearId()).isEqualTo(MEMBER_JOBYEAR.getId());
+        assertEquals(response.getNickname(), MEMBER_NICKNAME);
+        assertEquals(response.getBirth(), MEMBER_BIRTH);
+        assertEquals(response.getGender(), MEMBER_GENDER);
+        assertEquals(response.getJobId(), MEMBER_JOB.getId());
+        assertEquals(response.getJobYearId(), MEMBER_JOBYEAR.getId());
     }
 
     @DisplayName("닉네임 수정 성공")
@@ -139,7 +138,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertThat(resultMember.getNickname()).isEqualTo("newName");
+        assertEquals(resultMember.getNickname(), "newName");
     }
 
     @DisplayName("닉네임 수정 실패: 이미 사용중인 닉네임인 경우 예외가 발생한다.")
@@ -168,7 +167,7 @@ class MemberServiceTest {
         // when // then
         assertThatThrownBy(() -> memberService.updateNickname(member2, request))
                 .isInstanceOf(GlobalException.class)
-                .hasMessage("이미 사용중인 닉네임입니다.");
+                .hasMessage(ErrorCode.DUPLICATED_NICKNAME.getMessage());
     }
 
     @DisplayName("생년월일 수정 성공")
@@ -188,7 +187,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertThat(resultMember.getBirth()).isEqualTo(newBirth);
+        assertEquals(resultMember.getBirth(), newBirth);
     }
 
     @DisplayName("성별 수정 성공")
@@ -208,7 +207,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertThat(resultMember.getGender()).isEqualTo(newGender);
+        assertEquals(resultMember.getGender(), newGender);
     }
 
     @DisplayName("직무 수정 성공")
@@ -231,7 +230,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertThat(resultMember.getJob()).isEqualTo(newJob);
+        assertEquals(resultMember.getJob(), newJob);
     }
 
     @DisplayName("직무 수정 실패: 직무 정보를 찾을 수 없는 경우 예외가 발생한다.")
@@ -248,7 +247,7 @@ class MemberServiceTest {
         // when // then
         assertThatThrownBy(() -> memberService.updateJob(member, request))
                 .isInstanceOf(GlobalException.class)
-                .hasMessage("직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
+                .hasMessage(ErrorCode.JOB_NOT_FOUND.getMessage());
     }
 
     @DisplayName("연차 수정 성공")
@@ -267,7 +266,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertThat(resultMember.getJobYear()).isEqualTo(JobYear.of(4));
+        assertEquals(resultMember.getJobYear(), JobYear.of(4));
     }
 
 

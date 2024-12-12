@@ -9,6 +9,8 @@ import com.challenge.api.controller.member.request.UpdateJobYearRequest;
 import com.challenge.api.controller.member.request.UpdateNicknameRequest;
 import com.challenge.api.service.member.MemberService;
 import com.challenge.api.service.member.response.MemberInfoResponse;
+import com.challenge.exception.ErrorCode;
+import com.challenge.exception.GlobalException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,6 +24,7 @@ import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -456,11 +459,39 @@ class MemberControllerTest extends ControllerTestSupport {
 
         @DisplayName("회원 프로필 이미지 등록 실패: 이미지 파일이 누락된 경우 에러 응답을 반환한다.")
         @Test
-        void uploadProfileImgFailsWhenImageIsMissing() throws Exception {
+        void uploadProfileImgFailedWhenImageIsMissing() throws Exception {
             // when // then
             mockMvc.perform(multipart("/api/v1/member/profile/img")
                             .contentType(MediaType.MULTIPART_FORM_DATA))
                     .andExpect(status().isBadRequest());
+        }
+
+        @DisplayName("회원 프로필 이미지 등록 실패: s3 파일 업로드에 실패한 경우 에러 응답을 반환한다.")
+        @Test
+        void uploadProfileImgFailedWhenUploadingFailed() throws Exception {
+            // given
+            willThrow(new GlobalException(ErrorCode.S3_UPLOAD_ERROR))
+                    .given(memberService).uploadProfileImg(any(), any());
+
+            // MockMultipartFile 생성
+            MockMultipartFile image = new MockMultipartFile(
+                    "image",
+                    "profile.jpg",
+                    MediaType.IMAGE_JPEG_VALUE,
+                    "dummy image content".getBytes()
+            );
+
+            // when // then
+            mockMvc.perform(multipart("/api/v1/member/profile/img")
+                            .file(image)
+                            .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(jsonPath("$.message").value(ErrorCode.S3_UPLOAD_ERROR.getMessage()))
+                    .andExpect(jsonPath("$.code").value(ErrorCode.S3_UPLOAD_ERROR.getCode()))
+                    .andExpect(jsonPath("$.url").value("/api/v1/member/profile/img"))
+                    .andExpect(jsonPath("$.data").isEmpty());
+
+
         }
 
     }
