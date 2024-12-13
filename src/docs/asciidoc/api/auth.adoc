@@ -96,11 +96,28 @@ include::{snippets}/kakao-login/kakao-login-success/http-response.adoc[]
 include::{snippets}/kakao-login/kakao-login-success/response-fields.adoc[]
 
 == 3.4. 카카오 소셜 로그인 실패
-include::{snippets}/kakao-login/kakao-login-fail-blank-access-token/response-fields.adoc[]
-
 === 3.4.1 access token이 공백인 경우
 ==== HTTP Request
 include::{snippets}/kakao-login/kakao-login-fail-blank-access-token/http-request.adoc[]
 
 ==== HTTP Response
 include::{snippets}/kakao-login/kakao-login-fail-blank-access-token/http-response.adoc[]
+include::{snippets}/kakao-login/kakao-login-fail-blank-access-token/response-fields.adoc[]
+
+== 3.5. access token 재발급 성공
+==== HTTP Request
+include::{snippets}/reissue-token/reissue-token-success/http-request.adoc[]
+include::{snippets}/reissue-token/reissue-token-success/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/reissue-token/reissue-token-success/http-response.adoc[]
+include::{snippets}/reissue-token/reissue-token-success/response-fields.adoc[]
+
+== 3.6. access token 재발급 실패
+=== 3.6.1. refresh token이 공백인 경우
+==== HTTP Request
+include::{snippets}/reissue-token/reissue-token-fail-token-blank/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/reissue-token/reissue-token-fail-token-blank/http-response.adoc[]
+include::{snippets}/reissue-token/reissue-token-fail-token-blank/response-fields.adoc[]

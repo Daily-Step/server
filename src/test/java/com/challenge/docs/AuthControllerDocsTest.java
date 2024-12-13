@@ -3,9 +3,11 @@ package com.challenge.docs;
 import com.challenge.api.controller.auth.AuthController;
 import com.challenge.api.controller.auth.request.KakaoLoginRequest;
 import com.challenge.api.controller.auth.request.KakaoSigninRequest;
+import com.challenge.api.controller.auth.request.ReissueTokenRequest;
 import com.challenge.api.service.auth.AuthService;
 import com.challenge.api.service.auth.request.KakaoLoginServiceRequest;
 import com.challenge.api.service.auth.request.KakaoSigninServiceRequest;
+import com.challenge.api.service.auth.request.ReissueTokenServiceRequest;
 import com.challenge.api.service.auth.response.LoginResponse;
 import com.challenge.api.service.auth.response.ReissueTokenResponse;
 import com.challenge.domain.job.Job;
@@ -534,6 +536,84 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("accessToken").type(STRING)
                                             .description("카카오 access token")
+                            ),
+                            responseFields(failResponse())
+                    ));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("토큰 재발급")
+    class reissueToken {
+
+        @BeforeEach
+        void setUp() {
+            // 서비스 mock 처리
+            mockReissueTokenResponse = ReissueTokenResponse.builder()
+                    .accessToken(ACCESS_TOKEN)
+                    .refreshToken(REFRESH_TOKEN)
+                    .accessTokenExpiresIn(123456789012L)
+                    .build();
+            given(authService.reissueToken(any(ReissueTokenServiceRequest.class))).willReturn(mockReissueTokenResponse);
+        }
+
+        @DisplayName("토큰 재발급 성공")
+        @Test
+        void reissueTokenSuccess() throws Exception {
+            // given
+            ReissueTokenRequest request = ReissueTokenRequest.builder()
+                    .refreshToken(REFRESH_TOKEN)
+                    .build();
+
+            // when // then
+            mockMvc.perform(post("/api/v1/auth/reissue")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("OK"))
+                    .andExpect(jsonPath("$.code").isEmpty())
+                    .andExpect(jsonPath("$.url").isEmpty())
+                    .andExpect(jsonPath("$.data.accessToken").value(ACCESS_TOKEN))
+                    .andExpect(jsonPath("$.data.refreshToken").value(REFRESH_TOKEN))
+                    .andDo(restDocs.document(
+                            requestFields(
+                                    fieldWithPath("refreshToken").type(STRING)
+                                            .description("refresh token")
+                            ),
+                            responseFields(successResponse())
+                                    .and(
+                                            fieldWithPath("data.accessToken").type(STRING)
+                                                    .description("새로 발급된 access token"),
+                                            fieldWithPath("data.refreshToken").type(STRING)
+                                                    .description("새로 발급된 refresh token"),
+                                            fieldWithPath("data.accessTokenExpiresIn").type(NUMBER)
+                                                    .description("access token이 만료되는 시간 timestamp")
+                                    ))
+                    )
+            ;
+        }
+
+        @DisplayName("토큰 재발급 실패: refresh token이 공백인 경우 에러 응답을 반환한다.")
+        @Test
+        void reissueTokenFailTokenBlank() throws Exception {
+            // given
+            ReissueTokenRequest request = ReissueTokenRequest.builder()
+                    .refreshToken(" ")
+                    .build();
+
+            // when // then
+            mockMvc.perform(post("/api/v1/auth/reissue")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().is(400))
+                    .andExpect(jsonPath("$.message").value("refresh token은 필수 입력값입니다."))
+                    .andExpect(jsonPath("$.code").value("VALID_ERROR"))
+                    .andExpect(jsonPath("$.url").value("/api/v1/auth/reissue"))
+                    .andDo(restDocs.document(
+                            requestFields(
+                                    fieldWithPath("refreshToken").type(STRING)
+                                            .description("refresh token")
                             ),
                             responseFields(failResponse())
                     ));
