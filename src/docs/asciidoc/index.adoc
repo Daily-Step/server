@@ -15,5 +15,6 @@ endif::[]
 include::api/challenge.adoc[]
 include::api/category.adoc[]
 include::api/auth.adoc[]
+include::api/member.adoc[]
 
 

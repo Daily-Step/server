@@ -46,6 +46,7 @@ class MemberServiceTest {
     private static final String MEMBER_EMAIL = "test@naver.com";
     private static final String MEMBER_NICKNAME = "test";
     private static final LocalDate MEMBER_BIRTH = LocalDate.of(2000, 1, 1);
+    private static final String MEMBER_BIRTH_STRING = LocalDate.of(2000, 1, 1).toString();
     private static final Gender MEMBER_GENDER = Gender.MALE;
     private static final JobYear MEMBER_JOBYEAR = JobYear.LT_1Y;
     private Job MEMBER_JOB;
@@ -104,7 +105,7 @@ class MemberServiceTest {
 
         // then
         assertThat(response.getNickname()).isEqualTo(MEMBER_NICKNAME);
-        assertThat(response.getBirth()).isEqualTo(MEMBER_BIRTH);
+        assertThat(response.getBirth()).isEqualTo(MEMBER_BIRTH_STRING);
         assertThat(response.getGender()).isEqualTo(MEMBER_GENDER);
         assertThat(response.getJobId()).isEqualTo(MEMBER_JOB.getId());
         assertThat(response.getJobYearId()).isEqualTo(MEMBER_JOBYEAR.getId());

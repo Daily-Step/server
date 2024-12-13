@@ -1,0 +1,10 @@
+= 4. 회원
+
+[[Get-Member-Info-Success]]
+== 4.1. 회원 정보 조회 성공
+==== HTTP Request
+include::{snippets}/member-controller-docs-test/get-member-info-success/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/member-controller-docs-test/get-member-info-success/http-response.adoc[]
+include::{snippets}/member-controller-docs-test/get-member-info-success/response-fields.adoc[]
