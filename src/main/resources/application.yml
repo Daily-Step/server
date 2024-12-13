@@ -12,6 +12,18 @@ jwt:
   access_expiration_time: 36000000 # 10시간 (10 * 60 * 60 * 1000 밀리초)
   refresh_expiration_day: 14 # 2주
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    S3:
+      bucket: ${S3_BUCKET_NAME}
+    region:
+      static: ${S3_REGION}
+    stack:
+      auto: false
+
 ---
 # 로컬 환경
 spring:

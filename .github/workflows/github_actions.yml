@@ -19,6 +19,10 @@ jobs:
       DB_SCHEMA_NAME: ${{ secrets.DB_SCHEMA_NAME }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      S3_REGION: ${{ secrets.S3_REGION }}
 
     steps:
       # 1. GitHub Repository 파일 불러오기
@@ -66,6 +70,10 @@ jobs:
             DB_SCHEMA_NAME= ${{ secrets.DB_SCHEMA_NAME }}
             DB_USERNAME= ${{ secrets.DB_USERNAME }}
             DB_PASSWORD= ${{ secrets.DB_PASSWORD }}
+            S3_ACCESS_KEY= ${{ secrets.S3_ACCESS_KEY }}
+            S3_SECRET_KEY= ${{ secrets.S3_SECRET_KEY }}
+            S3_BUCKET_NAME= ${{ secrets.S3_BUCKET_NAME }}
+            S3_REGION= ${{ secrets.S3_REGION }}
 
       ## CD (Continuous Deployment) 파트
       # 7. EC2에 SSH로 접속하여 Docker 컨테이너 실행
@@ -93,4 +101,8 @@ jobs:
             -e DB_SCHEMA_NAME=${{ secrets.DB_SCHEMA_NAME }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }} \
+            -e S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} \
+            -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}\
+            -e S3_REGION=${{ secrets.S3_REGION }}\
             ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
