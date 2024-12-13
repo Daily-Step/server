@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.payload.JsonFieldType.NULL;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -59,8 +58,7 @@ public abstract class RestDocsSupport {
                 fieldWithPath("status").type(NUMBER).description("상태"),
                 fieldWithPath("message").type(STRING).description("메시지"),
                 fieldWithPath("code").type(NULL).description("코드"),
-                fieldWithPath("url").type(NULL).description("API 호출 URL"),
-                fieldWithPath("data").type(OBJECT).description("응답 데이터")
+                fieldWithPath("url").type(NULL).description("API 호출 URL")
         };
     }
 

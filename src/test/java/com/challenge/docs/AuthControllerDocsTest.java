@@ -28,6 +28,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.payload.JsonFieldType.NULL;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -48,18 +49,17 @@ class AuthControllerDocsTest extends RestDocsSupport {
     private static final String KAKAO_ACCESS_TOKEN = "kakao-access-token";
     private static final String ACCESS_TOKEN = "access-token";
     private static final String REFRESH_TOKEN = "refresh-token";
-    protected static final String MOCK_NICKNAME = "nickname";
-    protected static final String MOCK_BIRTH = LocalDate.of(2000, 1, 1).toString();
-    protected static final Gender MOCK_GENDER = Gender.MALE;
-    protected static final JobYear MOCK_JOBYEAR = JobYear.LT_1Y;
-    protected static final Job MOCK_JOB = Job.builder().id(1L).code("1").description("1").build();
-
-    private LoginResponse mockLoginResponse;
-    private ReissueTokenResponse mockReissueTokenResponse;
+    private static final String MOCK_NICKNAME = "nickname";
+    private static final String MOCK_BIRTH = LocalDate.of(2000, 1, 1).toString();
+    private static final Gender MOCK_GENDER = Gender.MALE;
+    private static final JobYear MOCK_JOBYEAR = JobYear.LT_1Y;
+    private static final Job MOCK_JOB = Job.builder().id(1L).code("1").description("1").build();
 
     @Nested
     @DisplayName("카카오 회원가입")
     class KakaoSignin {
+
+        private LoginResponse mockLoginResponse;
 
         private FieldDescriptor[] commonRequest() {
             return new FieldDescriptor[]{
@@ -117,6 +117,8 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             requestFields(commonRequest()),
                             responseFields(successResponse())
                                     .and(
+                                            fieldWithPath("data").type(OBJECT)
+                                                    .description("응답 데이터"),
                                             fieldWithPath("data.memberId").type(NUMBER)
                                                     .description("회원 id"),
                                             fieldWithPath("data.accessToken").type(STRING)
@@ -156,7 +158,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: nickname이 공백인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: nickname이 공백인 경우")
         @Test
         void kakaoSigninFailBlankNickname() throws Exception {
             // given
@@ -183,7 +185,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: nickname이 길이/문자 조건을 위반한 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: nickname이 길이/문자 조건을 위반한 경우")
         @Test
         void kakaoSigninFailInvalidNickname() throws Exception {
             // given
@@ -210,7 +212,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: birth가 null인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: birth가 null인 경우")
         @Test
         void kakaoSigninFailBirthNull() throws Exception {
             // given
@@ -248,7 +250,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: birth가 과거 날짜가 아닌 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: birth가 과거 날짜가 아닌 경우")
         @Test
         void kakaoSigninFailBirthNotPast() throws Exception {
             // given
@@ -275,7 +277,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: gender가 null인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: gender가 null인 경우")
         @Test
         void kakaoSigninFailGenderNull() throws Exception {
             // given
@@ -314,7 +316,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: jobId가 null인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: jobId가 null인 경우")
         @Test
         void kakaoSigninFailJobIdNull() throws Exception {
             // given
@@ -353,7 +355,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: jobId가 1 미만인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: jobId가 1 미만인 경우")
         @Test
         void kakaoSigninFailJobIdLessThan() throws Exception {
             // given
@@ -380,7 +382,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: jobId가 20 초과인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: jobId가 20 초과인 경우")
         @Test
         void kakaoSigninFailJobIdGreaterThan() throws Exception {
             // given
@@ -407,7 +409,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: yearId가 1 미만인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: yearId가 1 미만인 경우")
         @Test
         void kakaoSigninFailYearIdLessThan() throws Exception {
             // given
@@ -434,7 +436,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: yearId가 4 초과인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: yearId가 4 초과인 경우")
         @Test
         void kakaoSigninFailYearIdMoreThan() throws Exception {
             // given
@@ -466,6 +468,8 @@ class AuthControllerDocsTest extends RestDocsSupport {
     @Nested
     @DisplayName("카카오 소셜 로그인")
     class KakaoLogin {
+
+        private LoginResponse mockLoginResponse;
 
         @BeforeEach
         void setUp() {
@@ -504,6 +508,8 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             ),
                             responseFields(successResponse())
                                     .and(
+                                            fieldWithPath("data").type(OBJECT)
+                                                    .description("응답 데이터"),
                                             fieldWithPath("data.memberId").type(NUMBER)
                                                     .description("회원 id"),
                                             fieldWithPath("data.accessToken").type(STRING)
@@ -546,6 +552,8 @@ class AuthControllerDocsTest extends RestDocsSupport {
     @DisplayName("토큰 재발급")
     class reissueToken {
 
+        private ReissueTokenResponse mockReissueTokenResponse;
+
         @BeforeEach
         void setUp() {
             // 서비스 mock 처리
@@ -582,6 +590,8 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             ),
                             responseFields(successResponse())
                                     .and(
+                                            fieldWithPath("data").type(OBJECT)
+                                                    .description("응답 데이터"),
                                             fieldWithPath("data.accessToken").type(STRING)
                                                     .description("새로 발급된 access token"),
                                             fieldWithPath("data.refreshToken").type(STRING)
@@ -593,7 +603,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
             ;
         }
 
-        @DisplayName("토큰 재발급 실패: refresh token이 공백인 경우 에러 응답을 반환한다.")
+        @DisplayName("토큰 재발급 실패: refresh token이 공백인 경우")
         @Test
         void reissueTokenFailTokenBlank() throws Exception {
             // given
