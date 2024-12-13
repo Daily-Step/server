@@ -1,21 +1,106 @@
-== 3. 로그인 및 회원가입
+= 3. 로그인 및 회원가입
 
 [[Kakao-Signin-Success]]
-=== 3.1. 카카오 소셜 회원가입
+== 3.1. 카카오 소셜 회원가입 성공
 ==== HTTP Request
-include::{snippets}/auth-controller-docs-test/kakao-signin-success/http-request.adoc[]
-include::{snippets}/auth-controller-docs-test/kakao-signin-success/request-fields.adoc[]
+include::{snippets}/kakao-signin/kakao-signin-succeeds/http-request.adoc[]
+include::{snippets}/kakao-signin/kakao-signin-succeeds/request-fields.adoc[]
 
 ==== HTTP Response
-include::{snippets}/auth-controller-docs-test/kakao-signin-success/http-response.adoc[]
-include::{snippets}/auth-controller-docs-test/kakao-signin-success/response-fields.adoc[]
+include::{snippets}/kakao-signin/kakao-signin-succeeds/http-response.adoc[]
+include::{snippets}/kakao-signin/kakao-signin-succeeds/response-fields.adoc[]
+
+[[Kakao-Signin-Fail]]
+== 3.2. 카카오 소셜 회원가입 실패
+include::{snippets}/kakao-signin/kakao-signin-fail-blank-access-token/response-fields.adoc[]
+
+=== 3.2.1 access token이 공백인 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-blank-access-token/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-blank-access-token/http-response.adoc[]
+
+=== 3.2.2.nickname이 길이/문자 조건을 위반한 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-invalid-nickname/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-invalid-nickname/http-response.adoc[]
+
+=== 3.2.3. birth가 null인 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-birth-null/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-birth-null/http-response.adoc[]
+
+=== 3.2.4. birth가 과거 날짜가 아닌 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-birth-not-past/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-birth-not-past/http-response.adoc[]
+
+=== 3.2.5. gender가 null인 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-gender-null/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-gender-null/http-response.adoc[]
+
+=== 3.2.6. jobId가 null인 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-job-id-null/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-job-id-null/http-response.adoc[]
+
+=== 3.2.7. jobId가 1보다 작은 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-job-id-less-than/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-job-id-less-than/http-response.adoc[]
+
+=== 3.2.8. jobId가 20보다 큰 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-job-id-greater-than/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-job-id-greater-than/http-response.adoc[]
+
+=== 3.2.9. yearId가 1보다 작은 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-year-id-less-than/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-year-id-less-than/http-response.adoc[]
+
+=== 3.2.10. yearId가 4보다 큰 경우
+==== HTTP Request
+include::{snippets}/kakao-signin/kakao-signin-fail-year-id-more-than/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-signin/kakao-signin-fail-year-id-more-than/http-response.adoc[]
+
 
 [[Kakao-Login-Success]]
-=== 3.2. 카카오 소셜 로그인
+== 3.3. 카카오 소셜 로그인 성공
 ==== HTTP Request
-include::{snippets}/auth-controller-docs-test/kakao-login-success/http-request.adoc[]
-include::{snippets}/auth-controller-docs-test/kakao-login-success/request-fields.adoc[]
+include::{snippets}/kakao-login/kakao-login-success/http-request.adoc[]
+include::{snippets}/kakao-login/kakao-login-success/request-fields.adoc[]
 
 ==== HTTP Response
-include::{snippets}/auth-controller-docs-test/kakao-login-success/http-response.adoc[]
-include::{snippets}/auth-controller-docs-test/kakao-login-success/response-fields.adoc[]
+include::{snippets}/kakao-login/kakao-login-success/http-response.adoc[]
+include::{snippets}/kakao-login/kakao-login-success/response-fields.adoc[]
+
+== 3.4. 카카오 소셜 로그인 실패
+include::{snippets}/kakao-login/kakao-login-fail-blank-access-token/response-fields.adoc[]
+
+=== 3.4.1 access token이 공백인 경우
+==== HTTP Request
+include::{snippets}/kakao-login/kakao-login-fail-blank-access-token/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/kakao-login/kakao-login-fail-blank-access-token/http-response.adoc[]

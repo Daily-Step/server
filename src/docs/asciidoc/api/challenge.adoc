@@ -1,7 +1,7 @@
-== 1. 챌린지
+= 1. 챌린지
 
 [[Challenge-Create-Success]]
-=== 1-1. 챌린지 생성 성공
+== 1.1. 챌린지 생성 성공
 
 ==== HTTP Request
 include::{snippets}/challenge-create-success/http-request.adoc[]
@@ -12,7 +12,8 @@ include::{snippets}/challenge-create-success/http-response.adoc[]
 include::{snippets}/challenge-create-success/response-fields.adoc[]
 
 [[Challenge-Create-Fail]]
-=== 1-2. 챌린지 생성 실패 (제목 누락)
+== 1.2. 챌린지 생성 실패
+=== 1.2.1 제목 누락
 
 ==== HTTP Request
 include::{snippets}/challenge-create-fail/http-request.adoc[]
@@ -23,7 +24,7 @@ include::{snippets}/challenge-create-fail/http-response.adoc[]
 include::{snippets}/challenge-create-fail/response-fields.adoc[]
 
 [[Challenge-Success]]
-=== 1-3. 챌린지 달성 완료
+== 1.3. 챌린지 달성 완료
 
 ==== HTTP Request
 include::{snippets}/challenge-achieve/http-request.adoc[]
