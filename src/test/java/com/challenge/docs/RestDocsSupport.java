@@ -2,7 +2,6 @@ package com.challenge.docs;
 
 import com.challenge.exception.ApiControllerAdvice;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.annotation.Import;
@@ -38,8 +37,6 @@ public abstract class RestDocsSupport {
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider contextProvider) {
-        objectMapper.registerModule(new JavaTimeModule());
-
         this.restDocs = new RestDocsConfiguration().restDocumentationResultHandler();
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(initController())

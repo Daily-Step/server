@@ -26,7 +26,6 @@ import static com.challenge.docs.RestDocsConfiguration.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.NULL;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
@@ -50,7 +49,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
     private static final String ACCESS_TOKEN = "access-token";
     private static final String REFRESH_TOKEN = "refresh-token";
     protected static final String MOCK_NICKNAME = "nickname";
-    protected static final LocalDate MOCK_BIRTH = LocalDate.of(2000, 1, 1);
+    protected static final String MOCK_BIRTH = LocalDate.of(2000, 1, 1).toString();
     protected static final Gender MOCK_GENDER = Gender.MALE;
     protected static final JobYear MOCK_JOBYEAR = JobYear.LT_1Y;
     protected static final Job MOCK_JOB = Job.builder().id(1L).code("1").description("1").build();
@@ -67,7 +66,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("accessToken").type(STRING).description("카카오 access token"),
                     fieldWithPath("nickname").type(STRING).description("회원 닉네임")
                             .attributes(field("4~10자, 특수문자 및 공백 불가")),
-                    fieldWithPath("birth").type(ARRAY).description("생일")
+                    fieldWithPath("birth").type(STRING).description("생일")
                             .attributes(field("과거 날짜")),
                     fieldWithPath("gender").type(STRING).description("성별")
                             .attributes(field("MALE, FEMALE")),
@@ -256,7 +255,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
             KakaoSigninRequest request = KakaoSigninRequest.builder()
                     .accessToken(KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
-                    .birth(LocalDate.now())
+                    .birth(LocalDate.now().plusDays(1).toString())
                     .gender(MOCK_GENDER)
                     .jobId(MOCK_JOB.getId())
                     .yearId(MOCK_JOBYEAR.getId())
@@ -267,7 +266,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("birth는 과거 날짜여야 합니다."))
+                    .andExpect(jsonPath("$.message").value("유효하지 않은 날짜입니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"))
                     .andDo(restDocs.document(
@@ -302,7 +301,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                                     fieldWithPath("accessToken").type(STRING).description("카카오 access token"),
                                     fieldWithPath("nickname").type(STRING).description("회원 닉네임")
                                             .attributes(field("4~10자, 특수문자 및 공백 불가")),
-                                    fieldWithPath("birth").type(ARRAY).description("생일")
+                                    fieldWithPath("birth").type(STRING).description("생일")
                                             .attributes(field("과거 날짜")),
                                     fieldWithPath("gender").type(NULL).description("성별")
                                             .attributes(field("MALE, FEMALE")),
@@ -341,7 +340,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                                     fieldWithPath("accessToken").type(STRING).description("카카오 access token"),
                                     fieldWithPath("nickname").type(STRING).description("회원 닉네임")
                                             .attributes(field("4~10자, 특수문자 및 공백 불가")),
-                                    fieldWithPath("birth").type(ARRAY).description("생일")
+                                    fieldWithPath("birth").type(STRING).description("생일")
                                             .attributes(field("과거 날짜")),
                                     fieldWithPath("gender").type(STRING).description("성별")
                                             .attributes(field("MALE, FEMALE")),
