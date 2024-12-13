@@ -2,23 +2,22 @@ package com.challenge.api.service.member.response;
 
 import com.challenge.domain.member.Gender;
 import com.challenge.domain.member.Member;
+import com.challenge.utils.date.DateUtils;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 public class MemberInfoResponse {
 
     private final String nickname;
-    private final LocalDate birth;
+    private final String birth;
     private final Gender gender;
     private final long jobId;
     private final String job;
     private final int jobYearId;
 
     @Builder
-    private MemberInfoResponse(String nickname, LocalDate birth, Gender gender, long jobId, String job, int jobYearId) {
+    private MemberInfoResponse(String nickname, String birth, Gender gender, long jobId, String job, int jobYearId) {
         this.nickname = nickname;
         this.birth = birth;
         this.gender = gender;
@@ -30,7 +29,7 @@ public class MemberInfoResponse {
     public static MemberInfoResponse of(Member member) {
         return MemberInfoResponse.builder()
                 .nickname(member.getNickname())
-                .birth(member.getBirth())
+                .birth(DateUtils.toDayString(member.getBirth()))
                 .gender(member.getGender())
                 .jobId(member.getJob().getId())
                 .job(member.getJob().getDescription())

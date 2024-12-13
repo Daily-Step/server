@@ -231,7 +231,7 @@ public class AuthControllerTest extends ControllerTestSupport {
             KakaoSigninRequest request = KakaoSigninRequest.builder()
                     .accessToken(MOCK_KAKAO_ACCESS_TOKEN)
                     .nickname(MOCK_NICKNAME)
-                    .birth(LocalDate.now())
+                    .birth(LocalDate.now().plusDays(1).toString())
                     .gender(MOCK_GENDER)
                     .jobId(MOCK_JOB.getId())
                     .yearId(MOCK_JOBYEAR.getId())
@@ -242,7 +242,7 @@ public class AuthControllerTest extends ControllerTestSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("birth는 과거 날짜여야 합니다."))
+                    .andExpect(jsonPath("$.message").value("유효하지 않은 날짜입니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"));
         }

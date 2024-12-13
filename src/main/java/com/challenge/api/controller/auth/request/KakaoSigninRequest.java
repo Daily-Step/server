@@ -2,17 +2,16 @@ package com.challenge.api.controller.auth.request;
 
 import com.challenge.api.service.auth.request.KakaoSigninServiceRequest;
 import com.challenge.domain.member.Gender;
+import com.challenge.utils.date.DateUtils;
+import com.challenge.validator.annotation.ValidDate;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -24,9 +23,9 @@ public class KakaoSigninRequest {
     @Pattern(regexp = "^[가-힣a-zA-Z0-9]{4,10}$", message = "닉네임은 4~10자이며, 띄어쓰기와 특수문자를 사용할 수 없습니다.")
     private String nickname;
 
+    @ValidDate
     @NotNull(message = "birth는 필수 입력값입니다.")
-    @Past(message = "birth는 과거 날짜여야 합니다.")
-    private LocalDate birth;
+    private String birth;
 
     @NotNull(message = "gender는 필수 입력값입니다.")
     private Gender gender;
@@ -45,7 +44,7 @@ public class KakaoSigninRequest {
         return KakaoSigninServiceRequest.builder()
                 .accessToken(accessToken)
                 .nickname(nickname)
-                .birth(birth)
+                .birth(DateUtils.toLocalDate(birth))
                 .gender(gender)
                 .jobId(jobId)
                 .yearId(yearId)
@@ -53,7 +52,7 @@ public class KakaoSigninRequest {
     }
 
     @Builder
-    private KakaoSigninRequest(String accessToken, String nickname, LocalDate birth, Gender gender, Long jobId,
+    private KakaoSigninRequest(String accessToken, String nickname, String birth, Gender gender, Long jobId,
             int yearId) {
         this.accessToken = accessToken;
         this.nickname = nickname;

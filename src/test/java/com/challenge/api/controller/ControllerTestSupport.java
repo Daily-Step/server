@@ -43,7 +43,7 @@ public abstract class ControllerTestSupport {
     protected static final Long MOCK_SOCIAL_ID = 1L;
     protected static final String MOCK_EMAIL = "test@naver.com";
     protected static final String MOCK_NICKNAME = "test";
-    protected static final LocalDate MOCK_BIRTH = LocalDate.of(2000, 1, 1);
+    protected static final String MOCK_BIRTH = LocalDate.of(2000, 1, 1).toString();
     protected static final Gender MOCK_GENDER = Gender.MALE;
     protected static final JobYear MOCK_JOBYEAR = JobYear.LT_1Y;
     protected static final Job MOCK_JOB = Job.builder().id(1L).code("1").description("1").build();
@@ -62,7 +62,7 @@ public abstract class ControllerTestSupport {
                 .email(MOCK_EMAIL)
                 .loginType(LoginType.KAKAO)
                 .nickname(MOCK_NICKNAME)
-                .birth(MOCK_BIRTH)
+                .birth(LocalDate.of(2000, 1, 1))
                 .gender(MOCK_GENDER)
                 .jobYear(MOCK_JOBYEAR)
                 .job(MOCK_JOB)
