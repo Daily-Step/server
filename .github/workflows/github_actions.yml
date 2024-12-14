@@ -107,6 +107,6 @@ jobs:
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             -e S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }} \
             -e S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} \
-            -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}\
-            -e S3_REGION=${{ secrets.S3_REGION }}\
+            -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
+            -e S3_REGION=${{ secrets.S3_REGION }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}
