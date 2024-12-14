@@ -15,7 +15,6 @@ import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
 import com.challenge.domain.record.Record;
 import com.challenge.domain.record.RecordRepository;
-import com.challenge.domain.record.RecordStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -166,7 +165,6 @@ class ChallengeServiceTest {
     private Record createRecord(Challenge challenge, LocalDate currentDate) {
         return Record.builder()
                 .challenge(challenge)
-                .status(RecordStatus.ACHIEVEMENT_COMPLETED)
                 .successDate(currentDate)
                 .build();
     }
