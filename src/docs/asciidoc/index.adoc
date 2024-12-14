@@ -13,5 +13,6 @@ endif::[]
 == Challenge API
 
 include::api/challenge.adoc[]
+include::api/category.adoc[]
 
 
