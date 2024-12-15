@@ -20,7 +20,7 @@ public class ChallengeValidator {
     private final ChallengeRepository challengeRepository;
     private final ChallengeQueryRepository challengeQueryRepository;
 
-    public void challengeExists(Member member, Long challengeId) {
+    public void challengeExistsBy(Member member, Long challengeId) {
         boolean exists = challengeRepository.existsByMemberAndId(member, challengeId);
         if (!exists) {
             throw new GlobalException(ErrorCode.CHALLENGE_NOT_FOUND);
@@ -32,6 +32,11 @@ public class ChallengeValidator {
         if (exists) {
             throw new GlobalException(ErrorCode.DUPLICATE_RECORD);
         }
+    }
+
+    public Challenge findById(Long challengeId) {
+        return challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.CHALLENGE_NOT_FOUND));
     }
 
 }
