@@ -27,7 +27,7 @@ public class ChallengeValidator {
         }
     }
 
-    public void duplicateRecordBy(Challenge challenge, LocalDate currentDate) {
+    public void hasDuplicateRecordFor(Challenge challenge, LocalDate currentDate) {
         boolean exists = challengeQueryRepository.existsDuplicateRecordBy(challenge, currentDate);
         if (exists) {
             throw new GlobalException(ErrorCode.DUPLICATE_RECORD);

@@ -14,7 +14,6 @@ import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
 import com.challenge.domain.record.Record;
 import com.challenge.domain.record.RecordRepository;
-import com.challenge.domain.record.RecordStatus;
 import com.challenge.exception.GlobalException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -95,7 +94,7 @@ class ChallengeValidatorTest {
         recordRepository.save(record);
 
         // when // then
-        assertThatThrownBy(() -> challengeValidator.duplicateRecordBy(challenge, currentDate))
+        assertThatThrownBy(() -> challengeValidator.hasDuplicateRecordFor(challenge, currentDate))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("오늘 이미 해당 챌린지를 달성했습니다.");
     }
@@ -128,7 +127,6 @@ class ChallengeValidatorTest {
     private Record createRecord(Challenge challenge, LocalDate currentDate) {
         return Record.builder()
                 .challenge(challenge)
-                .status(RecordStatus.ACHIEVEMENT_COMPLETED)
                 .successDate(currentDate)
                 .build();
     }

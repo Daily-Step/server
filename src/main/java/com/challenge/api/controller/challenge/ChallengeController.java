@@ -48,4 +48,12 @@ public class ChallengeController {
         return ApiResponse.ok(challengeService.achieveChallenge(member, challengeId, achieveDate));
     }
 
+    @PostMapping("/challenges/{challengeId}/cancel")
+    public ApiResponse<ChallengeResponse> cancelChallenge(
+            @AuthMember Member member,
+            @PathVariable Long challengeId,
+            @RequestParam String cancelDate) {
+        return ApiResponse.ok(challengeService.cancelChallenge(member, challengeId, cancelDate));
+    }
+
 }

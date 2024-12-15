@@ -5,8 +5,6 @@ import com.challenge.domain.challenge.Challenge;
 import com.challenge.utils.date.DateUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,27 +36,21 @@ public class Record extends BaseDateTimeEntity {
     @Column(nullable = false)
     private LocalDate successDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RecordStatus status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id", nullable = false)
     private Challenge challenge;
 
     @Builder
-    private Record(LocalDate successDate, RecordStatus status, Challenge challenge) {
+    private Record(LocalDate successDate, Challenge challenge) {
         this.successDate = successDate;
-        this.status = status;
         this.challenge = challenge;
         challenge.addRecord(this);
     }
 
-    public static Record create(Challenge challenge, String achieveDate, RecordStatus recordStatus) {
+    public static Record achieve(Challenge challenge, String achieveDate) {
         return Record.builder()
                 .challenge(challenge)
                 .successDate(DateUtils.toLocalDate(achieveDate))
-                .status(recordStatus)
                 .build();
     }
 
