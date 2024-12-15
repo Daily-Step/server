@@ -68,7 +68,7 @@ class ChallengeValidatorTest {
         Long notExistsChallengeId = 999L;
 
         // when // then
-        assertThatThrownBy(() -> challengeValidator.challengeExists(savedMember, notExistsChallengeId))
+        assertThatThrownBy(() -> challengeValidator.challengeExistsBy(savedMember, notExistsChallengeId))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("챌린지 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
     }

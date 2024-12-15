@@ -1,6 +1,7 @@
 package com.challenge.domain.challenge;
 
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.member.Member;
@@ -96,6 +97,13 @@ public class Challenge extends BaseDateTimeEntity {
                 .color(request.getColor())
                 .startDateTime(startDateTime)
                 .build();
+    }
+
+    public void update(Category category, ChallengeUpdateServiceRequest request) {
+        this.title = request.getTitle();
+        this.category = category;
+        this.color = request.getColor();
+        this.content = request.getContent();
     }
 
     public void addRecord(Record record) {

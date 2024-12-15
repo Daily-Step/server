@@ -14,7 +14,7 @@ public class CategoryValidator {
 
     private final CategoryRepository categoryRepository;
 
-    public void validateCategoryExists(Long categoryId) {
+    public void categoryExistsBy(Long categoryId) {
         boolean exists = categoryRepository.existsById(categoryId);
         if (!exists) {
             throw new GlobalException(ErrorCode.CATEGORY_NOT_FOUND);

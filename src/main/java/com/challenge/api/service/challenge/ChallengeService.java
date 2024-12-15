@@ -1,6 +1,7 @@
 package com.challenge.api.service.challenge;
 
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.api.validator.CategoryValidator;
 import com.challenge.api.validator.ChallengeValidator;
@@ -48,7 +49,7 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse createChallenge(Member member, ChallengeCreateServiceRequest request,
             LocalDateTime startDateTime) {
-        categoryValidator.validateCategoryExists(request.getCategoryId());
+        categoryValidator.categoryExistsBy(request.getCategoryId());
 
         Category category = categoryRepository.getReferenceById(request.getCategoryId());
 
@@ -59,12 +60,11 @@ public class ChallengeService {
 
     @Transactional
     public ChallengeResponse achieveChallenge(Member member, Long challengeId, String achieveDate) {
-        challengeValidator.challengeExists(member, challengeId);
+        challengeValidator.challengeExistsBy(member, challengeId);
         DateValidator.isLocalDateFormatter(achieveDate);
         DateValidator.isBeforeOrEqualToTodayFrom(achieveDate);
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
-
         challengeValidator.hasDuplicateRecordFor(challenge, DateUtils.toLocalDate(achieveDate));
 
         Record record = Record.achieve(challenge, achieveDate);
@@ -76,16 +76,26 @@ public class ChallengeService {
 
     @Transactional
     public ChallengeResponse cancelChallenge(Member member, Long challengeId, String cancelDate) {
-        challengeValidator.challengeExists(member, challengeId);
+        challengeValidator.challengeExistsBy(member, challengeId);
         DateValidator.isLocalDateFormatter(cancelDate);
         DateValidator.isBeforeOrEqualToTodayFrom(cancelDate);
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
 
         Record record = recordValidator.hasRecordFor(challenge, DateUtils.toLocalDate(cancelDate));
-
         challenge.getRecords().remove(record);
 
+        return ChallengeResponse.of(challenge);
+    }
+
+    public ChallengeResponse updateChallenge(Member member, Long challengeId, ChallengeUpdateServiceRequest request) {
+        categoryValidator.categoryExistsBy(request.getCategoryId());
+        challengeValidator.challengeExistsBy(member, challengeId);
+
+        Category category = categoryRepository.getReferenceById(request.getCategoryId());
+
+        Challenge challenge = challengeRepository.getReferenceById(challengeId);
+        challenge.update(category, request);
         return ChallengeResponse.of(challenge);
     }
 
