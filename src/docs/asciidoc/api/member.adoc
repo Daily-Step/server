@@ -27,3 +27,125 @@ include::{snippets}/check-nickname-is-valid/check-nickname-is-valid-failed/reque
 ==== HTTP Response
 include::{snippets}/check-nickname-is-valid/check-nickname-is-valid-failed/http-response.adoc[]
 include::{snippets}/check-nickname-is-valid/check-nickname-is-valid-failed/response-fields.adoc[]
+
+== 4.4. 닉네임 수정 성공
+==== HTTP Request
+include::{snippets}/update-nickname/update-nickname-success/http-request.adoc[]
+include::{snippets}/update-nickname/update-nickname-success/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-nickname/update-nickname-success/http-response.adoc[]
+include::{snippets}/update-nickname/update-nickname-success/response-fields.adoc[]
+
+== 4.5. 닉네임 수정 실패
+=== 4.5.1. 닉네임이 공백인 경우
+==== HTTP Request
+include::{snippets}/update-nickname/check-nickname-is-valid-fail/http-request.adoc[]
+include::{snippets}/update-nickname/check-nickname-is-valid-fail/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-nickname/check-nickname-is-valid-fail/http-response.adoc[]
+include::{snippets}/update-nickname/check-nickname-is-valid-fail/response-fields.adoc[]
+
+== 4.6. 생년월일 수정 성공
+==== HTTP Request
+include::{snippets}/update-birth/update-birth-success/http-request.adoc[]
+include::{snippets}/update-birth/update-birth-success/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-birth/update-birth-success/http-response.adoc[]
+include::{snippets}/update-birth/update-birth-success/response-fields.adoc[]
+
+== 4.7. 생년월일 수정 실패
+=== 4.7.1. birth가 미래 날짜인 경우
+==== HTTP Request
+include::{snippets}/update-birth/update-birth-fail/http-request.adoc[]
+include::{snippets}/update-birth/update-birth-fail/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-birth/update-birth-fail/http-response.adoc[]
+include::{snippets}/update-birth/update-birth-fail/response-fields.adoc[]
+
+== 4.8. 성별 수정 성공
+==== HTTP Request
+include::{snippets}/update-gender/update-gender-success/http-request.adoc[]
+include::{snippets}/update-gender/update-gender-success/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-gender/update-gender-success/http-response.adoc[]
+include::{snippets}/update-gender/update-gender-success/response-fields.adoc[]
+
+== 4.9. 성별 수정 실패
+=== 4.9.1. gender가 null인 경우
+==== HTTP Request
+include::{snippets}/update-gender/update-gender-fail/http-request.adoc[]
+include::{snippets}/update-gender/update-gender-fail/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-gender/update-gender-fail/http-response.adoc[]
+include::{snippets}/update-gender/update-gender-fail/response-fields.adoc[]
+
+== 4.10. 직무 수정 성공
+==== HTTP Request
+include::{snippets}/update-job/update-job-success/http-request.adoc[]
+include::{snippets}/update-job/update-job-success/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-job/update-job-success/http-response.adoc[]
+include::{snippets}/update-job/update-job-success/response-fields.adoc[]
+
+== 4.11. 직무 수정 실패
+=== 4.11.1. jobId가 null인 경우
+==== HTTP Request
+include::{snippets}/update-job/update-job-fail-id-null/http-request.adoc[]
+include::{snippets}/update-job/update-job-fail-id-null/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-job/update-job-fail-id-null/http-response.adoc[]
+include::{snippets}/update-job/update-job-fail-id-null/response-fields.adoc[]
+
+=== 4.11.2. jobId가 1보다 작은 경우
+==== HTTP Request
+include::{snippets}/update-job/update-job-fail-id-less-than/http-request.adoc[]
+include::{snippets}/update-job/update-job-fail-id-less-than/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-job/update-job-fail-id-less-than/http-response.adoc[]
+include::{snippets}/update-job/update-job-fail-id-less-than/response-fields.adoc[]
+
+=== 4.11.3. jobId가 20보다 큰 경우
+==== HTTP Request
+include::{snippets}/update-job/update-job-fail-id-more-than/http-request.adoc[]
+include::{snippets}/update-job/update-job-fail-id-more-than/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-job/update-job-fail-id-more-than/http-response.adoc[]
+include::{snippets}/update-job/update-job-fail-id-more-than/response-fields.adoc[]
+
+== 4.12. 연차 수정 성공
+==== HTTP Request
+include::{snippets}/update-job-year/update-job-year-success/http-request.adoc[]
+include::{snippets}/update-job-year/update-job-year-success/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-job-year/update-job-year-success/http-response.adoc[]
+include::{snippets}/update-job-year/update-job-year-success/response-fields.adoc[]
+
+== 4.13. 연차 수정 실패
+=== 4.13.1. yearId가 1보다 작은 경우
+==== HTTP Request
+include::{snippets}/update-job-year/update-job-year-fail-id-less-than/http-request.adoc[]
+include::{snippets}/update-job-year/update-job-year-fail-id-less-than/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-job-year/update-job-year-fail-id-less-than/http-response.adoc[]
+include::{snippets}/update-job-year/update-job-year-fail-id-less-than/response-fields.adoc[]
+
+=== 4.13.2. yearId가 4보다 큰 경우
+==== HTTP Request
+include::{snippets}/update-job-year/update-job-year-fail-id-more-than/http-request.adoc[]
+include::{snippets}/update-job-year/update-job-year-fail-id-more-than/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-job-year/update-job-year-fail-id-more-than/http-response.adoc[]
+include::{snippets}/update-job-year/update-job-year-fail-id-more-than/response-fields.adoc[]

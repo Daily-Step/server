@@ -67,7 +67,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("nickname").type(STRING).description("회원 닉네임")
                             .attributes(field("4~10자, 특수문자 및 공백 불가")),
                     fieldWithPath("birth").type(STRING).description("생일")
-                            .attributes(field("과거 날짜")),
+                            .attributes(field("과거 날짜, yyyy-MM-dd")),
                     fieldWithPath("gender").type(STRING).description("성별")
                             .attributes(field("MALE, FEMALE")),
                     fieldWithPath("jobId").type(NUMBER).description("직무 id")

@@ -35,7 +35,7 @@ include::{snippets}/kakao-signin/kakao-signin-fail-birth-null/http-request.adoc[
 ==== HTTP Response
 include::{snippets}/kakao-signin/kakao-signin-fail-birth-null/http-response.adoc[]
 
-=== 3.2.4. birth가 과거 날짜가 아닌 경우
+=== 3.2.4. birth가 미래 날짜인 경우
 ==== HTTP Request
 include::{snippets}/kakao-signin/kakao-signin-fail-birth-not-past/http-request.adoc[]
 
