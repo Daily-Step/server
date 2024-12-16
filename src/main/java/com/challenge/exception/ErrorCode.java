@@ -71,6 +71,7 @@ public enum ErrorCode {
      * 기록 관련 에러
      */
     DUPLICATE_RECORD(BAD_REQUEST, "RECORD_4001", "오늘 이미 해당 챌린지를 달성했습니다."),
+    RECORD_NOT_FOUND(NOT_FOUND, "RECORD_4002", "기록 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다."),
 
     /**
      * 날짜 관련 에러
@@ -81,8 +82,9 @@ public enum ErrorCode {
     /**
      * 기타 에러
      */
-    JOB_NOT_FOUND(NOT_FOUND, "ERROR_4001", "직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
-
+    JOB_NOT_FOUND(NOT_FOUND, "ERROR_4001", "직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다."),
+    S3_UPLOAD_ERROR(INTERNAL_SERVER_ERROR, "ERROR_4002", "이미지 업로드에 실패했습니다. 관리자에게 문의 바랍니다.");
+    
     private final HttpStatus status;
     private final String code;
     private final String message;

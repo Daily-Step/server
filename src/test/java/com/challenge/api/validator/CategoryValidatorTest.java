@@ -30,7 +30,7 @@ class CategoryValidatorTest {
 
     @DisplayName("존재하는 카테고리 ID로 조회하는 경우 예외가 발생하지 않는다.")
     @Test
-    void validateCategoryExists_whenCategoryExists() {
+    void categoryExistsBy() {
         // given
         Category category = Category.builder()
                 .name("카테고리")
@@ -38,18 +38,18 @@ class CategoryValidatorTest {
         categoryRepository.save(category);
 
         // when // then
-        assertThatCode(() -> categoryValidator.validateCategoryExists(category.getId()))
+        assertThatCode(() -> categoryValidator.categoryExistsBy(category.getId()))
                 .doesNotThrowAnyException();
     }
 
     @DisplayName("존재하지 않는 카테고리 ID로 조회하는 경우 예외가 발생한다.")
     @Test
-    void validateCategoryExists_whenCategoryDoesNotExists() {
+    void categoryDoesNotExistsBy() {
         // given
         Long notExistsCategoryId = 999L;
 
         // when // then
-        assertThatThrownBy(() -> categoryValidator.validateCategoryExists(notExistsCategoryId))
+        assertThatThrownBy(() -> categoryValidator.categoryExistsBy(notExistsCategoryId))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage("카테고리 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
     }

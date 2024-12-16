@@ -7,6 +7,7 @@ import com.challenge.api.service.member.request.UpdateJobServiceRequest;
 import com.challenge.api.service.member.request.UpdateJobYearServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
+import com.challenge.api.service.s3.S3ClientService;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.JobYear;
@@ -17,6 +18,7 @@ import com.challenge.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JobRepository jobRepository;
+    private final S3ClientService s3ClientService;
 
     /**
      * 회원 정보 조회 메소드
@@ -61,6 +64,7 @@ public class MemberService {
      * @param request
      * @return
      */
+    @Transactional
     public String updateNickname(Member member, UpdateNicknameServiceRequest request) {
         String nickname = request.getNickname();
 
@@ -83,6 +87,7 @@ public class MemberService {
      * @param request
      * @return
      */
+    @Transactional
     public String updateBirth(Member member, UpdateBirthServiceRequest request) {
         member.updateBirth(request.getBirth());
 
@@ -96,6 +101,7 @@ public class MemberService {
      * @param request
      * @return
      */
+    @Transactional
     public String updateGender(Member member, UpdateGenderServiceRequest request) {
         member.updateGender(request.getGender());
 
@@ -109,6 +115,7 @@ public class MemberService {
      * @param request
      * @return
      */
+    @Transactional
     public String updateJob(Member member, UpdateJobServiceRequest request) {
         // 직무 데이터 조회
         Job job = jobRepository.findById(request.getJobId())
@@ -126,12 +133,31 @@ public class MemberService {
      * @param request
      * @return
      */
+    @Transactional
     public String updateJobYear(Member member, UpdateJobYearServiceRequest request) {
         JobYear jobYear = JobYear.of(request.getYearId());
 
         member.updateJobYear(jobYear);
 
         return "연차 수정 성공";
+    }
+
+    /**
+     * 회원 프로필 사진 업로드 메소드
+     *
+     * @param member
+     * @param image
+     * @return
+     */
+    @Transactional
+    public String uploadProfileImg(Member member, MultipartFile image) {
+        // s3 이미지 업로드
+        String imgUrl = s3ClientService.upload(image);
+
+        // member 엔티티 업데이트
+        member.updateProfileImg(imgUrl);
+
+        return imgUrl;
     }
 
 }

@@ -3,6 +3,7 @@ package com.challenge.api.controller.challenge;
 import com.challenge.annotation.AuthMember;
 import com.challenge.api.ApiResponse;
 import com.challenge.api.controller.challenge.request.ChallengeCreateRequest;
+import com.challenge.api.controller.challenge.request.ChallengeUpdateRequest;
 import com.challenge.api.service.challenge.ChallengeService;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.domain.member.Member;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,6 +48,22 @@ public class ChallengeController {
             @PathVariable Long challengeId,
             @RequestParam String achieveDate) {
         return ApiResponse.ok(challengeService.achieveChallenge(member, challengeId, achieveDate));
+    }
+
+    @PostMapping("/challenges/{challengeId}/cancel")
+    public ApiResponse<ChallengeResponse> cancelChallenge(
+            @AuthMember Member member,
+            @PathVariable Long challengeId,
+            @RequestParam String cancelDate) {
+        return ApiResponse.ok(challengeService.cancelChallenge(member, challengeId, cancelDate));
+    }
+
+    @PutMapping("/challenges/{challengeId}")
+    public ApiResponse<ChallengeResponse> updateChallenge(
+            @AuthMember Member member,
+            @PathVariable Long challengeId,
+            @RequestBody @Valid ChallengeUpdateRequest request) {
+        return ApiResponse.ok(challengeService.updateChallenge(member, challengeId, request.toServiceRequest()));
     }
 
 }

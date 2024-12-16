@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,18 +40,22 @@ public class MemberController {
     }
 
     @PutMapping("/nickname")
-    public ApiResponse<String> updateNickname(@RequestBody @Valid UpdateNicknameRequest request,
+    public ApiResponse<String> updateNickname(
+            @RequestBody @Valid UpdateNicknameRequest request,
             @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateNickname(member, request.toServiceRequest()));
     }
 
     @PutMapping("/birth")
-    public ApiResponse<String> updateBirth(@RequestBody @Valid UpdateBirthRequest request, @AuthMember Member member) {
+    public ApiResponse<String> updateBirth(
+            @RequestBody @Valid UpdateBirthRequest request,
+            @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateBirth(member, request.toServiceRequest()));
     }
 
     @PutMapping("/gender")
-    public ApiResponse<String> updateGender(@RequestBody @Valid UpdateGenderRequest request,
+    public ApiResponse<String> updateGender(
+            @RequestBody @Valid UpdateGenderRequest request,
             @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateGender(member, request.toServiceRequest()));
     }
@@ -60,9 +66,17 @@ public class MemberController {
     }
 
     @PutMapping("/jobyear")
-    public ApiResponse<String> updateJobYear(@RequestBody @Valid UpdateJobYearRequest request,
+    public ApiResponse<String> updateJobYear(
+            @RequestBody @Valid UpdateJobYearRequest request,
             @AuthMember Member member) {
         return ApiResponse.ok(memberService.updateJobYear(member, request.toServiceRequest()));
+    }
+
+    @PostMapping("/profile/img")
+    public ApiResponse<String> uploadProfileImg(
+            @RequestPart(value = "image") MultipartFile image,
+            @AuthMember Member member) {
+        return ApiResponse.ok(memberService.uploadProfileImg(member, image));
     }
 
 }

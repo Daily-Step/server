@@ -13,6 +13,7 @@ import com.challenge.domain.member.JobYear;
 import com.challenge.domain.member.LoginType;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
+import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import com.challenge.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,7 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 @ActiveProfiles("test")
@@ -87,7 +89,7 @@ class AuthServiceTest {
         LoginResponse response = authService.kakaoLogin(request);
 
         // then
-        assertThat(response.getMemberId()).isEqualTo(member.getId());
+        assertEquals(response.getMemberId(), member.getId());
         assertThat(response.getAccessToken()).isNotEmpty();
         assertThat(response.getRefreshToken()).isNotEmpty();
     }
@@ -107,7 +109,7 @@ class AuthServiceTest {
         // when // then
         assertThatThrownBy(() -> authService.kakaoLogin(request))
                 .isInstanceOf(GlobalException.class)
-                .hasMessage("사용자를 찾을 수 없습니다.");
+                .hasMessage(ErrorCode.MEMBER_NOT_FOUND.getMessage());
     }
 
     @DisplayName("카카오 회원가입 성공: 토큰과 회원id가 반환된다.")
@@ -132,7 +134,7 @@ class AuthServiceTest {
 
         // then
         Member savedMember = memberRepository.findBySocialIdAndLoginType(MOCK_SOCIAL_ID, LoginType.KAKAO);
-        assertThat(response.getMemberId()).isEqualTo(savedMember.getId());
+        assertEquals(response.getMemberId(), savedMember.getId());
         assertThat(response.getAccessToken()).isNotEmpty();
         assertThat(response.getRefreshToken()).isNotEmpty();
     }
@@ -160,7 +162,7 @@ class AuthServiceTest {
         // when // then
         assertThatThrownBy(() -> authService.kakaoSignin(request))
                 .isInstanceOf(GlobalException.class)
-                .hasMessage("이미 존재하는 회원입니다.");
+                .hasMessage(ErrorCode.MEMBER_EXISTS.getMessage());
     }
 
     @DisplayName("카카오 회원가입 실패: 중복된 닉네임을 요청하는 경우 예외가 발생한다.")
@@ -186,7 +188,7 @@ class AuthServiceTest {
         // when // then
         assertThatThrownBy(() -> authService.kakaoSignin(request))
                 .isInstanceOf(GlobalException.class)
-                .hasMessage("이미 사용중인 닉네임입니다.");
+                .hasMessage(ErrorCode.DUPLICATED_NICKNAME.getMessage());
     }
 
     @DisplayName("토큰 재발급 성공: 토큰이 반환된다.")
@@ -224,7 +226,7 @@ class AuthServiceTest {
         // when // then
         assertThatThrownBy(() -> authService.reissueToken(request))
                 .isInstanceOf(GlobalException.class)
-                .hasMessage("리프레쉬 토큰이 만료되었습니다. 다시 로그인 해주세요");
+                .hasMessage(ErrorCode.EXPIRED_REFRESH_TOKEN.getMessage());
     }
 
     @DisplayName("토큰 재발급 실패: 토큰에 담긴 memberId에 해당하는 회원이 존재하지 않는 경우 예외가 발생한다.")
@@ -241,7 +243,7 @@ class AuthServiceTest {
         // when // then
         assertThatThrownBy(() -> authService.reissueToken(request))
                 .isInstanceOf(GlobalException.class)
-                .hasMessage("사용자를 찾을 수 없습니다.");
+                .hasMessage(ErrorCode.MEMBER_NOT_FOUND.getMessage());
     }
 
     /*   테스트 공통 메소드   */
