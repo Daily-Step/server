@@ -1,12 +1,13 @@
 ==== Request Fields
 |===
-|Path|Type|Optional|Description
+|Path|Type|Optional|Constraints|Description
 
 {{#fields}}
 
 |{{#tableCellContent}}`+{{path}}+`{{/tableCellContent}}
 |{{#tableCellContent}}`+{{type}}+`{{/tableCellContent}}
 |{{#tableCellContent}}{{#optional}}O{{/optional}}{{/tableCellContent}}
+|{{#tableCellContent}}{{#constraints}}{{.}}{{/constraints}}{{/tableCellContent}}
 |{{#tableCellContent}}{{description}}{{/tableCellContent}}
 
 {{/fields}}

@@ -32,10 +32,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
+
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -58,6 +60,7 @@ class MemberServiceTest {
     private static final String MEMBER_EMAIL = "test@naver.com";
     private static final String MEMBER_NICKNAME = "test";
     private static final LocalDate MEMBER_BIRTH = LocalDate.of(2000, 1, 1);
+    private static final String MEMBER_BIRTH_STRING = LocalDate.of(2000, 1, 1).toString();
     private static final Gender MEMBER_GENDER = Gender.MALE;
     private static final JobYear MEMBER_JOBYEAR = JobYear.LT_1Y;
     private Job MEMBER_JOB;
@@ -115,11 +118,11 @@ class MemberServiceTest {
         MemberInfoResponse response = memberService.getMemberInfo(member);
 
         // then
-        assertEquals(response.getNickname(), MEMBER_NICKNAME);
-        assertEquals(response.getBirth(), MEMBER_BIRTH);
-        assertEquals(response.getGender(), MEMBER_GENDER);
-        assertEquals(response.getJobId(), MEMBER_JOB.getId());
-        assertEquals(response.getJobYearId(), MEMBER_JOBYEAR.getId());
+        assertThat(response.getNickname()).isEqualTo(MEMBER_NICKNAME);
+        assertThat(response.getBirth()).isEqualTo(MEMBER_BIRTH_STRING);
+        assertThat(response.getGender()).isEqualTo(MEMBER_GENDER);
+        assertThat(response.getJobId()).isEqualTo(MEMBER_JOB.getId());
+        assertThat(response.getJobYearId()).isEqualTo(MEMBER_JOBYEAR.getId());
     }
 
     @DisplayName("닉네임 수정 성공")

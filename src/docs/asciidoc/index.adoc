@@ -7,12 +7,14 @@ endif::[]
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toclevels: 2
+:toclevels: 1
 :sectlinks:
 
 == Challenge API
 
 include::api/challenge.adoc[]
 include::api/category.adoc[]
+include::api/auth.adoc[]
+include::api/member.adoc[]
 
 

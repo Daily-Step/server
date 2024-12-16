@@ -209,7 +209,7 @@ class MemberControllerTest extends ControllerTestSupport {
         void checkNicknameIsValidFailed() throws Exception {
             // given
             UpdateBirthRequest request = UpdateBirthRequest.builder()
-                    .birth(LocalDate.now())
+                    .birth(LocalDate.now().plusDays(1).toString())
                     .build();
 
             // when // then
@@ -217,7 +217,7 @@ class MemberControllerTest extends ControllerTestSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("birth는 과거 날짜여야 합니다."))
+                    .andExpect(jsonPath("$.message").value("유효하지 않은 날짜입니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/birth"));
         }
