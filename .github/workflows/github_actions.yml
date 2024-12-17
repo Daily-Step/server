@@ -5,9 +5,6 @@ on:
     types: [ closed ]
     branches:
       - develop
-  push:
-    branches:
-      - docs/47
 
 jobs:
   build-and-deploy: # Job 이름
