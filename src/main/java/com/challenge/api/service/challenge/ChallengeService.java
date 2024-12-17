@@ -88,6 +88,7 @@ public class ChallengeService {
         return ChallengeResponse.of(challenge);
     }
 
+    @Transactional
     public ChallengeResponse updateChallenge(Member member, Long challengeId, ChallengeUpdateServiceRequest request) {
         categoryValidator.categoryExistsBy(request.getCategoryId());
         challengeValidator.challengeExistsBy(member, challengeId);
@@ -97,6 +98,14 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
         challenge.update(category, request);
         return ChallengeResponse.of(challenge);
+    }
+
+    @Transactional
+    public Void deleteChallenge(Member member, Long challengeId) {
+        challengeValidator.challengeExistsBy(member, challengeId);
+        Challenge challenge = challengeRepository.getReferenceById(challengeId);
+        challengeRepository.delete(challenge);
+        return null;
     }
 
 }
