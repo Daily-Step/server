@@ -9,6 +9,7 @@ import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.domain.member.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,6 +65,11 @@ public class ChallengeController {
             @PathVariable Long challengeId,
             @RequestBody @Valid ChallengeUpdateRequest request) {
         return ApiResponse.ok(challengeService.updateChallenge(member, challengeId, request.toServiceRequest()));
+    }
+
+    @DeleteMapping("/challenges/{challengeId}")
+    public ApiResponse<Long> deleteChallenge(@AuthMember Member member, @PathVariable Long challengeId) {
+        return ApiResponse.ok(challengeService.deleteChallenge(member, challengeId));
     }
 
 }
