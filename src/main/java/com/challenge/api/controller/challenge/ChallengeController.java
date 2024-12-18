@@ -68,7 +68,7 @@ public class ChallengeController {
     }
 
     @DeleteMapping("/challenges/{challengeId}")
-    public ApiResponse<Void> deleteChallenge(@AuthMember Member member, @PathVariable Long challengeId) {
+    public ApiResponse<Long> deleteChallenge(@AuthMember Member member, @PathVariable Long challengeId) {
         return ApiResponse.ok(challengeService.deleteChallenge(member, challengeId));
     }
 

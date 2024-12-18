@@ -101,11 +101,11 @@ public class ChallengeService {
     }
 
     @Transactional
-    public Void deleteChallenge(Member member, Long challengeId) {
+    public Long deleteChallenge(Member member, Long challengeId) {
         challengeValidator.challengeExistsBy(member, challengeId);
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
         challengeRepository.delete(challenge);
-        return null;
+        return challengeId;
     }
 
 }
