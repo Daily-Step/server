@@ -490,8 +490,6 @@ class MemberControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.code").value(ErrorCode.S3_UPLOAD_ERROR.getCode()))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/profile/img"))
                     .andExpect(jsonPath("$.data").isEmpty());
-
-
         }
 
     }
