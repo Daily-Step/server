@@ -321,6 +321,20 @@ class MemberServiceTest {
                 .hasMessage(ErrorCode.S3_UPLOAD_ERROR.getMessage());
     }
 
+    @DisplayName("push 알림 받기 여부 수정 성공")
+    @Test
+    void updatePushReceiveSucceeds() {
+        // given
+        Member member = createMember();
+        boolean beforeNotificationReceived = member.isNotificationReceived();
+
+        // when
+        memberService.updatePushReceive(member);
+
+        // then
+        assertThat(member.isNotificationReceived()).isNotEqualTo(beforeNotificationReceived);
+    }
+
     /*   테스트 공통 메소드   */
     private Member createMember() {
         return memberRepository.save(Member.builder()
