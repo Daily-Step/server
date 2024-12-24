@@ -11,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -45,9 +44,9 @@ class MemberRepositoryTest {
         Member resultMember = memberRepository.findBySocialIdAndLoginType(MEMBER_SOCIAL_ID, MEMBER_LOGIN_TYPE);
 
         // then
-        assertEquals(resultMember.getId(), member.getId());
-        assertEquals(resultMember.getSocialId(), MEMBER_SOCIAL_ID);
-        assertEquals(resultMember.getLoginType(), MEMBER_LOGIN_TYPE);
+        assertThat(resultMember.getId()).isEqualTo(member.getId());
+        assertThat(resultMember.getSocialId()).isEqualTo(MEMBER_SOCIAL_ID);
+        assertThat(resultMember.getLoginType()).isEqualTo(MEMBER_LOGIN_TYPE);
     }
 
     @DisplayName("socialId와 loginType으로 특정 회원의 존재 여부를 조회한다.")
@@ -60,7 +59,7 @@ class MemberRepositoryTest {
         boolean exists = memberRepository.existsBySocialIdAndLoginType(MEMBER_SOCIAL_ID, MEMBER_LOGIN_TYPE);
 
         // then
-        assertTrue(exists);
+        assertThat(exists).isTrue();
     }
 
     @DisplayName("특정 닉네임을 가진 회원의 존재 여부를 조회한다.")
@@ -73,8 +72,7 @@ class MemberRepositoryTest {
         boolean exists = memberRepository.existsByNickname(MEMBER_NICKNAME);
 
         // then
-        assertTrue(exists);
-
+        assertThat(exists).isTrue();
     }
 
     /*  테스트 공통 메소드  */
