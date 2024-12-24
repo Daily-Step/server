@@ -65,15 +65,15 @@ class AuthControllerDocsTest extends RestDocsSupport {
             return new FieldDescriptor[]{
                     fieldWithPath("accessToken").type(STRING).description("카카오 access token"),
                     fieldWithPath("nickname").type(STRING).description("회원 닉네임")
-                            .attributes(field("4~10자, 특수문자 및 공백 불가")),
+                            .attributes(field("constraints", "4~10자, 특수문자 및 공백 불가")),
                     fieldWithPath("birth").type(STRING).description("생일")
-                            .attributes(field("과거 날짜, yyyy-MM-dd")),
+                            .attributes(field("constraints", "과거 날짜, yyyy-MM-dd")),
                     fieldWithPath("gender").type(STRING).description("성별")
-                            .attributes(field("MALE, FEMALE")),
+                            .attributes(field("constraints", "MALE, FEMALE")),
                     fieldWithPath("jobId").type(NUMBER).description("직무 id")
-                            .attributes(field("1~20 사이의 숫자")),
+                            .attributes(field("constraints", "1~20 사이의 숫자")),
                     fieldWithPath("yearId").type(NUMBER).description("연차 id")
-                            .attributes(field("1~4 사이의 숫자"))
+                            .attributes(field("constraints", "1~4 사이의 숫자"))
             };
         }
 
@@ -237,15 +237,15 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("accessToken").type(STRING).description("카카오 access token"),
                                     fieldWithPath("nickname").type(STRING).description("회원 닉네임")
-                                            .attributes(field("4~10자, 특수문자 및 공백 불가")),
+                                            .attributes(field("constraints", "4~10자, 특수문자 및 공백 불가")),
                                     fieldWithPath("birth").type(NULL).description("생일")
-                                            .attributes(field("과거 날짜")),
+                                            .attributes(field("constraints", "과거 날짜")),
                                     fieldWithPath("gender").type(STRING).description("성별")
-                                            .attributes(field("MALE, FEMALE")),
+                                            .attributes(field("constraints", "MALE, FEMALE")),
                                     fieldWithPath("jobId").type(NUMBER).description("직무 id")
-                                            .attributes(field("1~20 사이의 숫자")),
+                                            .attributes(field("constraints", "1~20 사이의 숫자")),
                                     fieldWithPath("yearId").type(NUMBER).description("연차 id")
-                                            .attributes(field("1~4 사이의 숫자"))),
+                                            .attributes(field("constraints", "1~4 사이의 숫자"))),
                             responseFields(failResponse())
                     ));
         }
@@ -302,15 +302,15 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("accessToken").type(STRING).description("카카오 access token"),
                                     fieldWithPath("nickname").type(STRING).description("회원 닉네임")
-                                            .attributes(field("4~10자, 특수문자 및 공백 불가")),
+                                            .attributes(field("constraints", "4~10자, 특수문자 및 공백 불가")),
                                     fieldWithPath("birth").type(STRING).description("생일")
-                                            .attributes(field("과거 날짜")),
+                                            .attributes(field("constraints", "과거 날짜")),
                                     fieldWithPath("gender").type(NULL).description("성별")
-                                            .attributes(field("MALE, FEMALE")),
+                                            .attributes(field("constraints", "MALE, FEMALE")),
                                     fieldWithPath("jobId").type(NUMBER).description("직무 id")
-                                            .attributes(field("1~20 사이의 숫자")),
+                                            .attributes(field("constraints", "1~20 사이의 숫자")),
                                     fieldWithPath("yearId").type(NUMBER).description("연차 id")
-                                            .attributes(field("1~4 사이의 숫자"))
+                                            .attributes(field("constraints", "1~4 사이의 숫자"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -341,15 +341,15 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("accessToken").type(STRING).description("카카오 access token"),
                                     fieldWithPath("nickname").type(STRING).description("회원 닉네임")
-                                            .attributes(field("4~10자, 특수문자 및 공백 불가")),
+                                            .attributes(field("constraints", "4~10자, 특수문자 및 공백 불가")),
                                     fieldWithPath("birth").type(STRING).description("생일")
-                                            .attributes(field("과거 날짜")),
+                                            .attributes(field("constraints", "과거 날짜")),
                                     fieldWithPath("gender").type(STRING).description("성별")
-                                            .attributes(field("MALE, FEMALE")),
+                                            .attributes(field("constraints", "MALE, FEMALE")),
                                     fieldWithPath("jobId").type(NULL).description("직무 id")
-                                            .attributes(field("1~20 사이의 숫자")),
+                                            .attributes(field("constraints", "1~20 사이의 숫자")),
                                     fieldWithPath("yearId").type(NUMBER).description("연차 id")
-                                            .attributes(field("1~4 사이의 숫자"))
+                                            .attributes(field("constraints", "1~4 사이의 숫자"))
                             ),
                             responseFields(failResponse())
                     ));

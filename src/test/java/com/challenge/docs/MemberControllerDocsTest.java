@@ -142,7 +142,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("nickname").type(STRING)
                                             .description("닉네임")
-                                            .attributes(field("4~10자, 특수문자 및 공백 불가"))
+                                            .attributes(field("constraints", "4~10자, 특수문자 및 공백 불가"))
                             ),
                             responseFields(successResponse())
                                     .and(
@@ -172,7 +172,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("nickname").type(STRING)
                                             .description("닉네임")
-                                            .attributes(field("4~10자, 특수문자 및 공백 불가"))
+                                            .attributes(field("constraints", "4~10자, 특수문자 및 공백 불가"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -215,7 +215,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("nickname").type(STRING)
                                             .description("닉네임")
-                                            .attributes(field("4~10자, 특수문자 및 공백 불가"))
+                                            .attributes(field("constraints", "4~10자, 특수문자 및 공백 불가"))
                             ),
                             responseFields(successResponse())
                                     .and(
@@ -245,7 +245,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("nickname").type(STRING)
                                             .description("닉네임")
-                                            .attributes(field("4~10자, 특수문자 및 공백 불가"))
+                                            .attributes(field("constraints", "4~10자, 특수문자 및 공백 불가"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -288,7 +288,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("birth").type(STRING)
                                             .description("생년월일")
-                                            .attributes(field("yyyy-MM-dd"))
+                                            .attributes(field("constraints", "yyyy-MM-dd"))
                             ),
                             responseFields(successResponse())
                                     .and(
@@ -318,7 +318,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("birth").type(STRING)
                                             .description("생년월일")
-                                            .attributes(field("yyyy-MM-dd"))
+                                            .attributes(field("constraints", "yyyy-MM-dd"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -361,7 +361,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("gender").type(STRING)
                                             .description("성별")
-                                            .attributes(field("MALE, FEMALE"))
+                                            .attributes(field("constraints", "MALE, FEMALE"))
                             ),
                             responseFields(successResponse())
                                     .and(
@@ -391,7 +391,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("gender").type(NULL)
                                             .description("성별")
-                                            .attributes(field("MALE, FEMALE"))
+                                            .attributes(field("constraints", "MALE, FEMALE"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -434,7 +434,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("jobId").type(NUMBER)
                                             .description("직무 id")
-                                            .attributes(field("1~20 사이의 숫자"))
+                                            .attributes(field("constraints", "1~20 사이의 숫자"))
                             ),
                             responseFields(successResponse())
                                     .and(
@@ -464,7 +464,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("jobId").type(NULL)
                                             .description("직무 id")
-                                            .attributes(field("1~20 사이의 숫자"))
+                                            .attributes(field("constraints", "1~20 사이의 숫자"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -490,7 +490,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("jobId").type(NUMBER)
                                             .description("직무 id")
-                                            .attributes(field("1~20 사이의 숫자"))
+                                            .attributes(field("constraints", "1~20 사이의 숫자"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -516,7 +516,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("jobId").type(NUMBER)
                                             .description("직무 id")
-                                            .attributes(field("1~20 사이의 숫자"))
+                                            .attributes(field("constraints", "1~20 사이의 숫자"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -559,7 +559,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("yearId").type(NUMBER)
                                             .description("연차 id")
-                                            .attributes(field("1~4 사이의 숫자"))
+                                            .attributes(field("constraints", "1~4 사이의 숫자"))
                             ),
                             responseFields(successResponse())
                                     .and(
@@ -589,7 +589,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("yearId").type(NUMBER)
                                             .description("연차 id")
-                                            .attributes(field("1~4 사이의 숫자"))
+                                            .attributes(field("constraints", "1~4 사이의 숫자"))
                             ),
                             responseFields(failResponse())
                     ));
@@ -615,7 +615,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             requestFields(
                                     fieldWithPath("yearId").type(NUMBER)
                                             .description("연차 id")
-                                            .attributes(field("1~4 사이의 숫자"))
+                                            .attributes(field("constraints", "1~4 사이의 숫자"))
                             ),
                             responseFields(failResponse())
                     ));
