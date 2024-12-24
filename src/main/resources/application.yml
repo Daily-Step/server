@@ -63,7 +63,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: false
   datasource:
     url: jdbc:mysql://${RDS_PRIVATE_IP}:${RDS_PORT}/${DB_SCHEMA_NAME}?useSSL=true
