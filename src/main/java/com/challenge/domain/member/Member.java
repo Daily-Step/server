@@ -82,7 +82,7 @@ public class Member extends BaseDateTimeEntity {
     private List<Notification> notifications = new ArrayList<>();
 
     public static Member create(Long socialId, String email, String nickname, LocalDate birth, Gender gender,
-            JobYear jobYear, LoginType loginType, Job job) {
+                                JobYear jobYear, LoginType loginType, Job job) {
         return Member.builder()
                 .socialId(socialId)
                 .email(email)
@@ -97,7 +97,7 @@ public class Member extends BaseDateTimeEntity {
 
     @Builder
     private Member(Long socialId, String email, String nickname, LocalDate birth, Gender gender, JobYear jobYear,
-            LoginType loginType, Job job) {
+                   LoginType loginType, Job job) {
         this.socialId = socialId;
         this.email = email;
         this.nickname = nickname;
@@ -130,6 +130,10 @@ public class Member extends BaseDateTimeEntity {
 
     public void updateProfileImg(String imgUrl) {
         this.profileImg = imgUrl;
+    }
+
+    public void updateNotificationReceived() {
+        this.isNotificationReceived = !this.isNotificationReceived;
     }
 
 }

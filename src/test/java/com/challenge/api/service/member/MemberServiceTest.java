@@ -33,7 +33,6 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
@@ -88,7 +87,7 @@ class MemberServiceTest {
         String response = memberService.checkNicknameIsValid(request);
 
         // then
-        assertEquals(response, "사용 가능한 닉네임입니다.");
+        assertThat(response).isEqualTo("사용 가능한 닉네임입니다.");
     }
 
     @DisplayName("닉네임 중복 확인 실패: 이미 사용중인 닉네임인 경우 예외가 발생한다.")
@@ -141,7 +140,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertEquals(resultMember.getNickname(), "newName");
+        assertThat(resultMember.getNickname()).isEqualTo("newName");
     }
 
     @DisplayName("닉네임 수정 실패: 이미 사용중인 닉네임인 경우 예외가 발생한다.")
@@ -190,7 +189,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertEquals(resultMember.getBirth(), newBirth);
+        assertThat(resultMember.getBirth()).isEqualTo(newBirth);
     }
 
     @DisplayName("성별 수정 성공")
@@ -210,7 +209,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertEquals(resultMember.getGender(), newGender);
+        assertThat(resultMember.getGender()).isEqualTo(newGender);
     }
 
     @DisplayName("직무 수정 성공")
@@ -233,7 +232,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertEquals(resultMember.getJob(), newJob);
+        assertThat(resultMember.getJob()).isEqualTo(newJob);
     }
 
     @DisplayName("직무 수정 실패: 직무 정보를 찾을 수 없는 경우 예외가 발생한다.")
@@ -269,7 +268,7 @@ class MemberServiceTest {
 
         // then
         Member resultMember = memberRepository.findById(member.getId()).get();
-        assertEquals(resultMember.getJobYear(), JobYear.of(4));
+        assertThat(resultMember.getJobYear()).isEqualTo(JobYear.of(4));
     }
 
 
@@ -294,8 +293,8 @@ class MemberServiceTest {
         String result = memberService.uploadProfileImg(member, image);
 
         // then
-        assertEquals(imgUrl, result);
-        assertEquals(member.getProfileImg(), imgUrl);
+        assertThat(imgUrl).isEqualTo(result);
+        assertThat(member.getProfileImg()).isEqualTo(imgUrl);
     }
 
     @DisplayName("프로필 사진 등록 실패: s3 이미지 업로드에 실패한 경우 예외가 발생한다.")
@@ -319,6 +318,20 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.uploadProfileImg(member, image))
                 .isInstanceOf(GlobalException.class)
                 .hasMessage(ErrorCode.S3_UPLOAD_ERROR.getMessage());
+    }
+
+    @DisplayName("push 알림 받기 여부 수정 성공")
+    @Test
+    void updatePushReceiveSucceeds() {
+        // given
+        Member member = createMember();
+        boolean beforeNotificationReceived = member.isNotificationReceived();
+
+        // when
+        memberService.updatePushReceive(member);
+
+        // then
+        assertThat(member.isNotificationReceived()).isNotEqualTo(beforeNotificationReceived);
     }
 
     /*   테스트 공통 메소드   */
