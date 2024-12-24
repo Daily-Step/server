@@ -56,7 +56,6 @@ public abstract class ControllerTestSupport {
         given(authInterceptor.preHandle(any(), any(), any())).willReturn(true);
 
         // 리졸버가 mockMember를 반환하도록 Mock 설정
-
         mockMember = Member.builder()
                 .socialId(MOCK_SOCIAL_ID)
                 .email(MOCK_EMAIL)

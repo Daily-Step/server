@@ -34,9 +34,4 @@ public class ChallengeValidator {
         }
     }
 
-    public Challenge findById(Long challengeId) {
-        return challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.CHALLENGE_NOT_FOUND));
-    }
-
 }

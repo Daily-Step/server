@@ -22,8 +22,9 @@ public class RestDocsConfiguration {
                         modifyHeaders()
                                 .remove("Content-Length")
                                 .remove("Host"),
-                        prettyPrint()),  // pretty json 적용
-                preprocessResponse(prettyPrint())    // pretty json 적용
+                        prettyPrint()
+                ),
+                preprocessResponse(prettyPrint())
         );
     }
 

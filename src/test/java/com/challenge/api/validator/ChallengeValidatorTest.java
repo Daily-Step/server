@@ -60,7 +60,7 @@ class ChallengeValidatorTest {
 
     @DisplayName("존재하지 않는 챌린지 ID로 조회하는 경우 예외가 발생한다.")
     @Test
-    void challengeId() {
+    void challengeExists() {
         // given
         Member member = createMember("nickname");
         Member savedMember = memberRepository.save(member);
