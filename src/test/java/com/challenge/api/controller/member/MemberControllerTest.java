@@ -494,4 +494,21 @@ class MemberControllerTest extends ControllerTestSupport {
 
     }
 
+    @DisplayName("push 알림 수신 여부 수정 성공")
+    @Test
+    void updatePushReceiveSucceeds() throws Exception {
+        // given
+        // 서비스 mock 처리
+        String response = "push 알림 여부 수정 성공";
+        given(memberService.updatePushReceive(any())).willReturn(response);
+
+        // when // then
+        mockMvc.perform(put("/api/v1/member/push"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.code").isEmpty())
+                .andExpect(jsonPath("$.url").isEmpty())
+                .andExpect(jsonPath("$.data").value(response));
+    }
+
 }

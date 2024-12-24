@@ -117,7 +117,8 @@ public class MemberControllerDocsTest extends RestDocsSupport {
         void setUp() {
             // 서비스 mock 처리
             checkNicknameResponse = "사용 가능한 닉네임입니다.";
-            given(memberService.checkNicknameIsValid(any(CheckNicknameServiceRequest.class))).willReturn(checkNicknameResponse);
+            given(memberService.checkNicknameIsValid(any(CheckNicknameServiceRequest.class))).willReturn(
+                    checkNicknameResponse);
         }
 
         @DisplayName("닉네임 중복 확인 성공")
@@ -189,7 +190,8 @@ public class MemberControllerDocsTest extends RestDocsSupport {
         void setUp() {
             // 서비스 mock 처리
             updateNicknameResponse = "닉네임 수정 성공";
-            given(memberService.updateNickname(any(Member.class), any(UpdateNicknameServiceRequest.class))).willReturn(updateNicknameResponse);
+            given(memberService.updateNickname(any(Member.class), any(UpdateNicknameServiceRequest.class))).willReturn(
+                    updateNicknameResponse);
         }
 
         @DisplayName("닉네임 수정 성공")
@@ -261,7 +263,8 @@ public class MemberControllerDocsTest extends RestDocsSupport {
         void setUp() {
             // 서비스 mock 처리
             updateBirthResponse = "생년월일 수정 성공";
-            given(memberService.updateBirth(any(Member.class), any(UpdateBirthServiceRequest.class))).willReturn(updateBirthResponse);
+            given(memberService.updateBirth(any(Member.class), any(UpdateBirthServiceRequest.class))).willReturn(
+                    updateBirthResponse);
         }
 
         @DisplayName("생년월일 수정 성공")
@@ -333,7 +336,8 @@ public class MemberControllerDocsTest extends RestDocsSupport {
         void setUp() {
             // 서비스 mock 처리
             updateGenderResponse = "성별 수정 성공";
-            given(memberService.updateGender(any(Member.class), any(UpdateGenderServiceRequest.class))).willReturn(updateGenderResponse);
+            given(memberService.updateGender(any(Member.class), any(UpdateGenderServiceRequest.class))).willReturn(
+                    updateGenderResponse);
         }
 
         @DisplayName("성별 수정 성공")
@@ -405,7 +409,8 @@ public class MemberControllerDocsTest extends RestDocsSupport {
         void setUp() {
             // 서비스 mock 처리
             updateJobResponse = "직무 수정 성공";
-            given(memberService.updateJob(any(Member.class), any(UpdateJobServiceRequest.class))).willReturn(updateJobResponse);
+            given(memberService.updateJob(any(Member.class), any(UpdateJobServiceRequest.class))).willReturn(
+                    updateJobResponse);
         }
 
         @DisplayName("직무 수정 성공")
@@ -529,7 +534,8 @@ public class MemberControllerDocsTest extends RestDocsSupport {
         void setUp() {
             // 서비스 mock 처리
             updateJobYearResponse = "연차 수정 성공";
-            given(memberService.updateJobYear(any(Member.class), any(UpdateJobYearServiceRequest.class))).willReturn(updateJobYearResponse);
+            given(memberService.updateJobYear(any(Member.class), any(UpdateJobYearServiceRequest.class))).willReturn(
+                    updateJobYearResponse);
         }
 
         @DisplayName("연차 수정 성공")
@@ -613,6 +619,38 @@ public class MemberControllerDocsTest extends RestDocsSupport {
                             ),
                             responseFields(failResponse())
                     ));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("push 알림 수신 여부 수정")
+    class UpdatePushReceive {
+
+        @DisplayName("push 알림 수신 여부 수정 성공")
+        @Test
+        void updatePushReceiveSucceeds() throws Exception {
+            // given
+            String response = "push 알림 여부 수정 성공";
+            given(memberService.updatePushReceive(any())).willReturn(response);
+
+            // when // then
+            mockMvc.perform(put("/api/v1/member/push")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("OK"))
+                    .andExpect(jsonPath("$.code").isEmpty())
+                    .andExpect(jsonPath("$.url").isEmpty())
+                    .andExpect(jsonPath("$.data").value(response))
+                    .andDo(restDocs.document(
+                            responseFields(successResponse())
+                                    .and(
+                                            fieldWithPath("data").type(STRING)
+                                                    .description("push 알림 수신 여부 수정 결과")
+                                    )
+                    ))
+            ;
+
         }
 
     }

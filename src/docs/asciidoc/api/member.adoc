@@ -149,3 +149,11 @@ include::{snippets}/update-job-year/update-job-year-fail-id-more-than/request-fi
 ==== HTTP Response
 include::{snippets}/update-job-year/update-job-year-fail-id-more-than/http-response.adoc[]
 include::{snippets}/update-job-year/update-job-year-fail-id-more-than/response-fields.adoc[]
+
+== 4.14. push 알림 수신 여부 수정 성공
+==== HTTP Request
+include::{snippets}/update-push-receive/update-push-receive-succeeds/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/update-push-receive/update-push-receive-succeeds/http-response.adoc[]
+include::{snippets}/update-push-receive/update-push-receive-succeeds/response-fields.adoc[]

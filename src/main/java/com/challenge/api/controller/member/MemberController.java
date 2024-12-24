@@ -79,4 +79,9 @@ public class MemberController {
         return ApiResponse.ok(memberService.uploadProfileImg(member, image));
     }
 
+    @PutMapping("/push")
+    public ApiResponse<String> updatePushReceive(@AuthMember Member member) {
+        return ApiResponse.ok(memberService.updatePushReceive(member));
+    }
+
 }

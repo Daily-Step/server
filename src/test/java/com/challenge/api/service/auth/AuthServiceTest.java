@@ -29,7 +29,6 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 @ActiveProfiles("test")
@@ -89,7 +88,7 @@ class AuthServiceTest {
         LoginResponse response = authService.kakaoLogin(request);
 
         // then
-        assertEquals(response.getMemberId(), member.getId());
+        assertThat(response.getMemberId()).isEqualTo(member.getId());
         assertThat(response.getAccessToken()).isNotEmpty();
         assertThat(response.getRefreshToken()).isNotEmpty();
     }
@@ -134,7 +133,7 @@ class AuthServiceTest {
 
         // then
         Member savedMember = memberRepository.findBySocialIdAndLoginType(MOCK_SOCIAL_ID, LoginType.KAKAO);
-        assertEquals(response.getMemberId(), savedMember.getId());
+        assertThat(response.getMemberId()).isEqualTo(savedMember.getId());
         assertThat(response.getAccessToken()).isNotEmpty();
         assertThat(response.getRefreshToken()).isNotEmpty();
     }
