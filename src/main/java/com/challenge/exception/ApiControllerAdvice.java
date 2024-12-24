@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -29,22 +30,42 @@ public class ApiControllerAdvice {
                 .code(ex.getCode())
                 .message(ex.getMessage())
                 .url(request.getRequestURI())
+                .data(null)
                 .build();
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(ex.getStatus().value()));
     }
 
     /**
-     * @Valid 입력 데이터의 유효성 검사 실패 시 발생하는 예외 처리 ( 컨트롤러 DTO )
+     * 입력 데이터의 유효성 검사 실패 시 발생하는 예외 처리 ( 컨트롤러 DTO )
      */
     @ExceptionHandler
-    public ResponseEntity<ApiResponse<Object>> methodArgumentNotValidException(MethodArgumentNotValidException e,
+    public ResponseEntity<ApiResponse<Object>> methodArgumentNotValidException(
+            MethodArgumentNotValidException e,
             HttpServletRequest request) {
         ApiResponse<Object> errorResponse = ApiResponse
                 .builder()
                 .status(BAD_REQUEST)
                 .message(e.getBindingResult().getAllErrors().get(0).getDefaultMessage())
                 .code("VALID_ERROR")
+                .url(request.getRequestURI())
+                .data(null)
+                .build();
+
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    /**
+     * RequestParam 누락 시 발생하는 예외 처리
+     */
+    @ExceptionHandler
+    public ResponseEntity<ApiResponse<Object>> missingServletRequestParameterException(
+            MissingServletRequestParameterException ex,
+            HttpServletRequest request) {
+        ApiResponse<Object> errorResponse = ApiResponse.builder()
+                .status(BAD_REQUEST)
+                .message("필수 요청 파라미터인 '(%s)'가 존재하지 않습니다.".formatted(ex.getParameterName()))
+                .code("MISSING_PARAMETER")
                 .url(request.getRequestURI())
                 .data(null)
                 .build();
