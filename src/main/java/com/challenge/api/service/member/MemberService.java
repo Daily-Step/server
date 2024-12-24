@@ -160,4 +160,17 @@ public class MemberService {
         return imgUrl;
     }
 
+    /**
+     * push 알림 받기 여부 수정 메소드
+     *
+     * @param member
+     * @return
+     */
+    @Transactional
+    public String updatePushReceive(Member member) {
+        member.updateNotificationReceived();
+
+        return "push 알림 여부 수정 성공";
+    }
+
 }
