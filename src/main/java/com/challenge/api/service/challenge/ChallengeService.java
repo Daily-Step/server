@@ -1,5 +1,7 @@
 package com.challenge.api.service.challenge;
 
+import com.challenge.api.service.challenge.request.ChallengeAchieveServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeCancelServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
@@ -59,15 +61,16 @@ public class ChallengeService {
     }
 
     @Transactional
-    public ChallengeResponse achieveChallenge(Member member, Long challengeId, String achieveDate) {
+    public ChallengeResponse achieveChallenge(Member member, Long challengeId,
+            ChallengeAchieveServiceRequest request) {
         challengeValidator.challengeExistsBy(member, challengeId);
-        DateValidator.isLocalDateFormatter(achieveDate);
-        DateValidator.isBeforeOrEqualToTodayFrom(achieveDate);
+        DateValidator.isLocalDateFormatter(request.getAchieveDate());
+        DateValidator.isBeforeOrEqualToTodayFrom(request.getAchieveDate());
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
-        challengeValidator.hasDuplicateRecordFor(challenge, DateUtils.toLocalDate(achieveDate));
+        challengeValidator.hasDuplicateRecordFor(challenge, DateUtils.toLocalDate(request.getAchieveDate()));
 
-        Record record = Record.achieve(challenge, achieveDate);
+        Record record = Record.achieve(challenge, request.getAchieveDate());
         recordRepository.save(record);
         challenge.addRecord(record);
 
@@ -75,14 +78,14 @@ public class ChallengeService {
     }
 
     @Transactional
-    public ChallengeResponse cancelChallenge(Member member, Long challengeId, String cancelDate) {
+    public ChallengeResponse cancelChallenge(Member member, Long challengeId, ChallengeCancelServiceRequest request) {
         challengeValidator.challengeExistsBy(member, challengeId);
-        DateValidator.isLocalDateFormatter(cancelDate);
-        DateValidator.isBeforeOrEqualToTodayFrom(cancelDate);
+        DateValidator.isLocalDateFormatter(request.getCancelDate());
+        DateValidator.isBeforeOrEqualToTodayFrom(request.getCancelDate());
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
 
-        Record record = recordValidator.hasRecordFor(challenge, DateUtils.toLocalDate(cancelDate));
+        Record record = recordValidator.hasRecordFor(challenge, DateUtils.toLocalDate(request.getCancelDate()));
         challenge.getRecords().remove(record);
 
         return ChallengeResponse.of(challenge);
