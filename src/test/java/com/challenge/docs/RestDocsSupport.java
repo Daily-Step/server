@@ -19,7 +19,6 @@ import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-
 /**
  * Spring REST Docs
  *
@@ -50,8 +49,6 @@ public abstract class RestDocsSupport {
 
     /**
      * 성공 공통 응답 필드 반환
-     *
-     * @return
      */
     protected FieldDescriptor[] successResponse() {
         return new FieldDescriptor[]{
@@ -64,8 +61,6 @@ public abstract class RestDocsSupport {
 
     /**
      * 실패 공통 응답 필드 반환
-     *
-     * @return
      */
     protected FieldDescriptor[] failResponse() {
         return new FieldDescriptor[]{

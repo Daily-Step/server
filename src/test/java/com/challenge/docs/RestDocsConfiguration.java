@@ -22,13 +22,14 @@ public class RestDocsConfiguration {
                         modifyHeaders()
                                 .remove("Content-Length")
                                 .remove("Host"),
-                        prettyPrint()),  // pretty json 적용
-                preprocessResponse(prettyPrint())    // pretty json 적용
+                        prettyPrint()
+                ),
+                preprocessResponse(prettyPrint())
         );
     }
 
-    public static Attributes.Attribute field(final String value) {
-        return new Attributes.Attribute("constraints", value);
+    public static Attributes.Attribute field(final String key, final String value) {
+        return new Attributes.Attribute(key, value);
     }
 
 }

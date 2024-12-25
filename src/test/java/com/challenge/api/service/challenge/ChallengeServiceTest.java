@@ -1,6 +1,9 @@
 package com.challenge.api.service.challenge;
 
+import com.challenge.api.service.challenge.request.ChallengeAchieveServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeCancelServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
@@ -68,7 +71,7 @@ class ChallengeServiceTest {
         Member member = createMember();
         memberRepository.save(member);
 
-        Category category = createCategory();
+        Category category = createCategory("카테고리");
         categoryRepository.save(category);
 
         ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
@@ -93,12 +96,63 @@ class ChallengeServiceTest {
 
     @DisplayName("챌린지를 달성 한다.")
     @Test
-    void successChallenge() {
+    void achieveChallenge() {
         // given
         Member member = createMember();
         memberRepository.save(member);
 
-        Category category = createCategory();
+        Category category = createCategory("카테고리");
+        categoryRepository.save(category);
+
+        ChallengeCreateServiceRequest challengeCreateServiceRequest = ChallengeCreateServiceRequest.builder()
+                .title("제목")
+                .durationInWeeks(2)
+                .weeklyGoalCount(3)
+                .categoryId(category.getId())
+                .color("색상")
+                .content("내용")
+                .build();
+
+        Challenge challenge = Challenge.create(member, category, challengeCreateServiceRequest,
+                LocalDateTime.of(2024, 11, 11, 10, 10, 30));
+        challengeRepository.save(challenge);
+
+        Record record1 = createRecord(challenge, LocalDate.of(2024, 11, 11));
+        Record record2 = createRecord(challenge, LocalDate.of(2024, 11, 12));
+        Record record3 = createRecord(challenge, LocalDate.of(2024, 11, 13));
+        recordRepository.saveAll(List.of(record1, record2, record3));
+
+        ChallengeAchieveServiceRequest challengeAchieveServiceRequest = ChallengeAchieveServiceRequest.builder()
+                .achieveDate("2024-11-14")
+                .build();
+
+        // when
+        ChallengeResponse challengeResponse = challengeService.achieveChallenge(
+                member,
+                challenge.getId(),
+                challengeAchieveServiceRequest
+        );
+
+        // then
+        assertThat(challengeResponse.getId()).isNotNull();
+        assertThat(challengeResponse.getTitle()).isEqualTo("제목");
+        assertThat(challengeResponse.getRecord().getSuccessDates())
+                .containsExactlyInAnyOrder(
+                        "2024-11-11",
+                        "2024-11-12",
+                        "2024-11-13",
+                        "2024-11-14"
+                );
+    }
+
+    @DisplayName("챌린지를 취소한다.")
+    @Test
+    void cancelChallenge() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category = createCategory("카테고리");
         categoryRepository.save(category);
 
         ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
@@ -118,23 +172,66 @@ class ChallengeServiceTest {
         Record record3 = createRecord(challenge, LocalDate.of(2024, 11, 13));
         recordRepository.saveAll(List.of(record1, record2, record3));
 
+        ChallengeCancelServiceRequest cancelRequest = ChallengeCancelServiceRequest.builder()
+                .cancelDate("2024-11-13")
+                .build();
+
         // when
-        ChallengeResponse challengeResponse = challengeService.achieveChallenge(
+        ChallengeResponse challengeResponse = challengeService.cancelChallenge(
                 member,
                 challenge.getId(),
-                "2024-11-14"
+                cancelRequest
         );
 
         // then
         assertThat(challengeResponse.getId()).isNotNull();
         assertThat(challengeResponse.getTitle()).isEqualTo("제목");
         assertThat(challengeResponse.getRecord().getSuccessDates())
-                .containsExactlyInAnyOrder(
-                        "2024-11-11",
-                        "2024-11-12",
-                        "2024-11-13",
-                        "2024-11-14"
-                );
+                .containsExactlyInAnyOrder("2024-11-11", "2024-11-12");
+    }
+
+    @DisplayName("챌린지를 수정한다.")
+    @Test
+    void updateChallenge() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category1 = createCategory("카테고리");
+        Category category2 = createCategory("수정된 카테고리");
+        categoryRepository.saveAll(List.of(category1, category2));
+
+        ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
+                .title("제목")
+                .durationInWeeks(2)
+                .weeklyGoalCount(3)
+                .categoryId(category1.getId())
+                .color("색상")
+                .content("내용")
+                .build();
+
+        Challenge challenge = Challenge.create(member, category1, request, LocalDateTime.of(2024, 11, 11, 10, 10, 30));
+        challengeRepository.save(challenge);
+
+        ChallengeUpdateServiceRequest updateRequest = ChallengeUpdateServiceRequest.builder()
+                .title("수정된 제목")
+                .categoryId(category2.getId())
+                .color("수정된 색상")
+                .content("수정된 내용")
+                .build();
+
+        // when
+        ChallengeResponse updateChallengeResponse = challengeService.updateChallenge(
+                member,
+                challenge.getId(),
+                updateRequest);
+
+        // then
+        assertThat(updateChallengeResponse.getId()).isNotNull();
+        assertThat(updateChallengeResponse.getCategory().getName()).isEqualTo("수정된 카테고리");
+        assertThat(updateChallengeResponse.getTitle()).isEqualTo("수정된 제목");
+        assertThat(updateChallengeResponse.getColor()).isEqualTo("수정된 색상");
+        assertThat(updateChallengeResponse.getContent()).isEqualTo("수정된 내용");
     }
 
     private Member createMember() {
@@ -156,9 +253,9 @@ class ChallengeServiceTest {
                 .build();
     }
 
-    private Category createCategory() {
+    private Category createCategory(String category) {
         return Category.builder()
-                .name("카테고리")
+                .name(category)
                 .build();
     }
 

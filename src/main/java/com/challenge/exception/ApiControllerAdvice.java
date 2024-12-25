@@ -29,16 +29,18 @@ public class ApiControllerAdvice {
                 .code(ex.getCode())
                 .message(ex.getMessage())
                 .url(request.getRequestURI())
+                .data(null)
                 .build();
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(ex.getStatus().value()));
     }
 
     /**
-     * @Valid 입력 데이터의 유효성 검사 실패 시 발생하는 예외 처리 ( 컨트롤러 DTO )
+     * 입력 데이터의 유효성 검사 실패 시 발생하는 예외 처리 ( 컨트롤러 DTO )
      */
     @ExceptionHandler
-    public ResponseEntity<ApiResponse<Object>> methodArgumentNotValidException(MethodArgumentNotValidException e,
+    public ResponseEntity<ApiResponse<Object>> methodArgumentNotValidException(
+            MethodArgumentNotValidException e,
             HttpServletRequest request) {
         ApiResponse<Object> errorResponse = ApiResponse
                 .builder()

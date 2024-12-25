@@ -2,6 +2,8 @@ package com.challenge.api.controller.challenge;
 
 import com.challenge.annotation.AuthMember;
 import com.challenge.api.ApiResponse;
+import com.challenge.api.controller.challenge.request.ChallengeAchieveRequest;
+import com.challenge.api.controller.challenge.request.ChallengeCancelRequest;
 import com.challenge.api.controller.challenge.request.ChallengeCreateRequest;
 import com.challenge.api.controller.challenge.request.ChallengeUpdateRequest;
 import com.challenge.api.service.challenge.ChallengeService;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -47,16 +48,16 @@ public class ChallengeController {
     public ApiResponse<ChallengeResponse> achieveChallenge(
             @AuthMember Member member,
             @PathVariable Long challengeId,
-            @RequestParam String achieveDate) {
-        return ApiResponse.ok(challengeService.achieveChallenge(member, challengeId, achieveDate));
+            @RequestBody @Valid ChallengeAchieveRequest request) {
+        return ApiResponse.ok(challengeService.achieveChallenge(member, challengeId, request.toServiceRequest()));
     }
 
     @PostMapping("/challenges/{challengeId}/cancel")
     public ApiResponse<ChallengeResponse> cancelChallenge(
             @AuthMember Member member,
             @PathVariable Long challengeId,
-            @RequestParam String cancelDate) {
-        return ApiResponse.ok(challengeService.cancelChallenge(member, challengeId, cancelDate));
+            @RequestBody @Valid ChallengeCancelRequest request) {
+        return ApiResponse.ok(challengeService.cancelChallenge(member, challengeId, request.toServiceRequest()));
     }
 
     @PutMapping("/challenges/{challengeId}")
