@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -422,6 +423,23 @@ class ChallengeControllerTest extends ControllerTestSupport {
                         put("/api/v1/challenges/{challengeId}", challengeId)
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.code").isEmpty())
+                .andExpect(jsonPath("$.url").isEmpty());
+    }
+
+    @DisplayName("챌린지를 성공적으로 삭제한다.")
+    @Test
+    void deleteChallenge() throws Exception {
+        // given
+        Long challengeId = 1L;
+
+        // when // then
+        mockMvc.perform(
+                        delete("/api/v1/challenges/{challengeId}", challengeId)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
