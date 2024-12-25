@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -241,28 +242,38 @@ class ChallengeServiceTest {
         Member member = createMember();
         memberRepository.save(member);
 
-        Category category1 = createCategory("카테고리");
-        Category category2 = createCategory("수정된 카테고리");
-        categoryRepository.saveAll(List.of(category1, category2));
+        Category category = createCategory("카테고리");
+        categoryRepository.save(category);
 
-        ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
-                .title("제목")
+        ChallengeCreateServiceRequest request1 = ChallengeCreateServiceRequest.builder()
+                .title("제목1")
                 .durationInWeeks(2)
                 .weeklyGoalCount(3)
-                .categoryId(category1.getId())
-                .color("색상")
-                .content("내용")
+                .categoryId(category.getId())
+                .color("색상1")
+                .content("내용1")
+                .build();
+        ChallengeCreateServiceRequest request2 = ChallengeCreateServiceRequest.builder()
+                .title("제목2")
+                .durationInWeeks(2)
+                .weeklyGoalCount(3)
+                .categoryId(category.getId())
+                .color("색상2")
+                .content("내용2")
                 .build();
 
-        Challenge challenge = Challenge.create(member, category1, request, LocalDateTime.of(2024, 11, 11, 10, 10, 30));
-        challengeRepository.save(challenge);
+        Challenge challenge1 = Challenge.create(member, category, request1, LocalDateTime.of(2024, 11, 11, 10, 10, 30));
+        Challenge challenge2 = Challenge.create(member, category, request2, LocalDateTime.of(2024, 11, 11, 11, 10, 30));
+        challengeRepository.saveAll(List.of(challenge1, challenge2));
 
         // when
-        Long deletedChallenge = challengeService.deleteChallenge(member, challenge.getId());
+        Long deletedChallenge = challengeService.deleteChallenge(member, challenge2.getId());
 
         // then
-        assertThat(deletedChallenge).isEqualTo(challenge.getId());
-        assertThat(challengeRepository.findById(challenge.getId())).isEmpty();
+        assertThat(deletedChallenge).isEqualTo(challenge2.getId());
+        assertThat(challengeRepository.findAll()).hasSize(1)
+                .extracting("title", "content")
+                .containsExactly(tuple("제목1", "내용1"));
     }
 
     private Member createMember() {
