@@ -24,6 +24,7 @@ import static com.challenge.docs.RestDocsConfiguration.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.NULL;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -467,6 +468,36 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                                 .description("챌린지 시작 일시"),
                                         fieldWithPath("data.endDateTime").type(STRING)
                                                 .description("챌린지 종료 일시")
+                                )
+                ));
+    }
+
+    @DisplayName("챌린지를 삭제하는 API")
+    @Test
+    void deleteChallenge() throws Exception {
+        // given
+        Long challengeId = 1L;
+
+        given(challengeService.deleteChallenge(
+                any(Member.class),
+                any(Long.class)
+        )).willReturn(challengeId);
+
+        // when // then
+        mockMvc.perform(
+                        delete("/api/v1/challenges/{challengeId}", challengeId)
+                )
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("challengeId")
+                                        .attributes(field("type", "Long"))
+                                        .description("챌린지 아이디")
+                        ),
+                        responseFields(successResponse())
+                                .and(
+                                        fieldWithPath("data").type(NUMBER)
+                                                .description("삭제된 챌린지 아이디")
                                 )
                 ));
     }

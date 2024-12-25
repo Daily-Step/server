@@ -234,6 +234,37 @@ class ChallengeServiceTest {
         assertThat(updateChallengeResponse.getContent()).isEqualTo("수정된 내용");
     }
 
+    @DisplayName("챌린지를 삭제한다.")
+    @Test
+    void deleteChallenge() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category1 = createCategory("카테고리");
+        Category category2 = createCategory("수정된 카테고리");
+        categoryRepository.saveAll(List.of(category1, category2));
+
+        ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
+                .title("제목")
+                .durationInWeeks(2)
+                .weeklyGoalCount(3)
+                .categoryId(category1.getId())
+                .color("색상")
+                .content("내용")
+                .build();
+
+        Challenge challenge = Challenge.create(member, category1, request, LocalDateTime.of(2024, 11, 11, 10, 10, 30));
+        challengeRepository.save(challenge);
+
+        // when
+        Long deletedChallenge = challengeService.deleteChallenge(member, challenge.getId());
+
+        // then
+        assertThat(deletedChallenge).isEqualTo(challenge.getId());
+        assertThat(challengeRepository.findById(challenge.getId())).isEmpty();
+    }
+
     private Member createMember() {
         Job job = Job.builder()
                 .code("1")
