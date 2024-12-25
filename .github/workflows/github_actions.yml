@@ -23,6 +23,7 @@ jobs:
       S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
       S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
       S3_REGION: ${{ secrets.S3_REGION }}
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
 
     steps:
       # 1. GitHub Repository 파일 불러오기
@@ -52,7 +53,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 6. Docker 이미지 생성 및 Push
+      # 6. firebase 설정 파일 생성
+      - name: Create firebase.json from Secret
+        run: |
+          mkdir -p src/main/resources/firebase
+          echo "${{ secrets.FIREBASE_JSON }}" > src/main/resources/firebase/firebase.json
+
+      # 7. Docker 이미지 생성 및 Push
       - name: Docker 이미지 생성 및 push
         uses: docker/build-push-action@v6
         with:
@@ -74,9 +81,10 @@ jobs:
             S3_SECRET_KEY= ${{ secrets.S3_SECRET_KEY }}
             S3_BUCKET_NAME= ${{ secrets.S3_BUCKET_NAME }}
             S3_REGION= ${{ secrets.S3_REGION }}
+            FIREBASE_PROJECT_ID= ${{ secrets.FIREBASE_PROJECT_ID }}
 
       ## CD (Continuous Deployment) 파트
-      # 7. EC2에 SSH로 접속하여 Docker 컨테이너 실행
+      # 8. EC2에 SSH로 접속하여 Docker 컨테이너 실행
       - name: EC2에 배포
         uses: appleboy/ssh-action@v1.1.0
         with:
@@ -105,4 +113,5 @@ jobs:
             -e S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} \
             -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
             -e S3_REGION=${{ secrets.S3_REGION }} \
+            -e FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/challenge:${{ github.sha }}

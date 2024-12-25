@@ -92,3 +92,7 @@ cloud:
       static: ${S3_REGION}
     stack:
       auto: false
+
+fcm:
+  file_path: firebase/firebase.json
+  project_id: ${FIREBASE_PROJECT_ID}
