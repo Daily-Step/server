@@ -5,6 +5,7 @@ import com.challenge.api.ApiResponse;
 import com.challenge.api.controller.challenge.request.ChallengeAchieveRequest;
 import com.challenge.api.controller.challenge.request.ChallengeCancelRequest;
 import com.challenge.api.controller.challenge.request.ChallengeCreateRequest;
+import com.challenge.api.controller.challenge.request.ChallengeQueryRequest;
 import com.challenge.api.controller.challenge.request.ChallengeUpdateRequest;
 import com.challenge.api.service.challenge.ChallengeService;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
@@ -31,9 +32,10 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @GetMapping("/challenges")
-    public ApiResponse<List<ChallengeResponse>> getChallenges(@AuthMember Member member) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        return ApiResponse.ok(challengeService.getChallenges(member, currentDateTime));
+    public ApiResponse<List<ChallengeResponse>> getChallenges(
+            @AuthMember Member member,
+            @RequestBody @Valid ChallengeQueryRequest request) {
+        return ApiResponse.ok(challengeService.getChallenges(member, request.toServiceRequest()));
     }
 
     @PostMapping("/challenges")
