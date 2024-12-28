@@ -3,6 +3,7 @@ package com.challenge.api.service.challenge;
 import com.challenge.api.service.challenge.request.ChallengeAchieveServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCancelServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeQueryServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.api.validator.CategoryValidator;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,8 +42,16 @@ public class ChallengeService {
     private final CategoryValidator categoryValidator;
     private final RecordValidator recordValidator;
 
-    public List<ChallengeResponse> getChallenges(Member member, LocalDateTime currentDateTime) {
-        List<Challenge> challenges = challengeQueryRepository.findChallengesBy(member, currentDateTime);
+    /**
+     * 입력 받은 날짜 기준 이전 2달간의 챌린지 목록 조회 (2달전 00:00:00 ~ 입력받은 날짜 23:59:59)
+     */
+    public List<ChallengeResponse> getChallenges(Member member, ChallengeQueryServiceRequest request) {
+        // validation
+        DateValidator.isLocalDateFormatter(request.getQueryDate());
+        DateValidator.isBeforeOrEqualToTodayFrom(request.getQueryDate());
+
+        LocalDate targetDate = DateUtils.toLocalDate(request.getQueryDate());
+        List<Challenge> challenges = challengeQueryRepository.findChallengesBy(member, targetDate);
 
         return challenges.stream()
                 .map(ChallengeResponse::of)
@@ -51,6 +61,7 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse createChallenge(Member member, ChallengeCreateServiceRequest request,
             LocalDateTime startDateTime) {
+        // validation
         categoryValidator.categoryExistsBy(request.getCategoryId());
 
         Category category = categoryRepository.getReferenceById(request.getCategoryId());
@@ -63,6 +74,7 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse achieveChallenge(Member member, Long challengeId,
             ChallengeAchieveServiceRequest request) {
+        // validation
         challengeValidator.challengeExistsBy(member, challengeId);
         DateValidator.isLocalDateFormatter(request.getAchieveDate());
         DateValidator.isBeforeOrEqualToTodayFrom(request.getAchieveDate());
@@ -79,6 +91,7 @@ public class ChallengeService {
 
     @Transactional
     public ChallengeResponse cancelChallenge(Member member, Long challengeId, ChallengeCancelServiceRequest request) {
+        // validation
         challengeValidator.challengeExistsBy(member, challengeId);
         DateValidator.isLocalDateFormatter(request.getCancelDate());
         DateValidator.isBeforeOrEqualToTodayFrom(request.getCancelDate());
@@ -93,6 +106,7 @@ public class ChallengeService {
 
     @Transactional
     public ChallengeResponse updateChallenge(Member member, Long challengeId, ChallengeUpdateServiceRequest request) {
+        // validation
         categoryValidator.categoryExistsBy(request.getCategoryId());
         challengeValidator.challengeExistsBy(member, challengeId);
 
@@ -105,7 +119,9 @@ public class ChallengeService {
 
     @Transactional
     public Long deleteChallenge(Member member, Long challengeId) {
+        // validation
         challengeValidator.challengeExistsBy(member, challengeId);
+
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
         challengeRepository.delete(challenge);
         return challengeId;

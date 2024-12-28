@@ -18,12 +18,17 @@ public class ChallengeQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<Challenge> findChallengesBy(Member member, LocalDateTime currentDateTime) {
+    /**
+     * 입력 받은 날짜 기준 이전 2달간의 챌린지 목록 조회 (2달전 00:00:00 ~ 입력받은 날짜 23:59:59)
+     */
+    public List<Challenge> findChallengesBy(Member member, LocalDate targetDate) {
+        LocalDateTime startDateTime = targetDate.minusMonths(2).atStartOfDay();
+        LocalDateTime endDateTime = targetDate.atTime(23, 59, 59);
+
         return queryFactory.selectFrom(challenge)
                 .where(challenge.member.eq(member)
-                        .and(challenge.isDeleted.eq(false))
-                        .and(challenge.startDateTime.loe(currentDateTime))
-                        .and(challenge.endDateTime.goe(currentDateTime)))
+                        .and(challenge.endDateTime.goe(startDateTime))
+                        .and(challenge.startDateTime.loe(endDateTime)))
                 .fetch();
     }
 
