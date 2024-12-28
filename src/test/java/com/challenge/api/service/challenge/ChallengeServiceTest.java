@@ -3,6 +3,7 @@ package com.challenge.api.service.challenge;
 import com.challenge.api.service.challenge.request.ChallengeAchieveServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCancelServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeQueryServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.domain.category.Category;
@@ -63,6 +64,42 @@ class ChallengeServiceTest {
         categoryRepository.deleteAllInBatch();
     }
 
+    @DisplayName("입력 받은 날짜 기준 이전 2달간의 챌린지 목록을 조회한다.")
+    @Test
+    void getChallenges() {
+        // given
+        String targetDate = "2024-12-28";
+
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category = createCategory("카테고리");
+        categoryRepository.save(category);
+
+        ChallengeQueryServiceRequest request = ChallengeQueryServiceRequest.builder()
+                .queryDate(targetDate)
+                .build();
+
+        Challenge challenge1 = createChallenge(member, category, 1, "제목1",
+                LocalDateTime.of(2024, 10, 1, 12, 30, 59));
+        Challenge challenge2 = createChallenge(member, category, 2, "제목2",
+                LocalDateTime.of(2024, 11, 16, 14, 0, 0));
+        Challenge challenge3 = createChallenge(member, category, 3, "제목3",
+                LocalDateTime.of(2024, 12, 1, 0, 0, 0));
+        challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3));
+
+        // when
+        List<ChallengeResponse> challenges = challengeService.getChallenges(member, request);
+
+        // then
+        assertThat(challenges).hasSize(2)
+                .extracting("title", "durationInWeeks")
+                .containsExactlyInAnyOrder(
+                        tuple("제목2", 2),
+                        tuple("제목3", 3)
+                );
+    }
+
     @DisplayName("챌린지를 생성한다.")
     @Test
     void createChallenge() {
@@ -100,6 +137,7 @@ class ChallengeServiceTest {
     void achieveChallenge() {
         // given
         Member member = createMember();
+
         memberRepository.save(member);
 
         Category category = createCategory("카테고리");
@@ -292,6 +330,19 @@ class ChallengeServiceTest {
                 .gender(Gender.MALE)
                 .jobYear(JobYear.LT_1Y)
                 .job(job)
+                .build();
+    }
+
+    private Challenge createChallenge(Member member, Category category, int durationInWeeks, String title,
+            LocalDateTime startDateTime) {
+        return Challenge.builder()
+                .member(member)
+                .category(category)
+                .durationInWeeks(durationInWeeks)
+                .title(title)
+                .color("#30B0C7")
+                .weeklyGoalCount(1)
+                .startDateTime(startDateTime)
                 .build();
     }
 
