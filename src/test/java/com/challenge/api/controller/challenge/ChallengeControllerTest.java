@@ -5,6 +5,7 @@ import com.challenge.api.service.challenge.ChallengeService;
 import com.challenge.api.service.challenge.request.ChallengeAchieveServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCancelServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeQueryServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,6 +27,27 @@ class ChallengeControllerTest extends ControllerTestSupport {
 
     @MockitoBean
     private ChallengeService challengeService;
+
+    @DisplayName("챌린지 목록을 조회한다.")
+    @Test
+    void getChallenges() throws Exception {
+        // given
+        ChallengeQueryServiceRequest request = ChallengeQueryServiceRequest.builder()
+                .queryDate("2024-11-11")
+                .build();
+
+        // when // then
+        mockMvc.perform(
+                        get("/api/v1/challenges")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.code").isEmpty())
+                .andExpect(jsonPath("$.url").isEmpty());
+    }
 
     @Nested
     @DisplayName("챌린지를 생성한다.")
