@@ -40,6 +40,16 @@ public class MemberService {
     }
 
     /**
+     * 회원 프로필 사진 조회 메소드
+     *
+     * @param member
+     * @return
+     */
+    public String getMemberProfileImg(Member member) {
+        return member.getProfileImg();
+    }
+
+    /**
      * 해당 닉네임이 사용 가능 여부를 조회하는 메소드
      *
      * @param request

@@ -71,6 +71,10 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+
 social:
   kakao:
     apikey: ${KAKAO_API_KEY}
