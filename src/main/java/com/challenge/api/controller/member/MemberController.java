@@ -34,6 +34,11 @@ public class MemberController {
         return ApiResponse.ok(memberService.getMemberInfo(member));
     }
 
+    @GetMapping("/profile/img")
+    public ApiResponse<String> getMemberProfileImg(@AuthMember Member member) {
+        return ApiResponse.ok(memberService.getMemberProfileImg(member));
+    }
+
     @PostMapping("/nickname/valid")
     public ApiResponse<String> checkNicknameIsValid(@RequestBody @Valid CheckNicknameRequest request) {
         return ApiResponse.ok(memberService.checkNicknameIsValid(request.toServiceRequest()));
