@@ -97,7 +97,10 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                 .name("운동")
                                 .build())
                         .record(RecordResponse.builder()
-                                .successDates(List.of())
+                                .successDates(List.of(
+                                        DateUtils.toDayString(LocalDate.now()),
+                                        DateUtils.toDayString(LocalDate.now().plusDays(1))
+                                ))
                                 .build())
                         .title("챌린지 제목2")
                         .content("챌린지 내용2")
@@ -124,35 +127,38 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                         ),
                         responseFields(successResponse())
                                 .and(
-                                        fieldWithPath("data").type(OBJECT)
+                                        fieldWithPath("data").type(ARRAY)
                                                 .description("응답 데이터"),
-                                        fieldWithPath("data.id").type(NUMBER)
+                                        fieldWithPath("data[].id").type(NUMBER)
                                                 .description("챌린지 ID"),
-                                        fieldWithPath("data.category").type(OBJECT)
+                                        fieldWithPath("data[].category").type(OBJECT)
                                                 .description("카테고리 정보"),
-                                        fieldWithPath("data.category.id").type(NUMBER)
+                                        fieldWithPath("data[].category.id").type(NUMBER)
                                                 .description("카테고리 ID"),
-                                        fieldWithPath("data.category.name").type(STRING)
+                                        fieldWithPath("data[].category.name").type(STRING)
                                                 .description("카테고리 이름"),
-                                        fieldWithPath("data.record").type(NULL)
+                                        fieldWithPath("data[].record").type(OBJECT)
                                                 .optional()
                                                 .description("기록 목록"),
-                                        fieldWithPath("data.title").type(STRING)
+                                        fieldWithPath("data[].record.successDates").type(ARRAY)
+                                                .optional()
+                                                .description("기록된 성공 날짜 배열"),
+                                        fieldWithPath("data[].title").type(STRING)
                                                 .description("챌린지 제목"),
-                                        fieldWithPath("data.content").type(STRING)
+                                        fieldWithPath("data[].content").type(STRING)
                                                 .optional()
                                                 .description("챌린지 내용"),
-                                        fieldWithPath("data.durationInWeeks").type(NUMBER)
+                                        fieldWithPath("data[].durationInWeeks").type(NUMBER)
                                                 .description("챌린지 기간 (주 단위)"),
-                                        fieldWithPath("data.weekGoalCount").type(NUMBER)
+                                        fieldWithPath("data[].weekGoalCount").type(NUMBER)
                                                 .description("주간 목표 횟수"),
-                                        fieldWithPath("data.totalGoalCount").type(NUMBER)
+                                        fieldWithPath("data[].totalGoalCount").type(NUMBER)
                                                 .description("총 목표 횟수"),
-                                        fieldWithPath("data.color").type(STRING)
+                                        fieldWithPath("data[].color").type(STRING)
                                                 .description("챌린지 색상"),
-                                        fieldWithPath("data.startDateTime").type(STRING)
+                                        fieldWithPath("data[].startDateTime").type(STRING)
                                                 .description("챌린지 시작 일시"),
-                                        fieldWithPath("data.endDateTime").type(STRING)
+                                        fieldWithPath("data[].endDateTime").type(STRING)
                                                 .description("챌린지 종료 일시")
                                 )
                 ));
