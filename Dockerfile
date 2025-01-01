@@ -40,6 +40,6 @@ WORKDIR /app
 COPY --from=build /app/build/libs/*SNAPSHOT.jar /app/challenge.jar
 
 EXPOSE 8080
-CMD ["java", "-Dspring.profiles.active=dev", "-jar", "challenge.jar"]
+CMD ["java", "-Dspring.profiles.active=dev", "-Duser.timezone=Asia/Seoul", "-jar", "challenge.jar"]
 
 
