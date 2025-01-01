@@ -5,6 +5,8 @@ import com.challenge.api.service.fcm.request.FcmMessage;
 import com.challenge.api.service.fcm.request.TokenSaveServiceRequest;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
+import com.challenge.domain.notification.Notification;
+import com.challenge.domain.notification.NotificationRepository;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import com.google.firebase.messaging.ApnsConfig;
@@ -17,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,13 +28,13 @@ public class FcmService {
 
     private final FirebaseMessaging firebaseMessaging;
     private final MemberRepository memberRepository;
+    private final NotificationRepository notificationRepository;
 
     public String sendMessage(FcmMessage request) {
         try {
+            // fcm 메시지 발송
             Message message = request.buildMessage().setApnsConfig(getApnsConfig(request)).build();
-            log.info("Sending message: {}", message);
-            String send = firebaseMessaging.send(message);
-            log.info("Sent message: {}", send);
+            firebaseMessaging.send(message);
         } catch (Exception exception) {
             log.error(exception.getMessage(), exception);
             throw new GlobalException(ErrorCode.FCM_SERVICE_UNAVAILABLE);
@@ -39,6 +43,7 @@ public class FcmService {
         return "fcm 푸시 발송 성공";
     }
 
+    @Transactional
     public String sendMessageById(FcmSendByIdRequest request) {
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(
                 () -> new GlobalException(ErrorCode.MEMBER_NOT_FOUND));
@@ -47,9 +52,15 @@ public class FcmService {
             throw new GlobalException(ErrorCode.FCM_TOKEN_NOT_FOUND);
         }
 
+        // fcm 메시지 전송
         FcmMessage fcmMessage = FcmMessage.of(member.getFcmToken(), request.getTitle(), request.getBody());
+        String result = sendMessage(fcmMessage);
 
-        return sendMessage(fcmMessage);
+        // 알림 발송 내역 저장
+        Notification notification = Notification.of(request.getTitle(), request.getBody(), LocalDateTime.now(), member);
+        notificationRepository.save(notification);
+
+        return result;
     }
 
     @Transactional
