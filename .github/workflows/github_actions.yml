@@ -1,13 +1,10 @@
 name: Challenge CI/CD Pipeline
 
 on:
-  #  pull_request:
-  #    types: [ closed ]
-  #    branches:
-  #      - develop
-  push:
+  pull_request:
+    types: [ closed ]
     branches:
-      - feat/66
+      - develop
 
 jobs:
   build-and-deploy: # Job 이름
@@ -67,11 +64,6 @@ jobs:
           FIREBASE_JSON_URL: ${{ secrets.FIREBASE_JSON_URL }}
         run: |
           curl -L "$FIREBASE_JSON_URL" -o src/main/resources/firebase/firebase.json
-
-      - name: Verify firebase.json
-        run: |
-          cat src/main/resources/firebase/firebase.json
-          jq '.' src/main/resources/firebase/firebase.json
 
       # 7. Docker 이미지 생성 및 Push
       - name: Docker 이미지 생성 및 push
