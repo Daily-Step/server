@@ -1,8 +1,12 @@
 package com.challenge.api.controller.fcm;
 
+import com.challenge.annotation.AuthMember;
 import com.challenge.api.ApiResponse;
 import com.challenge.api.controller.fcm.request.FcmSendRequest;
+import com.challenge.api.controller.fcm.request.TokenSaveRequest;
 import com.challenge.api.service.fcm.FcmService;
+import com.challenge.domain.member.Member;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +23,12 @@ public class FcmController {
     @PostMapping("/send")
     public ApiResponse<String> pushMessage(@RequestBody FcmSendRequest request) {
         return ApiResponse.ok(fcmService.sendMessage(FcmSendRequest.toFcmMessage(request)));
+    }
+
+    @PostMapping
+    public ApiResponse<String> saveToken(@Valid @RequestBody TokenSaveRequest request,
+                                         @AuthMember Member member) {
+        return ApiResponse.ok(fcmService.saveToken(request.toServiceRequest(), member));
     }
 
 }

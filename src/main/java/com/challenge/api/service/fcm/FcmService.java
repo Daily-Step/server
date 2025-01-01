@@ -1,6 +1,8 @@
 package com.challenge.api.service.fcm;
 
 import com.challenge.api.service.fcm.request.FcmMessage;
+import com.challenge.api.service.fcm.request.TokenSaveServiceRequest;
+import com.challenge.domain.member.Member;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import com.google.firebase.messaging.ApnsConfig;
@@ -11,6 +13,7 @@ import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -31,6 +34,13 @@ public class FcmService {
         }
 
         return "fcm 푸시 발송 성공";
+    }
+
+    @Transactional
+    public String saveToken(TokenSaveServiceRequest request, Member member) {
+        member.updateFcmToken(request.getToken());
+
+        return "fcm 토큰 저장 성공";
     }
 
     private ApnsConfig getApnsConfig(FcmMessage request) {

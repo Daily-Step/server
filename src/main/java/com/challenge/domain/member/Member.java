@@ -66,6 +66,9 @@ public class Member extends BaseDateTimeEntity {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private boolean isNotificationReceived = false;
 
+    @Column(length = 400)
+    private String fcmToken;
+
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private boolean isDeleted = false;
 
@@ -134,6 +137,10 @@ public class Member extends BaseDateTimeEntity {
 
     public void updateNotificationReceived() {
         this.isNotificationReceived = !this.isNotificationReceived;
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
 }
