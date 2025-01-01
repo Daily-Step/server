@@ -51,7 +51,7 @@ include::{snippets}/challenge-controller-docs-test/achieve-challenge/response-fi
 .HTTP Request
 include::{snippets}/challenge-controller-docs-test/cancel-challenge/http-request.adoc[]
 include::{snippets}/challenge-controller-docs-test/cancel-challenge/path-parameters.adoc[]
-include::{snippets}/challenge-controller-docs-test/cancel-challenge/response-fields.adoc[]
+include::{snippets}/challenge-controller-docs-test/cancel-challenge/request-fields.adoc[]
 
 .HTTP Response
 include::{snippets}/challenge-controller-docs-test/cancel-challenge/http-response.adoc[]
