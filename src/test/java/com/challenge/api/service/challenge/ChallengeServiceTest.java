@@ -1,5 +1,6 @@
 package com.challenge.api.service.challenge;
 
+import com.challenge.api.controller.challenge.request.ChallengeCreateRequest;
 import com.challenge.api.service.challenge.request.ChallengeAchieveServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCancelServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
@@ -112,7 +113,7 @@ class ChallengeServiceTest {
         Category category = createCategory("카테고리");
         categoryRepository.save(category);
 
-        ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
+        ChallengeCreateRequest request = ChallengeCreateRequest.builder()
                 .title("제목")
                 .durationInWeeks(2)
                 .weeklyGoalCount(3)
@@ -122,7 +123,10 @@ class ChallengeServiceTest {
                 .build();
 
         // when
-        ChallengeResponse challengeResponse = challengeService.createChallenge(member, request, startDateTime);
+        ChallengeResponse challengeResponse = challengeService.createChallenge(
+                member,
+                request.toServiceRequest(),
+                startDateTime);
 
         // then
         assertThat(challengeResponse.getId()).isNotNull();
