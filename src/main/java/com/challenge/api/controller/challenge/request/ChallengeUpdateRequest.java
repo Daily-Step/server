@@ -27,6 +27,7 @@ public class ChallengeUpdateRequest {
     public ChallengeUpdateServiceRequest toServiceRequest() {
         return ChallengeUpdateServiceRequest.builder()
                 .title(title)
+                .categoryId(categoryId)
                 .color(color)
                 .content(content)
                 .build();
