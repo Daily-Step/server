@@ -1,11 +1,13 @@
 package com.challenge.docs;
 
 import com.challenge.api.controller.challenge.ChallengeController;
+import com.challenge.api.controller.challenge.request.ChallengeQueryRequest;
 import com.challenge.api.service.category.response.CategoryResponse;
 import com.challenge.api.service.challenge.ChallengeService;
 import com.challenge.api.service.challenge.request.ChallengeAchieveServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCancelServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
+import com.challenge.api.service.challenge.request.ChallengeQueryServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.api.service.record.response.RecordResponse;
@@ -35,6 +37,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -47,6 +50,112 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
     @Override
     protected Object initController() {
         return new ChallengeController(challengeService);
+    }
+
+    @DisplayName("챌린지 조회 API")
+    @Test
+    void getChallenges() throws Exception {
+        // given
+        String queryDate = DateUtils.toDayString(LocalDate.now());
+        ChallengeQueryRequest request = ChallengeQueryRequest.builder()
+                .queryDate(queryDate)
+                .build();
+
+        given(challengeService.getChallenges(
+                any(Member.class),
+                any(ChallengeQueryServiceRequest.class)
+        )).willReturn(List.of(
+                ChallengeResponse
+                        .builder()
+                        .id(1L)
+                        .category(CategoryResponse.builder()
+                                .id(1L)
+                                .name("카테고리 이름")
+                                .build())
+                        .record(RecordResponse.builder()
+                                .successDates(
+                                        List.of(
+                                                DateUtils.toDayString(LocalDate.now()),
+                                                DateUtils.toDayString(LocalDate.now().plusDays(1))
+                                        )
+                                )
+                                .build())
+                        .title("챌린지 제목1")
+                        .content("챌린지 내용1")
+                        .durationInWeeks(1)
+                        .weekGoalCount(2)
+                        .totalGoalCount(4)
+                        .color("0xFFFF9500")
+                        .startDateTime(DateUtils.toDateTimeString(LocalDateTime.now().minusDays(3)))
+                        .endDateTime(DateUtils.toDateTimeString(LocalDateTime.now().plusWeeks(1)))
+                        .build(),
+                ChallengeResponse
+                        .builder()
+                        .id(2L)
+                        .category(CategoryResponse.builder()
+                                .id(2L)
+                                .name("운동")
+                                .build())
+                        .record(RecordResponse.builder()
+                                .successDates(List.of())
+                                .build())
+                        .title("챌린지 제목2")
+                        .content("챌린지 내용2")
+                        .durationInWeeks(2)
+                        .weekGoalCount(2)
+                        .totalGoalCount(4)
+                        .color("0xFFFF9500")
+                        .startDateTime(DateUtils.toDateTimeString(LocalDateTime.now()))
+                        .endDateTime(DateUtils.toDateTimeString(LocalDateTime.now().plusWeeks(2)))
+                        .build()
+        ));
+
+        mockMvc.perform(
+                        get("/api/v1/challenges")
+                                .content(objectMapper.writeValueAsBytes(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestFields(
+                                fieldWithPath("queryDate").type(STRING)
+                                        .attributes(field("constraints", "yyyy-MM-dd"))
+                                        .description("조회 일자")
+                        ),
+                        responseFields(successResponse())
+                                .and(
+                                        fieldWithPath("data").type(OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.id").type(NUMBER)
+                                                .description("챌린지 ID"),
+                                        fieldWithPath("data.category").type(OBJECT)
+                                                .description("카테고리 정보"),
+                                        fieldWithPath("data.category.id").type(NUMBER)
+                                                .description("카테고리 ID"),
+                                        fieldWithPath("data.category.name").type(STRING)
+                                                .description("카테고리 이름"),
+                                        fieldWithPath("data.record").type(NULL)
+                                                .optional()
+                                                .description("기록 목록"),
+                                        fieldWithPath("data.title").type(STRING)
+                                                .description("챌린지 제목"),
+                                        fieldWithPath("data.content").type(STRING)
+                                                .optional()
+                                                .description("챌린지 내용"),
+                                        fieldWithPath("data.durationInWeeks").type(NUMBER)
+                                                .description("챌린지 기간 (주 단위)"),
+                                        fieldWithPath("data.weekGoalCount").type(NUMBER)
+                                                .description("주간 목표 횟수"),
+                                        fieldWithPath("data.totalGoalCount").type(NUMBER)
+                                                .description("총 목표 횟수"),
+                                        fieldWithPath("data.color").type(STRING)
+                                                .description("챌린지 색상"),
+                                        fieldWithPath("data.startDateTime").type(STRING)
+                                                .description("챌린지 시작 일시"),
+                                        fieldWithPath("data.endDateTime").type(STRING)
+                                                .description("챌린지 종료 일시")
+                                )
+                ));
     }
 
     @Nested
