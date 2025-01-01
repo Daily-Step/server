@@ -57,11 +57,19 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # 6. firebase 설정 파일 생성
-      - name: Create firebase.json from Secret
+      - name: Prepare firebase directory
         run: |
           mkdir -p src/main/resources/firebase
           chmod 777 src/main/resources/firebase
-          printf "%b" "${{ secrets.FIREBASE_JSON }}" > src/main/resources/firebase/firebase.json
+
+      - name: Download firebase.json
+        env:
+          FIREBASE_JSON_URL: ${{ secrets.FIREBASE_JSON_URL }}
+        run: |
+          curl -L "$FIREBASE_JSON_URL" -o src/main/resources/firebase/firebase.json
+
+      - name: Verify firebase.json
+        run: |
           cat src/main/resources/firebase/firebase.json
           jq '.' src/main/resources/firebase/firebase.json
 
