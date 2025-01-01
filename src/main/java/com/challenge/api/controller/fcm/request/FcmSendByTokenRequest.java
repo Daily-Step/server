@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class FcmSendRequest {
+public class FcmSendByTokenRequest {
 
     @NotEmpty
     private String token;
@@ -20,13 +20,13 @@ public class FcmSendRequest {
     private String body;
 
     @Builder
-    private FcmSendRequest(String token, String title, String body) {
+    private FcmSendByTokenRequest(String token, String title, String body) {
         this.token = token;
         this.title = title;
         this.body = body;
     }
 
-    public static FcmMessage toFcmMessage(FcmSendRequest request) {
+    public static FcmMessage toFcmMessage(FcmSendByTokenRequest request) {
         return FcmMessage.of(request.getToken(), request.getTitle(), request.getBody());
     }
 

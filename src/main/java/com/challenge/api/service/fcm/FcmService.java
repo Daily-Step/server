@@ -1,8 +1,10 @@
 package com.challenge.api.service.fcm;
 
+import com.challenge.api.controller.fcm.request.FcmSendByIdRequest;
 import com.challenge.api.service.fcm.request.FcmMessage;
 import com.challenge.api.service.fcm.request.TokenSaveServiceRequest;
 import com.challenge.domain.member.Member;
+import com.challenge.domain.member.MemberRepository;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import com.google.firebase.messaging.ApnsConfig;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FcmService {
 
     private final FirebaseMessaging firebaseMessaging;
+    private final MemberRepository memberRepository;
 
     public String sendMessage(FcmMessage request) {
         try {
@@ -34,6 +37,19 @@ public class FcmService {
         }
 
         return "fcm 푸시 발송 성공";
+    }
+
+    public String sendMessageById(FcmSendByIdRequest request) {
+        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(
+                () -> new GlobalException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (member.getFcmToken() == null) {
+            throw new GlobalException(ErrorCode.FCM_TOKEN_NOT_FOUND);
+        }
+
+        FcmMessage fcmMessage = FcmMessage.of(member.getFcmToken(), request.getTitle(), request.getBody());
+
+        return sendMessage(fcmMessage);
     }
 
     @Transactional

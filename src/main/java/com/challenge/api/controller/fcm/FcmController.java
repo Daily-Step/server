@@ -2,7 +2,8 @@ package com.challenge.api.controller.fcm;
 
 import com.challenge.annotation.AuthMember;
 import com.challenge.api.ApiResponse;
-import com.challenge.api.controller.fcm.request.FcmSendRequest;
+import com.challenge.api.controller.fcm.request.FcmSendByIdRequest;
+import com.challenge.api.controller.fcm.request.FcmSendByTokenRequest;
 import com.challenge.api.controller.fcm.request.TokenSaveRequest;
 import com.challenge.api.service.fcm.FcmService;
 import com.challenge.domain.member.Member;
@@ -21,9 +22,14 @@ public class FcmController {
 
     private final FcmService fcmService;
 
-    @PostMapping("/send")
-    public ApiResponse<String> pushMessage(@RequestBody FcmSendRequest request) {
-        return ApiResponse.ok(fcmService.sendMessage(FcmSendRequest.toFcmMessage(request)));
+    @PostMapping("/send/token")
+    public ApiResponse<String> sendMessageByToken(@Valid @RequestBody FcmSendByTokenRequest request) {
+        return ApiResponse.ok(fcmService.sendMessage(FcmSendByTokenRequest.toFcmMessage(request)));
+    }
+
+    @PostMapping("/send/member")
+    public ApiResponse<String> sendMessageByMemberId(@Valid @RequestBody FcmSendByIdRequest request) {
+        return ApiResponse.ok(fcmService.sendMessageById(request));
     }
 
     @PostMapping
