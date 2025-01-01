@@ -18,6 +18,7 @@ ARG S3_ACCESS_KEY
 ARG S3_SECRET_KEY
 ARG S3_BUCKET_NAME
 ARG S3_REGION
+ARG FIREBASE_PROJECT_ID
 
 # 라이브러리 설치에 필요한 파일만 복사
 COPY build.gradle settings.gradle ./

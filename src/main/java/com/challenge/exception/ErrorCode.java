@@ -83,8 +83,10 @@ public enum ErrorCode {
      * 기타 에러
      */
     JOB_NOT_FOUND(NOT_FOUND, "ERROR_4001", "직무 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다."),
-    S3_UPLOAD_ERROR(INTERNAL_SERVER_ERROR, "ERROR_4002", "이미지 업로드에 실패했습니다. 관리자에게 문의 바랍니다.");
-    
+    S3_UPLOAD_ERROR(INTERNAL_SERVER_ERROR, "ERROR_4002", "이미지 업로드에 실패했습니다. 관리자에게 문의 바랍니다."),
+    FCM_SERVICE_UNAVAILABLE(INTERNAL_SERVER_ERROR, "ERROR_4003", "FCM 서버 요청에 실패했습니다. 관리자에게 문의 바랍니다."),
+    FCM_TOKEN_NOT_FOUND(NOT_FOUND, "ERROR_4004", "해당 회원의 FCM 토큰을 찾을 수 없습니다. 관리자에게 문의 바랍니다.");
+
     private final HttpStatus status;
     private final String code;
     private final String message;
