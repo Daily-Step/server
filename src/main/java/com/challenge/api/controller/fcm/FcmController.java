@@ -8,6 +8,7 @@ import com.challenge.api.service.fcm.FcmService;
 import com.challenge.domain.member.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,11 @@ public class FcmController {
     public ApiResponse<String> saveToken(@Valid @RequestBody TokenSaveRequest request,
                                          @AuthMember Member member) {
         return ApiResponse.ok(fcmService.saveToken(request.toServiceRequest(), member));
+    }
+
+    @DeleteMapping
+    public ApiResponse<String> deleteToken(@AuthMember Member member) {
+        return ApiResponse.ok(fcmService.deleteToken(member));
     }
 
 }

@@ -43,6 +43,13 @@ public class FcmService {
         return "fcm 토큰 저장 성공";
     }
 
+    @Transactional
+    public String deleteToken(Member member) {
+        member.updateFcmToken(null);
+
+        return "fcm 토큰 삭제 성공";
+    }
+
     private ApnsConfig getApnsConfig(FcmMessage request) {
         ApsAlert alert = ApsAlert.builder().setTitle(request.getTitle()).setBody(request.getBody()).build();
         Aps aps = Aps.builder().setAlert(alert).setSound("default").build();
