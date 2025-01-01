@@ -61,9 +61,9 @@ jobs:
         run: |
           mkdir -p src/main/resources/firebase
           chmod 777 src/main/resources/firebase
-          printf "%s" "${{ secrets.FIREBASE_JSON }}" > src/main/resources/firebase/firebase.json
+          printf "%b" "${{ secrets.FIREBASE_JSON }}" > src/main/resources/firebase/firebase.json
           cat src/main/resources/firebase/firebase.json
-          cat src/main/resources/firebase/firebase.json | jq '.'
+          jq '.' src/main/resources/firebase/firebase.json
 
       # 7. Docker 이미지 생성 및 Push
       - name: Docker 이미지 생성 및 push
