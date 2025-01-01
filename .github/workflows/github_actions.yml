@@ -61,7 +61,7 @@ jobs:
         run: |
           mkdir -p src/main/resources/firebase
           chmod 777 src/main/resources/firebase
-          echo "${{ secrets.FIREBASE_JSON }}" > src/main/resources/firebase/firebase.json
+          printf "%s" "${{ secrets.FIREBASE_JSON }}" > src/main/resources/firebase/firebase.json
           cat src/main/resources/firebase/firebase.json
           cat src/main/resources/firebase/firebase.json | jq '.'
 
