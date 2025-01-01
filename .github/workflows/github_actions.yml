@@ -62,6 +62,7 @@ jobs:
           mkdir -p src/main/resources/firebase
           chmod 777 src/main/resources/firebase
           echo "${{ secrets.FIREBASE_JSON }}" > src/main/resources/firebase/firebase.json
+          cat src/main/resources/firebase/firebase.json
           cat src/main/resources/firebase/firebase.json | jq '.'
 
       # 7. Docker 이미지 생성 및 Push
