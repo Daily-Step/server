@@ -393,7 +393,7 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("챌린지를 취소하는 API")
+    @DisplayName("챌린지 달성 취소하는 API")
     @Test
     void cancelChallenge() throws Exception {
         // given
@@ -445,6 +445,11 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                 parameterWithName("challengeId")
                                         .attributes(field("type", "Long"))
                                         .description("챌린지 아이디")
+                        ),
+                        requestFields(
+                                fieldWithPath("cancelDate").type(STRING)
+                                        .attributes(field("constraints", "yyyy-MM-dd"))
+                                        .description("취소 일자")
                         ),
                         responseFields(successResponse())
                                 .and(
