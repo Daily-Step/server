@@ -54,10 +54,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # 6. firebase 설정 파일 생성
-      - name: Create firebase.json from Secret
+      - name: Prepare firebase directory
         run: |
           mkdir -p src/main/resources/firebase
-          echo "${{ secrets.FIREBASE_JSON }}" > src/main/resources/firebase/firebase.json
+          chmod 777 src/main/resources/firebase
+
+      - name: Download firebase.json
+        env:
+          FIREBASE_JSON_URL: ${{ secrets.FIREBASE_JSON_URL }}
+        run: |
+          curl -L "$FIREBASE_JSON_URL" -o src/main/resources/firebase/firebase.json
 
       # 7. Docker 이미지 생성 및 Push
       - name: Docker 이미지 생성 및 push
