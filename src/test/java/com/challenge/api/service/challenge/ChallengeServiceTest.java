@@ -1,10 +1,10 @@
 package com.challenge.api.service.challenge;
 
+import com.challenge.api.controller.challenge.request.ChallengeCancelRequest;
 import com.challenge.api.controller.challenge.request.ChallengeCreateRequest;
+import com.challenge.api.controller.challenge.request.ChallengeQueryRequest;
 import com.challenge.api.service.challenge.request.ChallengeAchieveServiceRequest;
-import com.challenge.api.service.challenge.request.ChallengeCancelServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest;
-import com.challenge.api.service.challenge.request.ChallengeQueryServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.domain.category.Category;
@@ -77,7 +77,7 @@ class ChallengeServiceTest {
         Category category = createCategory("카테고리");
         categoryRepository.save(category);
 
-        ChallengeQueryServiceRequest request = ChallengeQueryServiceRequest.builder()
+        ChallengeQueryRequest request = ChallengeQueryRequest.builder()
                 .queryDate(targetDate)
                 .build();
 
@@ -90,7 +90,7 @@ class ChallengeServiceTest {
         challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3));
 
         // when
-        List<ChallengeResponse> challenges = challengeService.getChallenges(member, request);
+        List<ChallengeResponse> challenges = challengeService.getChallenges(member, request.toServiceRequest());
 
         // then
         assertThat(challenges).hasSize(2)
@@ -188,7 +188,7 @@ class ChallengeServiceTest {
                 );
     }
 
-    @DisplayName("챌린지를 취소한다.")
+    @DisplayName("챌린지 달성을 취소한다.")
     @Test
     void cancelChallenge() {
         // given
@@ -198,7 +198,7 @@ class ChallengeServiceTest {
         Category category = createCategory("카테고리");
         categoryRepository.save(category);
 
-        ChallengeCreateServiceRequest request = ChallengeCreateServiceRequest.builder()
+        ChallengeCreateRequest challengeCreateRequest = ChallengeCreateRequest.builder()
                 .title("제목")
                 .durationInWeeks(2)
                 .weeklyGoalCount(3)
@@ -207,30 +207,82 @@ class ChallengeServiceTest {
                 .content("내용")
                 .build();
 
-        Challenge challenge = Challenge.create(member, category, request, LocalDateTime.of(2024, 11, 11, 10, 10, 30));
-        challengeRepository.save(challenge);
+        Challenge challenge1 = Challenge.create(
+                member,
+                category,
+                challengeCreateRequest.toServiceRequest(),
+                LocalDateTime.of(2024, 11, 11, 10, 10, 30)
+        );
+        Challenge challenge2 = Challenge.create(
+                member,
+                category,
+                challengeCreateRequest.toServiceRequest(),
+                LocalDateTime.of(2024, 12, 1, 10, 10, 30)
+        );
+        challengeRepository.saveAll(List.of(challenge1, challenge2));
 
-        Record record1 = createRecord(challenge, LocalDate.of(2024, 11, 11));
-        Record record2 = createRecord(challenge, LocalDate.of(2024, 11, 12));
-        Record record3 = createRecord(challenge, LocalDate.of(2024, 11, 13));
-        recordRepository.saveAll(List.of(record1, record2, record3));
+        // 챌린지 달성
+        challengeService.achieveChallenge(member, challenge1.getId(),
+                ChallengeAchieveServiceRequest.builder().achieveDate("2024-11-11").build());
+        challengeService.achieveChallenge(member, challenge1.getId(),
+                ChallengeAchieveServiceRequest.builder().achieveDate("2024-11-12").build());
+        challengeService.achieveChallenge(member, challenge1.getId(),
+                ChallengeAchieveServiceRequest.builder().achieveDate("2024-11-13").build());
 
-        ChallengeCancelServiceRequest cancelRequest = ChallengeCancelServiceRequest.builder()
+        challengeService.achieveChallenge(member, challenge2.getId(),
+                ChallengeAchieveServiceRequest.builder().achieveDate("2024-12-02").build());
+        challengeService.achieveChallenge(member, challenge2.getId(),
+                ChallengeAchieveServiceRequest.builder().achieveDate("2024-12-03").build());
+
+        // 챌린지 취소
+        ChallengeCancelRequest challengeCancelRequest1 = ChallengeCancelRequest.builder()
                 .cancelDate("2024-11-13")
                 .build();
+        ChallengeCancelRequest challengeCancelRequest2 = ChallengeCancelRequest.builder()
+                .cancelDate("2024-12-03")
+                .build();
 
-        // when
-        ChallengeResponse challengeResponse = challengeService.cancelChallenge(
+        // when - 취소된 챌린지 상태 확인
+        ChallengeResponse challengeResponse1 = challengeService.cancelChallenge(
                 member,
-                challenge.getId(),
-                cancelRequest
+                challenge1.getId(),
+                challengeCancelRequest1.toServiceRequest()
+        );
+        ChallengeResponse challengeResponse2 = challengeService.cancelChallenge(
+                member,
+                challenge2.getId(),
+                challengeCancelRequest2.toServiceRequest()
         );
 
-        // then
-        assertThat(challengeResponse.getId()).isNotNull();
-        assertThat(challengeResponse.getTitle()).isEqualTo("제목");
-        assertThat(challengeResponse.getRecord().getSuccessDates())
+        // then - 취소된 챌린지 검증
+        assertThat(challengeResponse1.getId()).isNotNull();
+        assertThat(challengeResponse1.getTitle()).isEqualTo("제목");
+        assertThat(challengeResponse1.getRecord().getSuccessDates())
                 .containsExactlyInAnyOrder("2024-11-11", "2024-11-12");
+
+        assertThat(challengeResponse2.getId()).isNotNull();
+        assertThat(challengeResponse2.getTitle()).isEqualTo("제목");
+        assertThat(challengeResponse2.getRecord().getSuccessDates())
+                .containsExactlyInAnyOrder("2024-12-02");
+
+        // given - 모든 챌린지 조회를 위한 요청 request
+        ChallengeQueryRequest challengeQueryRequest = ChallengeQueryRequest.builder()
+                .queryDate("2024-12-28")
+                .build();
+
+        // when - 모든 챌린지 조회
+        List<ChallengeResponse> challenges = challengeService.getChallenges(
+                member,
+                challengeQueryRequest.toServiceRequest()
+        );
+
+        // then - 조회된 챌린지들에 대한 검증
+        assertThat(challenges).hasSize(2)
+                .extracting("record.successDates")
+                .containsExactlyInAnyOrder(
+                        List.of("2024-11-11", "2024-11-12"),
+                        List.of("2024-12-02")
+                );
     }
 
     @DisplayName("챌린지를 수정한다.")
