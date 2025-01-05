@@ -119,4 +119,8 @@ public class Challenge extends BaseDateTimeEntity {
         this.records.add(record);
     }
 
+    public void delete() {
+        this.isDeleted = true;
+    }
+
 }

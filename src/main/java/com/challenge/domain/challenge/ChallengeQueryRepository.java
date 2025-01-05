@@ -27,6 +27,7 @@ public class ChallengeQueryRepository {
 
         return queryFactory.selectFrom(challenge)
                 .where(challenge.member.eq(member)
+                        .and(challenge.isDeleted.isFalse())
                         .and(challenge.endDateTime.goe(startDateTime))
                         .and(challenge.startDateTime.loe(endDateTime)))
                 .fetch();

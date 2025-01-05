@@ -125,7 +125,7 @@ public class ChallengeService {
         challengeValidator.challengeExistsBy(member, challengeId);
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
-        challengeRepository.delete(challenge);
+        challenge.delete();
         return challengeId;
     }
 
