@@ -98,9 +98,11 @@ public class ChallengeService {
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
 
+        // validation
         Record record = recordValidator.hasRecordFor(challenge, DateUtils.toLocalDate(request.getCancelDate()));
-        challenge.getRecords().remove(record);
 
+        // 기록 삭제
+        challenge.getRecords().remove(record);
         return ChallengeResponse.of(challenge);
     }
 
