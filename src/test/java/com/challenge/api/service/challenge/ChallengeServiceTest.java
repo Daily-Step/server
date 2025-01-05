@@ -339,7 +339,7 @@ class ChallengeServiceTest {
         Category category = createCategory("카테고리");
         categoryRepository.save(category);
 
-        ChallengeCreateServiceRequest request1 = ChallengeCreateServiceRequest.builder()
+        ChallengeCreateRequest request1 = ChallengeCreateRequest.builder()
                 .title("제목1")
                 .durationInWeeks(2)
                 .weeklyGoalCount(3)
@@ -347,7 +347,7 @@ class ChallengeServiceTest {
                 .color("색상1")
                 .content("내용1")
                 .build();
-        ChallengeCreateServiceRequest request2 = ChallengeCreateServiceRequest.builder()
+        ChallengeCreateRequest request2 = ChallengeCreateRequest.builder()
                 .title("제목2")
                 .durationInWeeks(2)
                 .weeklyGoalCount(3)
@@ -356,18 +356,41 @@ class ChallengeServiceTest {
                 .content("내용2")
                 .build();
 
-        Challenge challenge1 = Challenge.create(member, category, request1, LocalDateTime.of(2024, 11, 11, 10, 10, 30));
-        Challenge challenge2 = Challenge.create(member, category, request2, LocalDateTime.of(2024, 11, 11, 11, 10, 30));
+        Challenge challenge1 = Challenge.create(member, category, request1.toServiceRequest()
+                , LocalDateTime.of(2024, 11, 11, 10, 10, 30));
+        Challenge challenge2 = Challenge.create(member, category, request2.toServiceRequest(),
+                LocalDateTime.of(2024, 11, 11, 11, 10, 30));
         challengeRepository.saveAll(List.of(challenge1, challenge2));
 
-        // when
+        // when - 챌린지 삭제
         Long deletedChallenge = challengeService.deleteChallenge(member, challenge2.getId());
 
-        // then
+        // then - 삭제된 챌린지 검증
         assertThat(deletedChallenge).isEqualTo(challenge2.getId());
-        assertThat(challengeRepository.findAll()).hasSize(1)
+        assertThat(challengeRepository.findAll()).hasSize(2)
+                .extracting("title", "content", "isDeleted")
+                .containsExactly(
+                        tuple("제목1", "내용1", false),
+                        tuple("제목2", "내용2", true)
+                );
+
+        // given - 모든 챌린지 조회를 위한 요청 request
+        ChallengeQueryRequest challengeQueryRequest = ChallengeQueryRequest.builder()
+                .queryDate("2024-12-28")
+                .build();
+
+        // when - 모든 챌린지 조회
+        List<ChallengeResponse> challenges = challengeService.getChallenges(
+                member,
+                challengeQueryRequest.toServiceRequest()
+        );
+
+        // then - 조회된 챌린지들에 대한 검증
+        assertThat(challenges).hasSize(1)
                 .extracting("title", "content")
-                .containsExactly(tuple("제목1", "내용1"));
+                .containsExactlyInAnyOrder(
+                        tuple("제목1", "내용1")
+                );
     }
 
     private Member createMember() {
