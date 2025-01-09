@@ -11,8 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,9 +21,6 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"challenge_id", "success_date"})
-)
 public class Record extends BaseDateTimeEntity {
 
     @Id
@@ -34,24 +29,40 @@ public class Record extends BaseDateTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate successDate;
+    private LocalDate date;
+
+    @Column(nullable = false)
+    private boolean isSucceed = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id", nullable = false)
     private Challenge challenge;
 
     @Builder
-    private Record(LocalDate successDate, Challenge challenge) {
-        this.successDate = successDate;
+    private Record(LocalDate date, boolean isSucceed, Challenge challenge) {
+        this.date = date;
         this.challenge = challenge;
-        challenge.addRecord(this);
+        this.isSucceed = isSucceed;
     }
 
     public static Record achieve(Challenge challenge, String achieveDate) {
-        return Record.builder()
+        Record record = Record.builder()
+                .date(DateUtils.toLocalDate(achieveDate))
+                .isSucceed(true)
                 .challenge(challenge)
-                .successDate(DateUtils.toLocalDate(achieveDate))
                 .build();
+        challenge.addRecord(record);
+        return record;
+    }
+
+    public static Record cancel(Challenge challenge, String cancelDate) {
+        Record record = Record.builder()
+                .date(DateUtils.toLocalDate(cancelDate))
+                .isSucceed(false)
+                .challenge(challenge)
+                .build();
+        challenge.getRecords().remove(record);
+        return record;
     }
 
 }
