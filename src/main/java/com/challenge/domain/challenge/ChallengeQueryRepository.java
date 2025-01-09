@@ -38,7 +38,7 @@ public class ChallengeQueryRepository {
         Long count = queryFactory.select(record.count())
                 .from(record)
                 .where(record.challenge.eq(challenge)
-                        .and(record.date.eq(successDate)))
+                        .and(record.successDate.eq(successDate)))
                 .fetchOne();
 
         return count != null && count > 0;
