@@ -12,12 +12,13 @@ public class MemberInfoResponse {
     private final String nickname;
     private final String birth;
     private final Gender gender;
-    private final long jobId;
+    private final Long jobId;
     private final String job;
-    private final int jobYearId;
+    private final Integer jobYearId;
 
     @Builder
-    private MemberInfoResponse(String nickname, String birth, Gender gender, long jobId, String job, int jobYearId) {
+    private MemberInfoResponse(String nickname, String birth, Gender gender, Long jobId, String job,
+                               Integer jobYearId) {
         this.nickname = nickname;
         this.birth = birth;
         this.gender = gender;
@@ -27,13 +28,17 @@ public class MemberInfoResponse {
     }
 
     public static MemberInfoResponse of(Member member) {
+        Long jobId = member.getJob() == null ? null : member.getJob().getId();
+        String job = member.getJob() == null ? null : member.getJob().getDescription();
+        Integer jobYearId = member.getJobYear() == null ? null : member.getJobYear().getId();
+
         return MemberInfoResponse.builder()
                 .nickname(member.getNickname())
                 .birth(DateUtils.toDayString(member.getBirth()))
                 .gender(member.getGender())
-                .jobId(member.getJob().getId())
-                .job(member.getJob().getDescription())
-                .jobYearId(member.getJobYear().getId())
+                .jobId(jobId)
+                .job(job)
+                .jobYearId(jobYearId)
                 .build();
     }
 

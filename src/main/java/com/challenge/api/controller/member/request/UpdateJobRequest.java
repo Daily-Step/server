@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class UpdateJobRequest {
 
     @NotNull(message = "jobId는 필수 입력값입니다.")
-    @Min(value = 1, message = "jobId는 1 이상의 값이어야 합니다.")
+    @Min(value = 0, message = "jobId는 0 이상의 값이어야 합니다.")
     @Max(value = 20, message = "jobId는 20 이하의 값이어야 합니다.")
     private Long jobId;
 

@@ -53,7 +53,7 @@ public class Member extends BaseDateTimeEntity {
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(10)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(10)")
     private JobYear jobYear;
 
     @Column(length = 1000)

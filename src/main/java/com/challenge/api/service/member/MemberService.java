@@ -127,11 +127,15 @@ public class MemberService {
      */
     @Transactional
     public String updateJob(Member member, UpdateJobServiceRequest request) {
-        // 직무 데이터 조회
-        Job job = jobRepository.findById(request.getJobId())
-                .orElseThrow(() -> new GlobalException(ErrorCode.JOB_NOT_FOUND));
+        if (request.getJobId() == 0) {
+            member.updateJob(null);
+        } else {
+            // 직무 데이터 조회
+            Job job = jobRepository.findById(request.getJobId())
+                    .orElseThrow(() -> new GlobalException(ErrorCode.JOB_NOT_FOUND));
 
-        member.updateJob(job);
+            member.updateJob(job);
+        }
 
         return "직업 수정 성공";
     }
@@ -145,9 +149,12 @@ public class MemberService {
      */
     @Transactional
     public String updateJobYear(Member member, UpdateJobYearServiceRequest request) {
-        JobYear jobYear = JobYear.of(request.getYearId());
-
-        member.updateJobYear(jobYear);
+        if (request.getYearId() == 0) {
+            member.updateJobYear(null);
+        } else {
+            JobYear jobYear = JobYear.of(request.getYearId());
+            member.updateJobYear(jobYear);
+        }
 
         return "연차 수정 성공";
     }
