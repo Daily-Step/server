@@ -28,7 +28,7 @@ public class RecordValidator {
      */
     public Record hasRecordFor(Challenge challenge, LocalDate cancelDate) {
         return challenge.getRecords().stream()
-                .filter(r -> r.getSuccessDate().equals(cancelDate))
+                .filter(r -> r.getDate().equals(cancelDate))
                 .findFirst()
                 .orElseThrow(() -> new GlobalException(ErrorCode.RECORD_NOT_FOUND));
     }

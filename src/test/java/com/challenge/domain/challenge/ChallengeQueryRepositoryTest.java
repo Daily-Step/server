@@ -131,6 +131,64 @@ class ChallengeQueryRepositoryTest {
         assertThat(result).isTrue();
     }
 
+    @DisplayName("진행중인 챌린지 수를 조회한다.")
+    @Test
+    void countOngoingChallengesBy() {
+        // given
+        String targetDateTime = "2025-01-08 12:30:59";
+
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category = createCategory();
+        categoryRepository.save(category);
+
+        Challenge challenge1 = createChallenge(member, category, 1, "제목1",
+                LocalDateTime.of(2024, 10, 1, 12, 30, 59));
+        Challenge challenge2 = createChallenge(member, category, 2, "제목2",
+                LocalDateTime.of(2024, 11, 11, 14, 0, 0));
+        Challenge challenge3 = createChallenge(member, category, 3, "제목3",
+                LocalDateTime.of(2024, 12, 23, 0, 0, 0));
+        Challenge challenge4 = createChallenge(member, category, 1, "제목4",
+                LocalDateTime.of(2025, 1, 1, 0, 0, 0));
+        challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3, challenge4));
+
+        // when
+        Long count = challengeQueryRepository.countOngoingChallengesBy(member, targetDateTime);
+
+        // then
+        assertThat(count).isEqualTo(2);
+    }
+
+    @DisplayName("완료된 챌린지 수를 조회한다.")
+    @Test
+    void countCompletedChallengesBy() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category = createCategory();
+        categoryRepository.save(category);
+
+        Challenge challenge1 = createChallenge(member, category, 1, "제목1",
+                LocalDateTime.of(2025, 1, 1, 12, 30, 59));
+
+        Record record1 = createRecord(challenge1, LocalDate.of(2025, 1, 1));
+        Record record2 = createRecord(challenge1, LocalDate.of(2025, 1, 2));
+        Record record3 = createRecord(challenge1, LocalDate.of(2025, 1, 3));
+        Record record4 = createRecord(challenge1, LocalDate.of(2025, 1, 4));
+        Record record5 = createRecord(challenge1, LocalDate.of(2025, 1, 5));
+        Record record6 = createRecord(challenge1, LocalDate.of(2025, 1, 6));
+        Record record7 = createRecord(challenge1, LocalDate.of(2025, 1, 7));
+        recordRepository.saveAll(List.of(record1, record2, record3, record4, record5, record6, record7));
+
+        // when
+        Long count = challengeQueryRepository.countCompletedChallengesBy(member);
+
+        // then
+        assertThat(count).isEqualTo(1);
+    }
+
     private Member createMember() {
         Job job = Job.builder()
                 .code("1")

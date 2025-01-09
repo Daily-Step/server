@@ -99,10 +99,13 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
 
         // validation
-        Record record = recordValidator.hasRecordFor(challenge, DateUtils.toLocalDate(request.getCancelDate()));
+        // TODO 마지막 record 상태를 가져와 is_succeed 상태가 true인지 확인
+        recordValidator.hasRecordFor(challenge, DateUtils.toLocalDate(request.getCancelDate()));
 
         // 기록 삭제
-        challenge.getRecords().remove(record);
+        Record record = Record.cancel(challenge, request.getCancelDate());
+        recordRepository.save(record);
+
         return ChallengeResponse.of(challenge);
     }
 
