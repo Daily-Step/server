@@ -322,12 +322,12 @@ class MemberControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.url").value("/api/v1/member/job"));
         }
 
-        @DisplayName("직무 수정 실패: jobId가 1 미만인 경우 에러 응답을 반환한다.")
+        @DisplayName("직무 수정 실패: jobId가 0 미만인 경우 에러 응답을 반환한다.")
         @Test
         void updateJobFailedWhenJobIdIsLessThanMin() throws Exception {
             // given
             UpdateJobRequest request = UpdateJobRequest.builder()
-                    .jobId(0L)
+                    .jobId(-1L)
                     .build();
 
             // when // then
@@ -335,7 +335,7 @@ class MemberControllerTest extends ControllerTestSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("jobId는 1 이상의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.message").value("jobId는 0 이상의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/job"));
         }
@@ -390,12 +390,12 @@ class MemberControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.data").value(updateJobYearResponse));
         }
 
-        @DisplayName("연차 수정 실패: yearId가 1 미만인 경우 에러 응답을 반환한다.")
+        @DisplayName("연차 수정 실패: yearId가 0 미만인 경우 에러 응답을 반환한다.")
         @Test
         void updateJobYearFailedWhenIdIsLessThanMin() throws Exception {
             // given
             UpdateJobYearRequest request = UpdateJobYearRequest.builder()
-                    .yearId(0)
+                    .yearId(-1)
                     .build();
 
             // when // then
@@ -403,7 +403,7 @@ class MemberControllerTest extends ControllerTestSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("yearId는 1 이상의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.message").value("yearId는 0 이상의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/member/jobyear"));
         }

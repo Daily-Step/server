@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class UpdateJobYearRequest {
 
     @NotNull(message = "yearId는 필수 입력값입니다.")
-    @Min(value = 1, message = "yearId는 1 이상의 값이어야 합니다.")
+    @Min(value = 0, message = "yearId는 0 이상의 값이어야 합니다.")
     @Max(value = 4, message = "yearId는 4 이하의 값이어야 합니다.")
     private int yearId;
 

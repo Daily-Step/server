@@ -293,7 +293,7 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"));
         }
 
-        @DisplayName("카카오 회원가입 실패: jobId가 1 미만인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: jobId가 0 미만인 경우 에러 응답을 반환한다.")
         @Test
         void kakaoSigninFailedWhenJobIdIsLessThanMin() throws Exception {
             // given
@@ -302,7 +302,7 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
                     .gender(MOCK_GENDER)
-                    .jobId(0L)
+                    .jobId(-1L)
                     .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
@@ -311,7 +311,7 @@ public class AuthControllerTest extends ControllerTestSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("jobId는 1 이상의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.message").value("jobId는 0 이상의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"));
         }
@@ -339,7 +339,7 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"));
         }
 
-        @DisplayName("카카오 회원가입 실패: yearId가 1 미만인 경우 에러 응답을 반환한다.")
+        @DisplayName("카카오 회원가입 실패: yearId가 0 미만인 경우 에러 응답을 반환한다.")
         @Test
         void kakaoSigninFailedWhenYearIdIsLessThanMin() throws Exception {
             // given
@@ -349,7 +349,7 @@ public class AuthControllerTest extends ControllerTestSupport {
                     .birth(MOCK_BIRTH)
                     .gender(MOCK_GENDER)
                     .jobId(MOCK_JOB.getId())
-                    .yearId(0)
+                    .yearId(-1)
                     .build();
 
             // when // then
@@ -357,7 +357,7 @@ public class AuthControllerTest extends ControllerTestSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("yearId는 1 이상의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.message").value("yearId는 0 이상의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"));
         }
