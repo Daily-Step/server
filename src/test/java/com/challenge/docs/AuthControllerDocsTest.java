@@ -355,7 +355,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: jobId가 1 미만인 경우")
+        @DisplayName("카카오 회원가입 실패: jobId가 0 미만인 경우")
         @Test
         void kakaoSigninFailJobIdLessThan() throws Exception {
             // given
@@ -364,7 +364,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     .nickname(MOCK_NICKNAME)
                     .birth(MOCK_BIRTH)
                     .gender(MOCK_GENDER)
-                    .jobId(0L)
+                    .jobId(-1L)
                     .yearId(MOCK_JOBYEAR.getId())
                     .build();
 
@@ -373,7 +373,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("jobId는 1 이상의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.message").value("jobId는 0 이상의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"))
                     .andDo(restDocs.document(
@@ -409,7 +409,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     ));
         }
 
-        @DisplayName("카카오 회원가입 실패: yearId가 1 미만인 경우")
+        @DisplayName("카카오 회원가입 실패: yearId가 0 미만인 경우")
         @Test
         void kakaoSigninFailYearIdLessThan() throws Exception {
             // given
@@ -419,7 +419,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                     .birth(MOCK_BIRTH)
                     .gender(MOCK_GENDER)
                     .jobId(MOCK_JOB.getId())
-                    .yearId(0)
+                    .yearId(-1)
                     .build();
 
             // when // then
@@ -427,7 +427,7 @@ class AuthControllerDocsTest extends RestDocsSupport {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().is(400))
-                    .andExpect(jsonPath("$.message").value("yearId는 1 이상의 값이어야 합니다."))
+                    .andExpect(jsonPath("$.message").value("yearId는 0 이상의 값이어야 합니다."))
                     .andExpect(jsonPath("$.code").value("VALID_ERROR"))
                     .andExpect(jsonPath("$.url").value("/api/v1/auth/signin/kakao"))
                     .andDo(restDocs.document(
