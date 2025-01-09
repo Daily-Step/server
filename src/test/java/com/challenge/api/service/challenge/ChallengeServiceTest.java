@@ -434,7 +434,7 @@ class ChallengeServiceTest {
     private Record createRecord(Challenge challenge, LocalDate currentDate) {
         return Record.builder()
                 .challenge(challenge)
-                .successDate(currentDate)
+                .date(currentDate)
                 .build();
     }
 

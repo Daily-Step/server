@@ -55,14 +55,12 @@ public class Record extends BaseDateTimeEntity {
         return record;
     }
 
-    public static Record cancel(Challenge challenge, String cancelDate) {
-        Record record = Record.builder()
+    public Record cancel(Challenge challenge, String cancelDate) {
+        return Record.builder()
                 .date(DateUtils.toLocalDate(cancelDate))
                 .isSucceed(false)
                 .challenge(challenge)
                 .build();
-        challenge.getRecords().remove(record);
-        return record;
     }
 
 }
