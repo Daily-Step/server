@@ -29,7 +29,7 @@ public class Record extends BaseDateTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDate successDate;
 
     @Column(nullable = false)
     private boolean isSucceed = false;
@@ -39,15 +39,15 @@ public class Record extends BaseDateTimeEntity {
     private Challenge challenge;
 
     @Builder
-    private Record(LocalDate date, boolean isSucceed, Challenge challenge) {
-        this.date = date;
+    private Record(LocalDate successDate, boolean isSucceed, Challenge challenge) {
+        this.successDate = successDate;
         this.challenge = challenge;
         this.isSucceed = isSucceed;
     }
 
     public static Record achieve(Challenge challenge, String achieveDate) {
         Record record = Record.builder()
-                .date(DateUtils.toLocalDate(achieveDate))
+                .successDate(DateUtils.toLocalDate(achieveDate))
                 .isSucceed(true)
                 .challenge(challenge)
                 .build();
@@ -57,7 +57,7 @@ public class Record extends BaseDateTimeEntity {
 
     public Record cancel(Challenge challenge, String cancelDate) {
         return Record.builder()
-                .date(DateUtils.toLocalDate(cancelDate))
+                .successDate(DateUtils.toLocalDate(cancelDate))
                 .isSucceed(false)
                 .challenge(challenge)
                 .build();

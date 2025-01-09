@@ -27,7 +27,7 @@ public class RecordResponse {
         return RecordResponse.builder()
                 .successDates(
                         records.stream()
-                                .map(record -> DateUtils.toDayString(record.getDate()))
+                                .map(record -> DateUtils.toDayString(record.getSuccessDate()))
                                 .toList()
                 )
                 .build();

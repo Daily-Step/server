@@ -127,7 +127,7 @@ class ChallengeValidatorTest {
     private Record createRecord(Challenge challenge, LocalDate currentDate) {
         return Record.builder()
                 .challenge(challenge)
-                .date(currentDate)
+                .successDate(currentDate)
                 .build();
     }
 
