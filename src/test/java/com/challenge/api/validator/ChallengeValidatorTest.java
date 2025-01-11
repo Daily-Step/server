@@ -5,6 +5,8 @@ import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.challenge.Challenge;
 import com.challenge.domain.challenge.ChallengeRepository;
+import com.challenge.domain.challengeRecord.ChallengeRecord;
+import com.challenge.domain.challengeRecord.ChallengeRecordRepository;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.Gender;
@@ -12,8 +14,6 @@ import com.challenge.domain.member.JobYear;
 import com.challenge.domain.member.LoginType;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
-import com.challenge.domain.record.Record;
-import com.challenge.domain.record.RecordRepository;
 import com.challenge.exception.GlobalException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,11 +47,11 @@ class ChallengeValidatorTest {
     private JobRepository jobRepository;
 
     @Autowired
-    private RecordRepository recordRepository;
+    private ChallengeRecordRepository challengeRecordRepository;
 
     @AfterEach
     void tearDown() {
-        recordRepository.deleteAllInBatch();
+        challengeRecordRepository.deleteAllInBatch();
         challengeRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
         categoryRepository.deleteAllInBatch();
@@ -90,8 +90,8 @@ class ChallengeValidatorTest {
         Challenge challenge = Challenge.create(member, category, request, LocalDateTime.now());
         challengeRepository.save(challenge);
 
-        Record record = createRecord(challenge, currentDate);
-        recordRepository.save(record);
+        ChallengeRecord challengeRecord = createRecord(challenge, currentDate);
+        challengeRecordRepository.save(challengeRecord);
 
         // when // then
         assertThatThrownBy(() -> challengeValidator.hasDuplicateRecordFor(challenge, currentDate))
@@ -124,10 +124,10 @@ class ChallengeValidatorTest {
                 .build();
     }
 
-    private Record createRecord(Challenge challenge, LocalDate currentDate) {
-        return Record.builder()
+    private ChallengeRecord createRecord(Challenge challenge, LocalDate currentDate) {
+        return ChallengeRecord.builder()
                 .challenge(challenge)
-                .successDate(currentDate)
+                .recordDate(currentDate)
                 .build();
     }
 
