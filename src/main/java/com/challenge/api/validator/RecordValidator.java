@@ -1,8 +1,8 @@
 package com.challenge.api.validator;
 
 import com.challenge.domain.challenge.Challenge;
-import com.challenge.domain.record.Record;
-import com.challenge.domain.record.RecordRepository;
+import com.challenge.domain.challengeRecord.ChallengeRecord;
+import com.challenge.domain.challengeRecord.ChallengeRecordQueryRepository;
 import com.challenge.exception.ErrorCode;
 import com.challenge.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +16,17 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class RecordValidator {
 
-    private final RecordRepository recordRepository;
+    private final ChallengeRecordQueryRepository challengeRecordQueryRepository;
 
-    /**
-     * 특정 챌린지와 날짜에 해당하는 레코드가 존재하는지 검증하고 반환
-     *
-     * @param challenge  검증 대상 챌린지
-     * @param cancelDate 취소하려는 날짜
-     * @return 검증된 Record 엔티티
-     * @throws GlobalException RECORD_NOT_FOUND 예외
-     */
-    public Record hasRecordFor(Challenge challenge, LocalDate cancelDate) {
-        return challenge.getRecords().stream()
-                .filter(r -> r.getSuccessDate().equals(cancelDate))
-                .findFirst()
-                .orElseThrow(() -> new GlobalException(ErrorCode.RECORD_NOT_FOUND));
+    public ChallengeRecord findLatestRecordBy(Challenge challenge, LocalDate cancelDate) {
+        ChallengeRecord challengeRecord = challengeRecordQueryRepository.findLatestRecordBy(challenge,
+                cancelDate);
+
+        if (challengeRecord != null) {
+            return challengeRecord;
+        }
+
+        throw new GlobalException(ErrorCode.LATEST_ACHIEVE_RECORD_NOT_FOUND);
     }
 
 }

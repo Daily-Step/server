@@ -1,7 +1,7 @@
 package com.challenge.api.service.record.response;
 
 import com.challenge.domain.challenge.Challenge;
-import com.challenge.domain.record.Record;
+import com.challenge.domain.challengeRecord.ChallengeRecord;
 import com.challenge.utils.date.DateUtils;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,15 +19,17 @@ public class RecordResponse {
     }
 
     public static RecordResponse of(Challenge challenge) {
-        List<Record> records = challenge.getRecords();
-        if (records.isEmpty()) {
+        List<ChallengeRecord> challengeRecords = challenge.getChallengeRecords();
+        if (challengeRecords.isEmpty()) {
             return null;
         }
 
         return RecordResponse.builder()
                 .successDates(
-                        records.stream()
-                                .map(record -> DateUtils.toDayString(record.getSuccessDate()))
+                        challengeRecords.stream()
+                                .sorted((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()))
+                                .filter(ChallengeRecord::isSucceed)
+                                .map(record -> DateUtils.toDayString(record.getRecordDate()))
                                 .toList()
                 )
                 .build();
