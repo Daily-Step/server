@@ -27,7 +27,6 @@ public class RecordResponse {
         return RecordResponse.builder()
                 .successDates(
                         challengeRecords.stream()
-                                .sorted((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()))
                                 .filter(ChallengeRecord::isSucceed)
                                 .map(record -> DateUtils.toDayString(record.getRecordDate()))
                                 .toList()

@@ -18,8 +18,8 @@ public class RecordValidator {
 
     private final ChallengeRecordQueryRepository challengeRecordQueryRepository;
 
-    public ChallengeRecord findLatestRecordBy(Challenge challenge, LocalDate cancelDate) {
-        ChallengeRecord challengeRecord = challengeRecordQueryRepository.findLatestRecordBy(challenge,
+    public ChallengeRecord isLatestRecordSuccessfulBy(Challenge challenge, LocalDate cancelDate) {
+        ChallengeRecord challengeRecord = challengeRecordQueryRepository.isLatestRecordSuccessfulBy(challenge,
                 cancelDate);
 
         if (challengeRecord != null) {

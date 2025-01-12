@@ -207,6 +207,7 @@ class ChallengeQueryRepositoryTest {
         return ChallengeRecord.builder()
                 .challenge(challenge)
                 .recordDate(currentDate)
+                .isSucceed(true)
                 .build();
     }
 

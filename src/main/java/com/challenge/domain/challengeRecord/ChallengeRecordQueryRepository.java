@@ -17,7 +17,7 @@ public class ChallengeRecordQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public ChallengeRecord findLatestRecordBy(Challenge challenge, LocalDate cancelDate) {
+    public ChallengeRecord isLatestRecordSuccessfulBy(Challenge challenge, LocalDate cancelDate) {
         ChallengeRecord latestRecord = queryFactory.selectFrom(challengeRecord)
                 .where(challengeRecord.challenge.eq(challenge)
                         .and(challengeRecord.recordDate.eq(cancelDate))

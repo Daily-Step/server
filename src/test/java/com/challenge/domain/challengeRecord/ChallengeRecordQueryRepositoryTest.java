@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
@@ -58,7 +59,39 @@ class ChallengeRecordQueryRepositoryTest {
 
     @DisplayName("특정 날짜의 가장 최근 기록이 성공 기록이 아니면 예외를 발생시킨다.")
     @Test
-    void findLatestRecordFail() {
+    void findLatestRecord_Fail() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category = createCategory();
+        categoryRepository.save(category);
+
+        Challenge challenge = createChallenge(member, category, LocalDateTime.of(2024, 10, 1, 12, 30, 59));
+        challengeRepository.save(challenge);
+
+        ChallengeRecord record1 = ChallengeRecord.builder()
+                .challenge(challenge)
+                .recordDate(LocalDate.of(2024, 10, 3))
+                .isSucceed(true)
+                .build();
+        ChallengeRecord record2 = ChallengeRecord.builder()
+                .challenge(challenge)
+                .recordDate(LocalDate.of(2024, 10, 3))
+                .isSucceed(false)
+                .build();
+        challengeRecordRepository.saveAll(List.of(record1, record2));
+
+        LocalDate cancelDate = LocalDate.of(2024, 10, 3);
+        // when // then
+        assertThatThrownBy(() -> challengeRecordQueryRepository.isLatestRecordSuccessfulBy(challenge, cancelDate))
+                .isInstanceOf(GlobalException.class)
+                .hasMessage("최근 달성한 기록을 찾을 수 없습니다.");
+    }
+
+    @DisplayName("특정 날짜의 가장 최근 기록이 성공 기록이면 해당 기록을 반환한다.")
+    @Test
+    void findLatestRecord() {
         // given
         Member member = createMember();
         memberRepository.save(member);
@@ -82,26 +115,19 @@ class ChallengeRecordQueryRepositoryTest {
         ChallengeRecord record3 = ChallengeRecord.builder()
                 .challenge(challenge)
                 .recordDate(LocalDate.of(2024, 10, 3))
-                .isSucceed(false)
+                .isSucceed(true)
                 .build();
         challengeRecordRepository.saveAll(List.of(record1, record2, record3));
 
-        // when // then
-        assertThatThrownBy(() -> challengeRecordQueryRepository.findLatestRecordBy(
-                challenge, LocalDate.of(2024, 10, 3)
-        ))
-                .isInstanceOf(GlobalException.class)
-                .hasMessage("최근 달성한 기록을 찾을 수 없습니다.");
-    }
-
-    @DisplayName("특정 날짜의 가장 최근 기록이 성공 기록이면 해당 기록을 반환한다.")
-    @Test
-    void findLatestRecord() throws Exception {
-        // given
-
         // when
+        ChallengeRecord latestRecord = challengeRecordQueryRepository.isLatestRecordSuccessfulBy(
+                challenge,
+                LocalDate.of(2024, 10, 3)
+        );
 
         // then
+        assertThat(latestRecord.getId()).isNotNull();
+        assertThat(latestRecord.isSucceed()).isTrue();
     }
 
     private Member createMember() {

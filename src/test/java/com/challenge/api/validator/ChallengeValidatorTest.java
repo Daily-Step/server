@@ -128,6 +128,7 @@ class ChallengeValidatorTest {
         return ChallengeRecord.builder()
                 .challenge(challenge)
                 .recordDate(currentDate)
+                .isSucceed(true)
                 .build();
     }
 
