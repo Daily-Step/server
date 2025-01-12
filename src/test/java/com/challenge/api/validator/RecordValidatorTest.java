@@ -18,11 +18,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class RecordValidatorTest {
 
     @Autowired
@@ -52,9 +57,9 @@ class RecordValidatorTest {
         categoryRepository.deleteAllInBatch();
     }
 
-    @DisplayName("특정 날짜에 해당하는 챌린지가 달성한 챌린지인지 확인한다.")
+    @DisplayName("특정 날짜의 최신 기록이 성공인지 확인한다.")
     @Test
-    void hasRecordFor() {
+    void isLatestRecordSuccessful() {
         // given
         Member member = createMember();
         memberRepository.save(member);
@@ -65,15 +70,29 @@ class RecordValidatorTest {
         Challenge challenge = createChallenge(member, category, LocalDateTime.of(2024, 10, 1, 12, 30, 59));
         challengeRepository.save(challenge);
 
-        ChallengeRecord record = ChallengeRecord.achieve(challenge, "2024-10-01");
-        challengeRecordRepository.save(record);
+        ChallengeRecord record1 = ChallengeRecord.builder()
+                .challenge(challenge)
+                .recordDate(LocalDate.of(2024, 10, 3))
+                .isSucceed(true)
+                .build();
+        ChallengeRecord record2 = ChallengeRecord.builder()
+                .challenge(challenge)
+                .recordDate(LocalDate.of(2024, 10, 3))
+                .isSucceed(false)
+                .build();
+        ChallengeRecord record3 = ChallengeRecord.builder()
+                .challenge(challenge)
+                .recordDate(LocalDate.of(2024, 10, 3))
+                .isSucceed(true)
+                .build();
+        challengeRecordRepository.saveAll(List.of(record1, record2, record3));
 
         // when
-//        ChallengeRecord challengeRecord = recordValidator.hasRecordFor(challenge, LocalDate.of(2024, 10, 1));
-//
-//        // then
-//        assertThat(challengeRecord.getRecordDate()).isEqualTo(LocalDate.of(2024, 10, 1));
-//        assertThat(challengeRecord.isSucceed()).isTrue();
+        ChallengeRecord latestRecord = recordValidator.isLatestRecordSuccessfulBy(challenge, LocalDate.of(2024, 10, 3));
+
+        // then
+        assertThat(latestRecord.getId()).isNotNull();
+        assertThat(latestRecord.isSucceed()).isTrue();
     }
 
     private Member createMember() {
