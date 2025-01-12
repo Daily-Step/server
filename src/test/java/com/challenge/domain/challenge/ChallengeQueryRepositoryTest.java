@@ -69,11 +69,11 @@ class ChallengeQueryRepositoryTest {
         Member member = createMember();
         memberRepository.save(member);
 
-        Challenge challenge1 = createChallenge(member, category, 1, "제목1",
+        Challenge challenge1 = createChallenge(member, category, 1, "제목1", false,
                 LocalDateTime.of(2024, 10, 1, 12, 30, 59));
-        Challenge challenge2 = createChallenge(member, category, 2, "제목2",
+        Challenge challenge2 = createChallenge(member, category, 2, "제목2", false,
                 LocalDateTime.of(2024, 11, 16, 14, 0, 0));
-        Challenge challenge3 = createChallenge(member, category, 3, "제목3",
+        Challenge challenge3 = createChallenge(member, category, 3, "제목3", false,
                 LocalDateTime.of(2024, 12, 1, 0, 0, 0));
         challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3));
 
@@ -91,7 +91,7 @@ class ChallengeQueryRepositoryTest {
 
     @DisplayName("입력 받은 날짜 기준 2달 전 날짜의 00:00:00부터 입력받은 날짜의 23:59:59까지의 시간 범위를 계산 한다.")
     @Test
-    void shouldCalculateStartAndEndDateTimeForChallengeQuery() throws Exception {
+    void shouldCalculateStartAndEndDateTimeForChallengeQuery() {
         // given
         LocalDate localDate = LocalDate.of(2024, 11, 11);
 
@@ -133,7 +133,7 @@ class ChallengeQueryRepositoryTest {
 
     @DisplayName("진행중인 챌린지 수를 조회한다.")
     @Test
-    void countOngoingChallengesBy() {
+    void countOngoingChallenges() {
         // given
         String targetDateTime = "2025-01-08 12:30:59";
 
@@ -143,13 +143,13 @@ class ChallengeQueryRepositoryTest {
         Category category = createCategory();
         categoryRepository.save(category);
 
-        Challenge challenge1 = createChallenge(member, category, 1, "제목1",
+        Challenge challenge1 = createChallenge(member, category, 1, "제목1", false,
                 LocalDateTime.of(2024, 10, 1, 12, 30, 59));
-        Challenge challenge2 = createChallenge(member, category, 2, "제목2",
+        Challenge challenge2 = createChallenge(member, category, 2, "제목2", false,
                 LocalDateTime.of(2024, 11, 11, 14, 0, 0));
-        Challenge challenge3 = createChallenge(member, category, 3, "제목3",
+        Challenge challenge3 = createChallenge(member, category, 3, "제목3", false,
                 LocalDateTime.of(2024, 12, 23, 0, 0, 0));
-        Challenge challenge4 = createChallenge(member, category, 1, "제목4",
+        Challenge challenge4 = createChallenge(member, category, 1, "제목4", false,
                 LocalDateTime.of(2025, 1, 1, 0, 0, 0));
         challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3, challenge4));
 
@@ -162,7 +162,34 @@ class ChallengeQueryRepositoryTest {
 
     @DisplayName("완료된 챌린지 수를 조회한다.")
     @Test
-    void countCompletedChallengesBy() {
+    void countCompletedChallenges() {
+    }
+
+    @DisplayName("전체 챌린지 수를 조회한다.")
+    @Test
+    void countAllChallenges() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category = createCategory();
+        categoryRepository.save(category);
+
+        Challenge challenge1 = createChallenge(member, category, 1, "제목1", false,
+                LocalDateTime.of(2024, 10, 1, 12, 30, 59));
+        Challenge challenge2 = createChallenge(member, category, 2, "제목2", false,
+                LocalDateTime.of(2024, 11, 11, 14, 0, 0));
+        Challenge challenge3 = createChallenge(member, category, 3, "제목3", true,
+                LocalDateTime.of(2024, 12, 23, 0, 0, 0));
+        Challenge challenge4 = createChallenge(member, category, 1, "제목4", true,
+                LocalDateTime.of(2025, 1, 1, 0, 0, 0));
+        challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3, challenge4));
+
+        // when
+        Long count = challengeQueryRepository.countAllChallengesBy(member);
+
+        // then
+        assertThat(count).isEqualTo(2);
     }
 
     private Member createMember() {
@@ -185,13 +212,14 @@ class ChallengeQueryRepositoryTest {
     }
 
     private Challenge createChallenge(Member member, Category category, int durationInWeeks, String title,
-            LocalDateTime startDateTime) {
+            boolean isDeleted, LocalDateTime startDateTime) {
         return Challenge.builder()
                 .member(member)
                 .category(category)
                 .durationInWeeks(durationInWeeks)
                 .title(title)
                 .color("#30B0C7")
+                .isDeleted(isDeleted)
                 .weeklyGoalCount(1)
                 .startDateTime(startDateTime)
                 .build();

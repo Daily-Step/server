@@ -65,7 +65,7 @@ public class Challenge extends BaseDateTimeEntity {
     private String color;
 
     @Column(nullable = false)
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
     @Column(nullable = false)
     private LocalDateTime startDateTime;
@@ -75,7 +75,7 @@ public class Challenge extends BaseDateTimeEntity {
 
     @Builder
     private Challenge(Member member, Category category, String title, String content, int durationInWeeks,
-            int weeklyGoalCount, String color, LocalDateTime startDateTime) {
+            int weeklyGoalCount, String color, boolean isDeleted, LocalDateTime startDateTime) {
         this.challengeRecords = new ArrayList<>();
         this.member = member;
         this.category = category;
@@ -85,7 +85,7 @@ public class Challenge extends BaseDateTimeEntity {
         this.weeklyGoalCount = weeklyGoalCount;
         this.totalGoalCount = durationInWeeks * weeklyGoalCount;
         this.color = color;
-        this.isDeleted = false;
+        this.isDeleted = isDeleted;
         this.startDateTime = startDateTime;
         this.endDateTime = startDateTime.plusWeeks(durationInWeeks)
                 .toLocalDate()

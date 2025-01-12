@@ -59,7 +59,7 @@ class ChallengeRecordQueryRepositoryTest {
 
     @DisplayName("특정 날짜의 가장 최근 기록이 성공 기록이 아니면 예외를 발생시킨다.")
     @Test
-    void findLatestRecord_Fail() {
+    void isLatestRecordSuccessful_Fail() {
         // given
         Member member = createMember();
         memberRepository.save(member);
@@ -91,7 +91,7 @@ class ChallengeRecordQueryRepositoryTest {
 
     @DisplayName("특정 날짜의 가장 최근 기록이 성공 기록이면 해당 기록을 반환한다.")
     @Test
-    void findLatestRecord() {
+    void isLatestRecordSuccessful() {
         // given
         Member member = createMember();
         memberRepository.save(member);
