@@ -75,9 +75,7 @@ public class ChallengeService {
     public ChallengeResponse achieveChallenge(Member member, Long challengeId,
             ChallengeAchieveServiceRequest request) {
         // validation
-        challengeValidator.challengeExistsBy(member, challengeId);
-        DateValidator.isLocalDateFormatter(request.getAchieveDate());
-        DateValidator.isBeforeOrEqualToTodayFrom(request.getAchieveDate());
+        validateChallengeAchieveOrCancel(member, challengeId, request.getAchieveDate());
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
         challengeValidator.hasDuplicateRecordFor(challenge, DateUtils.toLocalDate(request.getAchieveDate()));
@@ -91,14 +89,12 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse cancelChallenge(Member member, Long challengeId, ChallengeCancelServiceRequest request) {
         // validation
-        challengeValidator.challengeExistsBy(member, challengeId);
-        DateValidator.isLocalDateFormatter(request.getCancelDate());
-        DateValidator.isBeforeOrEqualToTodayFrom(request.getCancelDate());
+        validateChallengeAchieveOrCancel(member, challengeId, request.getCancelDate());
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
 
         // validation
-        ChallengeRecord challengeRecord = recordValidator.findLatestRecordBy(challenge,
+        ChallengeRecord challengeRecord = recordValidator.isLatestRecordSuccessfulBy(challenge,
                 DateUtils.toLocalDate(request.getCancelDate()));
 
         // 기록 삭제
@@ -130,6 +126,13 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
         challenge.delete();
         return challengeId;
+    }
+
+    // 챌린지 달성 또는 취소 시 유효성 검사
+    private void validateChallengeAchieveOrCancel(Member member, Long challengeId, String actionDate) {
+        challengeValidator.challengeExistsBy(member, challengeId);
+        DateValidator.isLocalDateFormatter(actionDate);
+        DateValidator.isBeforeOrEqualToTodayFrom(actionDate);
     }
 
 }
