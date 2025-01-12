@@ -103,6 +103,9 @@ public class ChallengeService {
 
         // 기록 삭제
         challenge.getRecords().remove(record);
+//        Record removedRecord = record.cancel(challenge, request.getCancelDate());
+//        recordRepository.save(removedRecord);
+
         return ChallengeResponse.of(challenge);
     }
 

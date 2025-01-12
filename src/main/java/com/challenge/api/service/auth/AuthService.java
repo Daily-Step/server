@@ -73,11 +73,21 @@ public class AuthService {
         authValidator.validateUniqueNickname(request.getNickname());
 
         // 직무 데이터 설정
-        Job job = jobRepository.findById(request.getJobId())
-                .orElseThrow(() -> new GlobalException(ErrorCode.JOB_NOT_FOUND));
+        Job job;
+        if (request.getJobId() == 0) {
+            job = null;
+        } else {
+            job = jobRepository.findById(request.getJobId())
+                    .orElseThrow(() -> new GlobalException(ErrorCode.JOB_NOT_FOUND));
+        }
 
         // 연차 enum 데이터 설정
-        JobYear jobYear = JobYear.of(request.getYearId());
+        JobYear jobYear;
+        if (request.getYearId() == 0) {
+            jobYear = null;
+        } else {
+            jobYear = JobYear.of(request.getYearId());
+        }
 
         // member 엔티티 생성 및 저장
         Member member = Member.create(userInfo.getSocialId(), userInfo.getEmail(), request.getNickname(),

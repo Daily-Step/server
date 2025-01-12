@@ -11,8 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,9 +21,6 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"challenge_id", "success_date"})
-)
 public class Record extends BaseDateTimeEntity {
 
     @Id
@@ -36,21 +31,35 @@ public class Record extends BaseDateTimeEntity {
     @Column(nullable = false)
     private LocalDate successDate;
 
+    @Column(nullable = false)
+    private boolean isSucceed = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id", nullable = false)
     private Challenge challenge;
 
     @Builder
-    private Record(LocalDate successDate, Challenge challenge) {
+    private Record(LocalDate successDate, boolean isSucceed, Challenge challenge) {
         this.successDate = successDate;
         this.challenge = challenge;
-        challenge.addRecord(this);
+        this.isSucceed = isSucceed;
     }
 
     public static Record achieve(Challenge challenge, String achieveDate) {
-        return Record.builder()
-                .challenge(challenge)
+        Record record = Record.builder()
                 .successDate(DateUtils.toLocalDate(achieveDate))
+                .isSucceed(true)
+                .challenge(challenge)
+                .build();
+        challenge.addRecord(record);
+        return record;
+    }
+
+    public Record cancel(Challenge challenge, String cancelDate) {
+        return Record.builder()
+                .successDate(DateUtils.toLocalDate(cancelDate))
+                .isSucceed(false)
+                .challenge(challenge)
                 .build();
     }
 
