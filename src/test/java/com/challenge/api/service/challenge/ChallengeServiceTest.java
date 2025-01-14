@@ -11,6 +11,7 @@ import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.challenge.Challenge;
 import com.challenge.domain.challenge.ChallengeRepository;
+import com.challenge.domain.challenge.ChallengeStatus;
 import com.challenge.domain.challengeRecord.ChallengeRecord;
 import com.challenge.domain.challengeRecord.ChallengeRecordRepository;
 import com.challenge.domain.job.Job;
@@ -368,10 +369,10 @@ class ChallengeServiceTest {
         // then - 삭제된 챌린지 검증
         assertThat(deletedChallenge).isEqualTo(challenge2.getId());
         assertThat(challengeRepository.findAll()).hasSize(2)
-                .extracting("title", "content", "isDeleted")
+                .extracting("title", "content", "status")
                 .containsExactly(
-                        tuple("제목1", "내용1", false),
-                        tuple("제목2", "내용2", true)
+                        tuple("제목1", "내용1", ChallengeStatus.ONGOING),
+                        tuple("제목2", "내용2", ChallengeStatus.REMOVED)
                 );
 
         // given - 모든 챌린지 조회를 위한 요청 request
@@ -413,12 +414,13 @@ class ChallengeServiceTest {
     }
 
     private Challenge createChallenge(Member member, Category category, int durationInWeeks, String title,
-            LocalDateTime startDateTime) {
+                                      LocalDateTime startDateTime) {
         return Challenge.builder()
                 .member(member)
                 .category(category)
                 .durationInWeeks(durationInWeeks)
                 .title(title)
+                .status(ChallengeStatus.ONGOING)
                 .color("#30B0C7")
                 .weeklyGoalCount(1)
                 .startDateTime(startDateTime)
