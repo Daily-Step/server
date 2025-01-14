@@ -1,4 +1,4 @@
-package com.challenge.domain.record;
+package com.challenge.domain.challengeRecord;
 
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.challenge.Challenge;
@@ -21,43 +21,43 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Record extends BaseDateTimeEntity {
+public class ChallengeRecord extends BaseDateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "record_id")
+    @Column(name = "challenge_record_id")
     private Long id;
-
-    @Column(nullable = false)
-    private LocalDate successDate;
-
-    @Column(nullable = false)
-    private boolean isSucceed = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id", nullable = false)
     private Challenge challenge;
 
+    @Column(nullable = false)
+    private LocalDate recordDate;
+
+    @Column(nullable = false)
+    private boolean isSucceed;
+
     @Builder
-    private Record(LocalDate successDate, boolean isSucceed, Challenge challenge) {
-        this.successDate = successDate;
+    private ChallengeRecord(LocalDate recordDate, boolean isSucceed, Challenge challenge) {
+        this.recordDate = recordDate;
         this.challenge = challenge;
         this.isSucceed = isSucceed;
     }
 
-    public static Record achieve(Challenge challenge, String achieveDate) {
-        Record record = Record.builder()
-                .successDate(DateUtils.toLocalDate(achieveDate))
+    public static ChallengeRecord achieve(Challenge challenge, String achieveDate) {
+        ChallengeRecord achieveRecord = ChallengeRecord.builder()
+                .recordDate(DateUtils.toLocalDate(achieveDate))
                 .isSucceed(true)
                 .challenge(challenge)
                 .build();
-        challenge.addRecord(record);
-        return record;
+        challenge.addRecord(achieveRecord);
+        return achieveRecord;
     }
 
-    public Record cancel(Challenge challenge, String cancelDate) {
-        return Record.builder()
-                .successDate(DateUtils.toLocalDate(cancelDate))
+    public static ChallengeRecord cancel(Challenge challenge, String cancelDate) {
+        return ChallengeRecord.builder()
+                .recordDate(DateUtils.toLocalDate(cancelDate))
                 .isSucceed(false)
                 .challenge(challenge)
                 .build();
