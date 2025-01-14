@@ -4,8 +4,8 @@ import com.challenge.api.service.challenge.request.ChallengeCreateServiceRequest
 import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.domain.BaseDateTimeEntity;
 import com.challenge.domain.category.Category;
+import com.challenge.domain.challengeRecord.ChallengeRecord;
 import com.challenge.domain.member.Member;
-import com.challenge.domain.record.Record;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,7 +36,7 @@ public class Challenge extends BaseDateTimeEntity {
     private Long id;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Record> records = new ArrayList<>();
+    private List<ChallengeRecord> challengeRecords = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -65,7 +65,7 @@ public class Challenge extends BaseDateTimeEntity {
     private String color;
 
     @Column(nullable = false)
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
     @Column(nullable = false)
     private LocalDateTime startDateTime;
@@ -75,8 +75,8 @@ public class Challenge extends BaseDateTimeEntity {
 
     @Builder
     private Challenge(Member member, Category category, String title, String content, int durationInWeeks,
-            int weeklyGoalCount, String color, LocalDateTime startDateTime) {
-        this.records = new ArrayList<>();
+            int weeklyGoalCount, String color, boolean isDeleted, LocalDateTime startDateTime) {
+        this.challengeRecords = new ArrayList<>();
         this.member = member;
         this.category = category;
         this.title = title;
@@ -85,7 +85,7 @@ public class Challenge extends BaseDateTimeEntity {
         this.weeklyGoalCount = weeklyGoalCount;
         this.totalGoalCount = durationInWeeks * weeklyGoalCount;
         this.color = color;
-        this.isDeleted = false;
+        this.isDeleted = isDeleted;
         this.startDateTime = startDateTime;
         this.endDateTime = startDateTime.plusWeeks(durationInWeeks)
                 .toLocalDate()
@@ -115,8 +115,8 @@ public class Challenge extends BaseDateTimeEntity {
         this.content = request.getContent();
     }
 
-    public void addRecord(Record record) {
-        this.records.add(record);
+    public void addRecord(ChallengeRecord challengeRecord) {
+        this.challengeRecords.add(challengeRecord);
     }
 
     public void delete() {

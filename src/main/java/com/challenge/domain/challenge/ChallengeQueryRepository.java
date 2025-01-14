@@ -2,7 +2,6 @@ package com.challenge.domain.challenge;
 
 import com.challenge.domain.member.Member;
 import com.challenge.utils.date.DateUtils;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.challenge.domain.challenge.QChallenge.challenge;
-import static com.challenge.domain.record.QRecord.record;
+import static com.challenge.domain.challengeRecord.QChallengeRecord.challengeRecord;
 
 @RequiredArgsConstructor
 @Repository
@@ -35,10 +34,11 @@ public class ChallengeQueryRepository {
 
     // 중복된 기록이 존재하는지 조회
     public boolean existsDuplicateRecordBy(Challenge challenge, LocalDate successDate) {
-        Long count = queryFactory.select(record.count())
-                .from(record)
-                .where(record.challenge.eq(challenge)
-                        .and(record.successDate.eq(successDate)))
+        Long count = queryFactory.select(challengeRecord.count())
+                .from(challengeRecord)
+                .where(challengeRecord.challenge.eq(challenge)
+                        .and(challengeRecord.recordDate.eq(successDate))
+                        .and(challengeRecord.isSucceed.eq(true)))
                 .fetchOne();
 
         return count != null && count > 0;
@@ -70,17 +70,7 @@ public class ChallengeQueryRepository {
 
     // 완료된 챌린지 수 조회
     public Long countCompletedChallengesBy(Member member) {
-        return queryFactory
-                .select(challenge.count())
-                .from(challenge)
-                .leftJoin(record)
-                .on(record.challenge.eq(challenge)
-                        .and(record.isSucceed.isTrue())
-                )
-                .where(challenge.member.eq(member))
-                .groupBy(challenge)
-                .having(record.count().eq(Expressions.constant(challenge.totalGoalCount)))
-                .fetchOne();
+        return null;
     }
 
     // 전체 챌린지 수 조회

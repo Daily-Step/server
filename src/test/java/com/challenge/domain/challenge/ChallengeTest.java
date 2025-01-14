@@ -52,7 +52,7 @@ class ChallengeTest {
         Challenge challenge = Challenge.create(member, category, request, LocalDateTime.now());
 
         // then
-        assertThat(challenge.getRecords()).isEmpty();
+        assertThat(challenge.getChallengeRecords()).isEmpty();
     }
 
     @DisplayName("챌린지 생성 시 총 목표 횟수는 기간 * 목표 횟수로 계산한다. ")

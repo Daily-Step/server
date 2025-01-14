@@ -14,9 +14,9 @@ import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.challenge.Challenge;
 import com.challenge.domain.challenge.ChallengeQueryRepository;
 import com.challenge.domain.challenge.ChallengeRepository;
+import com.challenge.domain.challengeRecord.ChallengeRecord;
+import com.challenge.domain.challengeRecord.ChallengeRecordRepository;
 import com.challenge.domain.member.Member;
-import com.challenge.domain.record.Record;
-import com.challenge.domain.record.RecordRepository;
 import com.challenge.utils.date.DateUtils;
 import com.challenge.validator.DateValidator;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final CategoryRepository categoryRepository;
-    private final RecordRepository recordRepository;
+    private final ChallengeRecordRepository challengeRecordRepository;
 
     private final ChallengeValidator challengeValidator;
     private final CategoryValidator categoryValidator;
@@ -75,16 +75,13 @@ public class ChallengeService {
     public ChallengeResponse achieveChallenge(Member member, Long challengeId,
             ChallengeAchieveServiceRequest request) {
         // validation
-        challengeValidator.challengeExistsBy(member, challengeId);
-        DateValidator.isLocalDateFormatter(request.getAchieveDate());
-        DateValidator.isBeforeOrEqualToTodayFrom(request.getAchieveDate());
+        validateChallengeAchieveOrCancel(member, challengeId, request.getAchieveDate());
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
         challengeValidator.hasDuplicateRecordFor(challenge, DateUtils.toLocalDate(request.getAchieveDate()));
 
-        Record record = Record.achieve(challenge, request.getAchieveDate());
-        recordRepository.save(record);
-        challenge.addRecord(record);
+        ChallengeRecord challengeRecord = ChallengeRecord.achieve(challenge, request.getAchieveDate());
+        challengeRecordRepository.save(challengeRecord);
 
         return ChallengeResponse.of(challenge);
     }
@@ -92,19 +89,18 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse cancelChallenge(Member member, Long challengeId, ChallengeCancelServiceRequest request) {
         // validation
-        challengeValidator.challengeExistsBy(member, challengeId);
-        DateValidator.isLocalDateFormatter(request.getCancelDate());
-        DateValidator.isBeforeOrEqualToTodayFrom(request.getCancelDate());
+        validateChallengeAchieveOrCancel(member, challengeId, request.getCancelDate());
 
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
 
         // validation
-        Record record = recordValidator.hasRecordFor(challenge, DateUtils.toLocalDate(request.getCancelDate()));
+        ChallengeRecord challengeRecord = recordValidator.isLatestRecordSuccessfulBy(challenge,
+                DateUtils.toLocalDate(request.getCancelDate()));
 
         // 기록 삭제
-        challenge.getRecords().remove(record);
-//        Record removedRecord = record.cancel(challenge, request.getCancelDate());
-//        recordRepository.save(removedRecord);
+        challenge.getChallengeRecords().remove(challengeRecord);
+        ChallengeRecord cancelRecord = ChallengeRecord.cancel(challenge, request.getCancelDate());
+        challengeRecordRepository.save(cancelRecord);
 
         return ChallengeResponse.of(challenge);
     }
@@ -130,6 +126,13 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
         challenge.delete();
         return challengeId;
+    }
+
+    // 챌린지 달성 또는 취소 시 유효성 검사
+    private void validateChallengeAchieveOrCancel(Member member, Long challengeId, String actionDate) {
+        challengeValidator.challengeExistsBy(member, challengeId);
+        DateValidator.isLocalDateFormatter(actionDate);
+        DateValidator.isBeforeOrEqualToTodayFrom(actionDate);
     }
 
 }

@@ -11,6 +11,8 @@ import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.challenge.Challenge;
 import com.challenge.domain.challenge.ChallengeRepository;
+import com.challenge.domain.challengeRecord.ChallengeRecord;
+import com.challenge.domain.challengeRecord.ChallengeRecordRepository;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.Gender;
@@ -18,8 +20,6 @@ import com.challenge.domain.member.JobYear;
 import com.challenge.domain.member.LoginType;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
-import com.challenge.domain.record.Record;
-import com.challenge.domain.record.RecordRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,14 +51,14 @@ class ChallengeServiceTest {
     private ChallengeRepository challengeRepository;
 
     @Autowired
-    private RecordRepository recordRepository;
+    private ChallengeRecordRepository challengeRecordRepository;
 
     @Autowired
     private ChallengeService challengeService;
 
     @AfterEach
     void tearDown() {
-        recordRepository.deleteAllInBatch();
+        challengeRecordRepository.deleteAllInBatch();
         challengeRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
         jobRepository.deleteAllInBatch();
@@ -160,10 +160,10 @@ class ChallengeServiceTest {
                 LocalDateTime.of(2024, 11, 11, 10, 10, 30));
         challengeRepository.save(challenge);
 
-        Record record1 = createRecord(challenge, LocalDate.of(2024, 11, 11));
-        Record record2 = createRecord(challenge, LocalDate.of(2024, 11, 12));
-        Record record3 = createRecord(challenge, LocalDate.of(2024, 11, 13));
-        recordRepository.saveAll(List.of(record1, record2, record3));
+        ChallengeRecord challengeRecord1 = createRecord(challenge, LocalDate.of(2024, 11, 11));
+        ChallengeRecord challengeRecord2 = createRecord(challenge, LocalDate.of(2024, 11, 12));
+        ChallengeRecord challengeRecord3 = createRecord(challenge, LocalDate.of(2024, 11, 13));
+        challengeRecordRepository.saveAll(List.of(challengeRecord1, challengeRecord2, challengeRecord3));
 
         ChallengeAchieveServiceRequest challengeAchieveServiceRequest = ChallengeAchieveServiceRequest.builder()
                 .achieveDate("2024-11-14")
@@ -431,10 +431,11 @@ class ChallengeServiceTest {
                 .build();
     }
 
-    private Record createRecord(Challenge challenge, LocalDate currentDate) {
-        return Record.builder()
+    private ChallengeRecord createRecord(Challenge challenge, LocalDate currentDate) {
+        return ChallengeRecord.builder()
                 .challenge(challenge)
-                .successDate(currentDate)
+                .recordDate(currentDate)
+                .isSucceed(true)
                 .build();
     }
 
