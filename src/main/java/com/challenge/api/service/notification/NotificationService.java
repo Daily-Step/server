@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @Service
@@ -29,7 +30,8 @@ public class NotificationService {
      * @return token, AchieveChallengeCountDTO
      */
     public Map<String, AchieveChallengeDTO> getAchieveTargetsAndChallenge() {
-        return notificationQueryRepository.getAchieveTargetsAndChallenge();
+        LocalDate today = LocalDate.now();
+        return notificationQueryRepository.getAchieveTargetsAndChallenge(today);
     }
 
 }
