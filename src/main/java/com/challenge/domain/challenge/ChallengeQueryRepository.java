@@ -69,9 +69,12 @@ public class ChallengeQueryRepository {
     }
 
     // 완료된 챌린지 수 조회
-    public Long countCompletedChallengesBy(Member member) {
-        // 챌린지 기간이 종료 됐고, 삭제되지 않은 챌린지 수 조회
-        return null;
+    public Long countSucceedChallengesBy(Member member) {
+        return queryFactory.select(challenge.count())
+                .from(challenge)
+                .where(challenge.member.eq(member)
+                        .and(challenge.status.eq(ChallengeStatus.SUCCEED)))
+                .fetchOne();
     }
 
     // 전체 챌린지 수 조회

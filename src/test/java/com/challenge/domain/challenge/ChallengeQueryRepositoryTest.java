@@ -25,6 +25,7 @@ import java.util.List;
 
 import static com.challenge.domain.challenge.ChallengeStatus.ONGOING;
 import static com.challenge.domain.challenge.ChallengeStatus.REMOVED;
+import static com.challenge.domain.challenge.ChallengeStatus.SUCCEED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
@@ -164,7 +165,29 @@ class ChallengeQueryRepositoryTest {
 
     @DisplayName("완료된 챌린지 수를 조회한다.")
     @Test
-    void countCompletedChallenges() {
+    void countSucceedChallenges() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category = createCategory();
+        categoryRepository.save(category);
+
+        Challenge challenge1 = createChallenge(member, category, 1, "제목1", ONGOING,
+                LocalDateTime.of(2024, 10, 1, 12, 30, 59));
+        Challenge challenge2 = createChallenge(member, category, 2, "제목2", ONGOING,
+                LocalDateTime.of(2024, 11, 11, 14, 0, 0));
+        Challenge challenge3 = createChallenge(member, category, 3, "제목3", ONGOING,
+                LocalDateTime.of(2024, 12, 23, 0, 0, 0));
+        Challenge challenge4 = createChallenge(member, category, 1, "제목4", SUCCEED,
+                LocalDateTime.of(2025, 1, 1, 0, 0, 0));
+        challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3, challenge4));
+
+        // when
+        Long count = challengeQueryRepository.countSucceedChallengesBy(member);
+
+        // then
+        assertThat(count).isEqualTo(1);
     }
 
     @DisplayName("전체 챌린지 수를 조회한다.")
@@ -214,7 +237,7 @@ class ChallengeQueryRepositoryTest {
     }
 
     private Challenge createChallenge(Member member, Category category, int durationInWeeks, String title,
-            ChallengeStatus status, LocalDateTime startDateTime) {
+                                      ChallengeStatus status, LocalDateTime startDateTime) {
         return Challenge.builder()
                 .member(member)
                 .category(category)
