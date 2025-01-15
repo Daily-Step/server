@@ -3,6 +3,7 @@ package com.challenge.scheduler;
 import com.challenge.api.service.fcm.FcmService;
 import com.challenge.api.service.fcm.request.FcmMessage;
 import com.challenge.api.service.notification.AchieveChallengeDTO;
+import com.challenge.api.service.notification.NewChallengeDTO;
 import com.challenge.api.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,16 +40,26 @@ public class NotificationScheduler {
     public void sendNewChallengeNotification() {
         try {
             // 알림 전송 대상 조회
-            Map<String, String> targetMap = notificationService.getNewChallengeTargets();
+            Map<String, NewChallengeDTO> targetMap = notificationService.getNewChallengeTargets();
 
             // 알림 객체 생성
             List<FcmMessage> fcmMessages = targetMap.entrySet().stream()
                     .map(entry ->
-                            FcmMessage.of(entry.getKey(), NEW_CHALLENGE_TITLE, entry.getValue() + NEW_CHALLENGE_BODY)
+                            FcmMessage.of(entry.getKey(), NEW_CHALLENGE_TITLE,
+                                    entry.getValue().getNickname() + NEW_CHALLENGE_BODY)
                     ).toList();
 
-            // 알림 발송
-            fcmMessages.forEach(fcmService::sendMessage);
+            // 알림 발송 및 내역 저장
+            fcmMessages.forEach(message -> {
+                // 알림 발송
+                fcmService.sendMessage(message);
+
+                // 알림 내역 저장
+                Long memberId = targetMap.get(message.getToken()).getMemberId();
+                notificationService.createAndSave(memberId, message.getTitle(), message.getBody());
+
+                log.debug("New challenge notification sent: {}", message);
+            });
         } catch (Exception e) {
             log.error("error occuerd while sending new challenge notification", e);
         }
@@ -70,14 +81,26 @@ public class NotificationScheduler {
                             getDayStartNotificationBody(entry.getValue()))
                     ).toList();
 
-            // 알림 발송
-            fcmMessages.forEach(fcmService::sendMessage);
+            // 알림 발송 및 내역 저장
+            fcmMessages.forEach(message -> {
+                // 알림 발송
+                fcmService.sendMessage(message);
+
+                // 알림 내역 저장
+                Long memberId = targetMap.get(message.getToken()).getMemberId();
+                notificationService.createAndSave(memberId, message.getTitle(), message.getBody());
+
+                log.debug("Day start notification sent: {}", message);
+            });
         } catch (Exception e) {
             log.error("error occuerd while sending day start notification", e);
         }
 
     }
 
+    /**
+     * 챌린지 하루 종료 알림 발송
+     */
     @Scheduled(cron = "0 0 21 * * *")
     public void sendDayEndNotification() {
         try {
@@ -91,8 +114,17 @@ public class NotificationScheduler {
                                     getDayEndNotificationBody(entry.getValue()))
                     ).toList();
 
-            // 알림 발송
-            fcmMessages.forEach(fcmService::sendMessage);
+            // 알림 발송 및 내역 저장
+            fcmMessages.forEach(message -> {
+                // 알림 발송
+                fcmService.sendMessage(message);
+
+                // 알림 내역 저장
+                Long memberId = targetMap.get(message.getToken()).getMemberId();
+                notificationService.createAndSave(memberId, message.getTitle(), message.getBody());
+
+                log.debug("Day end notification sent: {}", message);
+            });
         } catch (Exception e) {
             log.error("error occuerd while sending day end notification", e);
         }

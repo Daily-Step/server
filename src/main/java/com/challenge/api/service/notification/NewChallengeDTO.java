@@ -3,14 +3,11 @@ package com.challenge.api.service.notification;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @Builder
-public class AchieveChallengeDTO {
+public class NewChallengeDTO {
 
     Long memberId;
     String nickname;
-    List<String> challengeTitles;
 
 }

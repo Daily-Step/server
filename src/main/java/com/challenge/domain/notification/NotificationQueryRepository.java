@@ -1,6 +1,7 @@
 package com.challenge.domain.notification;
 
 import com.challenge.api.service.notification.AchieveChallengeDTO;
+import com.challenge.api.service.notification.NewChallengeDTO;
 import com.challenge.domain.challenge.ChallengeStatus;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -34,10 +35,11 @@ public class NotificationQueryRepository {
      *
      * @return
      */
-    public Map<String, String> getNewChallengeTargets() {
+    public Map<String, NewChallengeDTO> getNewChallengeTargets() {
         // ONGOING 상태인 challenge 개수가 0개인 member의 token, nickname 조회
         List<Tuple> result = queryFactory
-                .select(member.fcmToken,
+                .select(member.id,
+                        member.fcmToken,
                         member.nickname)
                 .from(member)
                 .leftJoin(challenge)
@@ -48,12 +50,18 @@ public class NotificationQueryRepository {
                 .having(challenge.id.count().eq(0L))
                 .fetch();
 
-        // 결과를 Map<String,String> 형태로 변환
-        Map<String, String> resultMap = new HashMap<>();
+        // 결과를 Map<String, NewChallengeDTO> 형태로 변환
+        Map<String, NewChallengeDTO> resultMap = new HashMap<>();
         for (Tuple tuple : result) {
             String token = tuple.get(member.fcmToken);
+            Long memberId = tuple.get(member.id);
             String nickname = tuple.get(member.nickname);
-            resultMap.put(token, nickname);
+
+            NewChallengeDTO dto = NewChallengeDTO.builder()
+                    .memberId(memberId)
+                    .nickname(nickname)
+                    .build();
+            resultMap.put(token, dto);
         }
 
         return resultMap;
@@ -70,7 +78,8 @@ public class NotificationQueryRepository {
         // 해당 챌린지의 마지막 기록이 없거나 isSucceed=false -> 달성 가능
         // 그 챌린지의 title, member.fcmToken, member.nickname 조회
         List<Tuple> result = queryFactory
-                .select(member.fcmToken,
+                .select(member.id,
+                        member.fcmToken,
                         member.nickname,
                         challenge.title)
                 .from(challenge)
@@ -84,12 +93,14 @@ public class NotificationQueryRepository {
         Map<String, AchieveChallengeDTO> resultMap = new HashMap<>();
         for (Tuple tuple : result) {
             String token = tuple.get(member.fcmToken);
+            Long memberId = tuple.get(member.id);
             String nickname = tuple.get(member.nickname);
             String title = tuple.get(challenge.title);
 
             AchieveChallengeDTO dto = resultMap.getOrDefault(
                     token,
                     AchieveChallengeDTO.builder()
+                            .memberId(memberId)
                             .nickname(nickname)
                             .challengeTitles(new ArrayList<>())
                             .build());
