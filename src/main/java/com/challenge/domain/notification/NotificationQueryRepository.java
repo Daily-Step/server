@@ -1,6 +1,7 @@
 package com.challenge.domain.notification;
 
 import com.challenge.api.service.notification.AchieveChallengeDTO;
+import com.challenge.domain.challenge.ChallengeStatus;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.challenge.domain.challenge.QChallenge.challenge;
+import static com.challenge.domain.member.QMember.member;
 
 @RequiredArgsConstructor
 @Repository
@@ -23,32 +25,64 @@ public class NotificationQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * 진행중인 챌린지가 없는 회원 token 및 닉네임 조회
+     *
+     * @return
+     */
+    public Map<String, String> getNewChallengeTargets() {
+        LocalDateTime now = LocalDateTime.now();
+
+        // ONGOING 상태인 challenge 개수가 0개인 member의 token, nickname 조회
+        List<Tuple> result = queryFactory
+                .select(member.fcmToken,
+                        member.nickname)
+                .from(member)
+                .leftJoin(challenge)
+                .on(challenge.member.id.eq(member.id)
+                        .and(challenge.status.eq(ChallengeStatus.ONGOING)))
+                .groupBy(member.id, member.fcmToken, member.nickname)
+                .having(challenge.id.count().eq(0L))
+                .fetch();
+
+        // 결과를 Map<String,String> 형태로 변환
+        Map<String, String> resultMap = new HashMap<>();
+        for (Tuple tuple : result) {
+            String token = tuple.get(member.fcmToken);
+            String nickname = tuple.get(member.nickname);
+            resultMap.put(token, nickname);
+        }
+
+        return resultMap;
+    }
+
+    /**
+     * 현재 시각 기준 달성할 챌린지가 있는 회원 token, 닉네임, 챌린지 제목 리스트 조회
+     *
+     * @return
+     */
     public Map<String, AchieveChallengeDTO> getAchieveTargetsAndChallenge() {
         LocalDate today = LocalDate.now();
         LocalDateTime now = LocalDateTime.now();
 
-        // isDeleted=false, endDateTime>now -> 진행중
+        // status=ONGOING -> 진행중
         // 해당 챌린지의 마지막 기록이 없거나 isSucceed=false -> 달성 가능
-        // 그 챌린지의 title, member.fcmToken, member.nickname 선택
+        // 그 챌린지의 title, member.fcmToken, member.nickname 조회
         List<Tuple> result = queryFactory
-                .select(
-                        challenge.member.fcmToken,
-                        challenge.member.nickname,
-                        challenge.title
-                )
+                .select(member.fcmToken,
+                        member.nickname,
+                        challenge.title)
                 .from(challenge)
-                .where(
-                        challenge.isDeleted.eq(false),
-                        challenge.endDateTime.gt(now),
-                        lastRecordSucceed(today).eq(false)
-                )
+                .join(member).on(challenge.member.id.eq(member.id))
+                .where(challenge.status.eq(ChallengeStatus.ONGOING),
+                        lastRecordSucceed(today).eq(false))
                 .fetch();
 
         // 결과를 Map<String, AchieveChallengeDTO> 형태로 변환
         Map<String, AchieveChallengeDTO> resultMap = new HashMap<>();
         for (Tuple tuple : result) {
-            String token = tuple.get(challenge.member.fcmToken);
-            String nickname = tuple.get(challenge.member.nickname);
+            String token = tuple.get(member.fcmToken);
+            String nickname = tuple.get(member.nickname);
             String title = tuple.get(challenge.title);
 
             AchieveChallengeDTO dto = resultMap.getOrDefault(
