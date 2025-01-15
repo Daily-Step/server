@@ -2,7 +2,6 @@ package com.challenge.api.service.fcm;
 
 import com.challenge.api.controller.fcm.request.FcmSendByIdRequest;
 import com.challenge.api.service.fcm.request.FcmMessage;
-import com.challenge.api.service.fcm.request.FcmMulticastMessage;
 import com.challenge.api.service.fcm.request.TokenSaveServiceRequest;
 import com.challenge.domain.member.Member;
 import com.challenge.domain.member.MemberRepository;
@@ -15,7 +14,6 @@ import com.google.firebase.messaging.Aps;
 import com.google.firebase.messaging.ApsAlert;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.MulticastMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,16 +41,6 @@ public class FcmService {
         }
 
         return "fcm 푸시 발송 성공";
-    }
-
-    public void sendMessages(FcmMulticastMessage request) {
-        try {
-            MulticastMessage messages = request.buildMessage().setApnsConfig(getApnsConfig(request)).build();
-            firebaseMessaging.sendMulticastAsync(messages);
-        } catch (Exception exception) {
-            log.error(exception.getMessage(), exception);
-            throw new GlobalException(ErrorCode.FCM_SERVICE_UNAVAILABLE);
-        }
     }
 
     @Transactional
@@ -90,12 +78,6 @@ public class FcmService {
     }
 
     private ApnsConfig getApnsConfig(FcmMessage request) {
-        ApsAlert alert = ApsAlert.builder().setTitle(request.getTitle()).setBody(request.getBody()).build();
-        Aps aps = Aps.builder().setAlert(alert).setSound("default").build();
-        return ApnsConfig.builder().setAps(aps).build();
-    }
-
-    private ApnsConfig getApnsConfig(FcmMulticastMessage request) {
         ApsAlert alert = ApsAlert.builder().setTitle(request.getTitle()).setBody(request.getBody()).build();
         Aps aps = Aps.builder().setAlert(alert).setSound("default").build();
         return ApnsConfig.builder().setAps(aps).build();
