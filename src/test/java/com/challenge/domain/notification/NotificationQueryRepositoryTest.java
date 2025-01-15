@@ -1,6 +1,7 @@
 package com.challenge.domain.notification;
 
 import com.challenge.api.service.notification.AchieveChallengeDTO;
+import com.challenge.api.service.notification.NewChallengeDTO;
 import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.challenge.Challenge;
@@ -94,7 +95,7 @@ public class NotificationQueryRepositoryTest {
             createChallenge(member, category, 1, "title1", ChallengeStatus.ONGOING, dateTime);
 
             // when
-            Map<String, String> resultMap = notificationQueryRepository.getNewChallengeTargets();
+            Map<String, NewChallengeDTO> resultMap = notificationQueryRepository.getNewChallengeTargets();
 
             // then
             assertThat(resultMap).isEmpty();
@@ -110,7 +111,7 @@ public class NotificationQueryRepositoryTest {
             createChallenge(member, category, 1, "title1", ChallengeStatus.REMOVED, dateTime);
 
             // when
-            Map<String, String> resultMap = notificationQueryRepository.getNewChallengeTargets();
+            Map<String, NewChallengeDTO> resultMap = notificationQueryRepository.getNewChallengeTargets();
 
             // then
             assertThat(resultMap).isEmpty();
@@ -140,7 +141,7 @@ public class NotificationQueryRepositoryTest {
             memberRepository.saveAll(List.of(member1, member2, member3, member4));
 
             // when
-            Map<String, String> resultMap = notificationQueryRepository.getNewChallengeTargets();
+            Map<String, NewChallengeDTO> resultMap = notificationQueryRepository.getNewChallengeTargets();
 
             // then
             assertThat(resultMap).hasSize(4);
@@ -178,6 +179,7 @@ public class NotificationQueryRepositoryTest {
             assertThat(dto.getChallengeTitles()).hasSize(3);
             assertThat(dto.getChallengeTitles()).containsExactly("title1", "title2", "title3");
             assertThat(dto.getNickname()).isEqualTo("nickname1");
+            assertThat(dto.getMemberId()).isEqualTo(member.getId());
         }
 
         @DisplayName("챌린지의 오늘 일자 기록이 존재하지만 마지막 기록의 isSucceeds가 false인 경우 해당 챌린지 정보가 담긴 map을 반환해야 한다.")
@@ -208,6 +210,7 @@ public class NotificationQueryRepositoryTest {
             assertThat(dto.getChallengeTitles()).hasSize(1);
             assertThat(dto.getChallengeTitles()).containsExactly("title1");
             assertThat(dto.getNickname()).isEqualTo("nickname1");
+            assertThat(dto.getMemberId()).isEqualTo(member.getId());
         }
 
         @DisplayName("회원의 챌린지 상태가 ONGOING이 아닌 경우 빈 map을 반환해야 한다.")
