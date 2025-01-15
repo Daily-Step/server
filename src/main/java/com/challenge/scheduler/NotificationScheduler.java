@@ -2,11 +2,11 @@ package com.challenge.scheduler;
 
 import com.challenge.api.service.fcm.FcmService;
 import com.challenge.api.service.fcm.request.FcmMessage;
-import com.challenge.api.service.notification.AchieveChallengeCountDTO;
-import com.challenge.api.service.notification.AchieveChallengeTitleDTO;
+import com.challenge.api.service.notification.AchieveChallengeDTO;
 import com.challenge.api.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Profile("dev")
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -36,17 +37,22 @@ public class NotificationScheduler {
      */
     @Scheduled(cron = "0 0 9 * * *")
     public void sendNewChallengeNotification() {
-        // 알림 전송 대상 조회
-        Map<String, String> targetMap = notificationService.getNewChallengeTargets();
+        try {
+            // 알림 전송 대상 조회
+            Map<String, String> targetMap = notificationService.getNewChallengeTargets();
 
-        // 알림 객체 생성
-        List<FcmMessage> fcmMessages = targetMap.entrySet().stream()
-                .map(entry ->
-                        FcmMessage.of(entry.getKey(), NEW_CHALLENGE_TITLE, entry.getValue() + NEW_CHALLENGE_BODY)
-                ).toList();
+            // 알림 객체 생성
+            List<FcmMessage> fcmMessages = targetMap.entrySet().stream()
+                    .map(entry ->
+                            FcmMessage.of(entry.getKey(), NEW_CHALLENGE_TITLE, entry.getValue() + NEW_CHALLENGE_BODY)
+                    ).toList();
 
-        // 알림 발송
-        fcmMessages.forEach(fcmService::sendMessage);
+            // 알림 발송
+            fcmMessages.forEach(fcmService::sendMessage);
+        } catch (Exception e) {
+            log.error("error occuerd while sending new challenge notification", e);
+        }
+
     }
 
     /**
@@ -54,36 +60,46 @@ public class NotificationScheduler {
      */
     @Scheduled(cron = "0 0 9 * * *")
     public void sendDayStartNotification() {
-        // 알림 전송 대상 조회
-        Map<String, AchieveChallengeTitleDTO> targetMap = notificationService.getAchieveTargetsAndChallengeTitle();
+        try {
+            // 알림 전송 대상 조회
+            Map<String, AchieveChallengeDTO> targetMap = notificationService.getAchieveTargetsAndChallenge();
 
-        // 알림 객체 생성
-        List<FcmMessage> fcmMessages = targetMap.entrySet().stream()
-                .map(entry -> FcmMessage.of(entry.getKey(), ACHIEVE_DAY_START_TITLE,
-                        getDayStartNotificationBody(entry.getValue()))
-                ).toList();
+            // 알림 객체 생성
+            List<FcmMessage> fcmMessages = targetMap.entrySet().stream()
+                    .map(entry -> FcmMessage.of(entry.getKey(), ACHIEVE_DAY_START_TITLE,
+                            getDayStartNotificationBody(entry.getValue()))
+                    ).toList();
 
-        // 알림 발송
-        fcmMessages.forEach(fcmService::sendMessage);
+            // 알림 발송
+            fcmMessages.forEach(fcmService::sendMessage);
+        } catch (Exception e) {
+            log.error("error occuerd while sending day start notification", e);
+        }
+
     }
 
     @Scheduled(cron = "0 0 21 * * *")
     public void sendDayEndNotification() {
-        // 알림 전송 대상 조회
-        Map<String, AchieveChallengeCountDTO> targetMap = notificationService.getAchieveTargetsAndChallengeCount();
+        try {
+            // 알림 전송 대상 조회
+            Map<String, AchieveChallengeDTO> targetMap = notificationService.getAchieveTargetsAndChallenge();
 
-        // 알림 객체 생성
-        List<FcmMessage> fcmMessages = targetMap.entrySet().stream()
-                .map(entry ->
-                        FcmMessage.of(entry.getKey(), ACHIEVE_DAY_END_TITLE,
-                                getDayEndNotificationBody(entry.getValue()))
-                ).toList();
+            // 알림 객체 생성
+            List<FcmMessage> fcmMessages = targetMap.entrySet().stream()
+                    .map(entry ->
+                            FcmMessage.of(entry.getKey(), ACHIEVE_DAY_END_TITLE,
+                                    getDayEndNotificationBody(entry.getValue()))
+                    ).toList();
 
-        // 알림 발송
-        fcmMessages.forEach(fcmService::sendMessage);
+            // 알림 발송
+            fcmMessages.forEach(fcmService::sendMessage);
+        } catch (Exception e) {
+            log.error("error occuerd while sending day end notification", e);
+        }
+
     }
 
-    private String getDayStartNotificationBody(AchieveChallengeTitleDTO dto) {
+    private String getDayStartNotificationBody(AchieveChallengeDTO dto) {
         List<String> challengeTitles = dto.getChallengeTitles();
         String body = challengeTitles.stream()
                 .map(title -> "- " + title)
@@ -97,8 +113,8 @@ public class NotificationScheduler {
         return body;
     }
 
-    private String getDayEndNotificationBody(AchieveChallengeCountDTO dto) {
-        return dto.getNickname() + String.format(ACHIEVE_DAY_END_BODY, dto.getCount());
+    private String getDayEndNotificationBody(AchieveChallengeDTO dto) {
+        return dto.getNickname() + String.format(ACHIEVE_DAY_END_BODY, dto.getChallengeTitles().size());
     }
 
 }
