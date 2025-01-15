@@ -9,6 +9,8 @@ import com.challenge.domain.member.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -52,6 +54,10 @@ public class Challenge extends BaseDateTimeEntity {
     @Column(length = 500)
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(10)", nullable = false)
+    private ChallengeStatus status;
+
     @Column(nullable = false)
     private int durationInWeeks;
 
@@ -65,27 +71,24 @@ public class Challenge extends BaseDateTimeEntity {
     private String color;
 
     @Column(nullable = false)
-    private boolean isDeleted = false;
-
-    @Column(nullable = false)
     private LocalDateTime startDateTime;
 
     @Column(nullable = false)
     private LocalDateTime endDateTime;
 
     @Builder
-    private Challenge(Member member, Category category, String title, String content, int durationInWeeks,
-            int weeklyGoalCount, String color, boolean isDeleted, LocalDateTime startDateTime) {
+    private Challenge(Member member, Category category, String title, String content, ChallengeStatus status,
+                      int durationInWeeks, int weeklyGoalCount, String color, LocalDateTime startDateTime) {
         this.challengeRecords = new ArrayList<>();
         this.member = member;
         this.category = category;
         this.title = title;
         this.content = content;
+        this.status = status;
         this.durationInWeeks = durationInWeeks;
         this.weeklyGoalCount = weeklyGoalCount;
         this.totalGoalCount = durationInWeeks * weeklyGoalCount;
         this.color = color;
-        this.isDeleted = isDeleted;
         this.startDateTime = startDateTime;
         this.endDateTime = startDateTime.plusWeeks(durationInWeeks)
                 .toLocalDate()
@@ -95,12 +98,13 @@ public class Challenge extends BaseDateTimeEntity {
     }
 
     public static Challenge create(Member member, Category category, ChallengeCreateServiceRequest request,
-            LocalDateTime startDateTime) {
+                                   LocalDateTime startDateTime) {
         return Challenge.builder()
                 .member(member)
                 .category(category)
                 .title(request.getTitle())
                 .content(request.getContent())
+                .status(ChallengeStatus.ONGOING)
                 .durationInWeeks(request.getDurationInWeeks())
                 .weeklyGoalCount(request.getWeeklyGoalCount())
                 .color(request.getColor())
@@ -120,7 +124,7 @@ public class Challenge extends BaseDateTimeEntity {
     }
 
     public void delete() {
-        this.isDeleted = true;
+        this.status = ChallengeStatus.REMOVED;
     }
 
 }

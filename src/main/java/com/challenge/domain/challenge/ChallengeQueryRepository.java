@@ -1,7 +1,6 @@
 package com.challenge.domain.challenge;
 
 import com.challenge.domain.member.Member;
-import com.challenge.utils.date.DateUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -26,7 +25,7 @@ public class ChallengeQueryRepository {
 
         return queryFactory.selectFrom(challenge)
                 .where(challenge.member.eq(member)
-                        .and(challenge.isDeleted.isFalse())
+                        .and(challenge.status.ne(ChallengeStatus.REMOVED))
                         .and(challenge.endDateTime.goe(startDateTime))
                         .and(challenge.startDateTime.loe(endDateTime)))
                 .fetch();
@@ -44,33 +43,23 @@ public class ChallengeQueryRepository {
         return count != null && count > 0;
     }
 
-    // 진행중인 챌린지 수 조회 테스트용
-    public Long countOngoingChallengesBy(Member member, String targetDateTime) {
-        LocalDateTime now = DateUtils.toLocalDateTime(targetDateTime);
-        return queryFactory.select(challenge.count())
-                .from(challenge)
-                .where(challenge.member.eq(member)
-                        .and(challenge.isDeleted.isFalse())
-                        .and(challenge.endDateTime.goe(now))
-                )
-                .fetchOne();
-    }
-
     // 진행중인 챌린지 수 조회
     public Long countOngoingChallengesBy(Member member) {
-        LocalDateTime now = LocalDateTime.now();
         return queryFactory.select(challenge.count())
                 .from(challenge)
                 .where(challenge.member.eq(member)
-                        .and(challenge.isDeleted.isFalse())
-                        .and(challenge.endDateTime.goe(now))
+                        .and(challenge.status.eq(ChallengeStatus.ONGOING))
                 )
                 .fetchOne();
     }
 
     // 완료된 챌린지 수 조회
-    public Long countCompletedChallengesBy(Member member) {
-        return null;
+    public Long countSucceedChallengesBy(Member member) {
+        return queryFactory.select(challenge.count())
+                .from(challenge)
+                .where(challenge.member.eq(member)
+                        .and(challenge.status.eq(ChallengeStatus.SUCCEED)))
+                .fetchOne();
     }
 
     // 전체 챌린지 수 조회
@@ -78,7 +67,7 @@ public class ChallengeQueryRepository {
         return queryFactory.select(challenge.count())
                 .from(challenge)
                 .where(challenge.member.eq(member)
-                        .and(challenge.isDeleted.isFalse()))
+                        .and(challenge.status.ne(ChallengeStatus.REMOVED)))
                 .fetchOne();
     }
 

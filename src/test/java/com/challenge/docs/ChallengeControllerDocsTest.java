@@ -11,6 +11,7 @@ import com.challenge.api.service.challenge.request.ChallengeQueryServiceRequest;
 import com.challenge.api.service.challenge.request.ChallengeUpdateServiceRequest;
 import com.challenge.api.service.challenge.response.ChallengeResponse;
 import com.challenge.api.service.record.response.RecordResponse;
+import com.challenge.domain.challenge.ChallengeStatus;
 import com.challenge.domain.member.Member;
 import com.challenge.utils.date.DateUtils;
 import org.junit.jupiter.api.DisplayName;
@@ -82,6 +83,7 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                 .build())
                         .title("챌린지 제목1")
                         .content("챌린지 내용1")
+                        .status(ChallengeStatus.ONGOING)
                         .durationInWeeks(1)
                         .weekGoalCount(2)
                         .totalGoalCount(4)
@@ -104,6 +106,7 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                 .build())
                         .title("챌린지 제목2")
                         .content("챌린지 내용2")
+                        .status(ChallengeStatus.ONGOING)
                         .durationInWeeks(2)
                         .weekGoalCount(2)
                         .totalGoalCount(4)
@@ -148,6 +151,8 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("data[].content").type(STRING)
                                                 .optional()
                                                 .description("챌린지 내용"),
+                                        fieldWithPath("data[].status").type(STRING)
+                                                .description("챌린지 상태"),
                                         fieldWithPath("data[].durationInWeeks").type(NUMBER)
                                                 .description("챌린지 기간 (주 단위)"),
                                         fieldWithPath("data[].weekGoalCount").type(NUMBER)
@@ -196,6 +201,7 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                             .record(null)
                             .title("챌린지 제목")
                             .content("챌린지 내용")
+                            .status(ChallengeStatus.ONGOING)
                             .durationInWeeks(2)
                             .weekGoalCount(2)
                             .totalGoalCount(4)
@@ -247,6 +253,8 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                             fieldWithPath("data.content").type(STRING)
                                                     .optional()
                                                     .description("챌린지 내용"),
+                                            fieldWithPath("data.status").type(STRING)
+                                                    .description("챌린지 상태"),
                                             fieldWithPath("data.durationInWeeks").type(NUMBER)
                                                     .description("챌린지 기간 (주 단위)"),
                                             fieldWithPath("data.weekGoalCount").type(NUMBER)
@@ -330,6 +338,7 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                 .build())
                         .title("챌린지 제목")
                         .content("챌린지 내용")
+                        .status(ChallengeStatus.ONGOING)
                         .durationInWeeks(2)
                         .weekGoalCount(2)
                         .totalGoalCount(4)
@@ -377,6 +386,9 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("data.content").type(STRING)
                                                 .optional()
                                                 .description("챌린지 내용"),
+                                        fieldWithPath("data.status").type(STRING)
+                                                .optional()
+                                                .description("챌린지 상태"),
                                         fieldWithPath("data.durationInWeeks").type(NUMBER)
                                                 .description("챌린지 기간 (주 단위)"),
                                         fieldWithPath("data.weekGoalCount").type(NUMBER)
@@ -425,6 +437,7 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                 .build())
                         .title("챌린지 제목")
                         .content("챌린지 내용")
+                        .status(ChallengeStatus.ONGOING)
                         .durationInWeeks(2)
                         .weekGoalCount(2)
                         .totalGoalCount(4)
@@ -474,6 +487,8 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("data.content").type(STRING)
                                                 .optional()
                                                 .description("챌린지 내용"),
+                                        fieldWithPath("data.status").type(STRING)
+                                                .description("챌린지 상태"),
                                         fieldWithPath("data.durationInWeeks").type(NUMBER)
                                                 .description("챌린지 기간 (주 단위)"),
                                         fieldWithPath("data.weekGoalCount").type(NUMBER)
@@ -523,6 +538,7 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                         .build())
                 .title("수정된 챌린지 제목")
                 .content("수정된 챌린지 내용")
+                .status(ChallengeStatus.ONGOING)
                 .durationInWeeks(2)
                 .weekGoalCount(2)
                 .totalGoalCount(4)
@@ -576,6 +592,8 @@ class ChallengeControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("data.content").type(STRING)
                                                 .optional()
                                                 .description("챌린지 내용"),
+                                        fieldWithPath("data.status").type(STRING)
+                                                .description("챌린지 상태"),
                                         fieldWithPath("data.durationInWeeks").type(NUMBER)
                                                 .description("챌린지 기간 (주 단위)"),
                                         fieldWithPath("data.weekGoalCount").type(NUMBER)

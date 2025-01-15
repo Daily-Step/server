@@ -4,6 +4,7 @@ import com.challenge.domain.category.Category;
 import com.challenge.domain.category.CategoryRepository;
 import com.challenge.domain.challenge.Challenge;
 import com.challenge.domain.challenge.ChallengeRepository;
+import com.challenge.domain.challenge.ChallengeStatus;
 import com.challenge.domain.challengeRecord.ChallengeRecord;
 import com.challenge.domain.challengeRecord.ChallengeRecordRepository;
 import com.challenge.domain.job.Job;
@@ -125,6 +126,7 @@ class RecordValidatorTest {
                 .member(member)
                 .category(category)
                 .title("제목")
+                .status(ChallengeStatus.ONGOING)
                 .color("#30B0C7")
                 .durationInWeeks(1)
                 .weeklyGoalCount(1)
