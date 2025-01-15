@@ -138,8 +138,6 @@ class ChallengeQueryRepositoryTest {
     @Test
     void countOngoingChallenges() {
         // given
-        String targetDateTime = "2025-01-08 12:30:59";
-
         Member member = createMember();
         memberRepository.save(member);
 
@@ -148,19 +146,19 @@ class ChallengeQueryRepositoryTest {
 
         Challenge challenge1 = createChallenge(member, category, 1, "제목1", ONGOING,
                 LocalDateTime.of(2024, 10, 1, 12, 30, 59));
-        Challenge challenge2 = createChallenge(member, category, 2, "제목2", ONGOING,
+        Challenge challenge2 = createChallenge(member, category, 2, "제목2", SUCCEED,
                 LocalDateTime.of(2024, 11, 11, 14, 0, 0));
-        Challenge challenge3 = createChallenge(member, category, 3, "제목3", ONGOING,
+        Challenge challenge3 = createChallenge(member, category, 3, "제목3", SUCCEED,
                 LocalDateTime.of(2024, 12, 23, 0, 0, 0));
-        Challenge challenge4 = createChallenge(member, category, 1, "제목4", ONGOING,
+        Challenge challenge4 = createChallenge(member, category, 1, "제목4", REMOVED,
                 LocalDateTime.of(2025, 1, 1, 0, 0, 0));
         challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3, challenge4));
 
         // when
-        Long count = challengeQueryRepository.countOngoingChallengesBy(member, targetDateTime);
+        Long count = challengeQueryRepository.countOngoingChallengesBy(member);
 
         // then
-        assertThat(count).isEqualTo(2);
+        assertThat(count).isEqualTo(1);
     }
 
     @DisplayName("완료된 챌린지 수를 조회한다.")

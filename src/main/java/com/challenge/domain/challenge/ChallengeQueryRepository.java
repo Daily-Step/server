@@ -1,7 +1,6 @@
 package com.challenge.domain.challenge;
 
 import com.challenge.domain.member.Member;
-import com.challenge.utils.date.DateUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -44,26 +43,12 @@ public class ChallengeQueryRepository {
         return count != null && count > 0;
     }
 
-    // 진행중인 챌린지 수 조회 테스트용
-    public Long countOngoingChallengesBy(Member member, String targetDateTime) {
-        LocalDateTime now = DateUtils.toLocalDateTime(targetDateTime);
-        return queryFactory.select(challenge.count())
-                .from(challenge)
-                .where(challenge.member.eq(member)
-                        .and(challenge.status.ne(ChallengeStatus.REMOVED))
-                        .and(challenge.endDateTime.goe(now))
-                )
-                .fetchOne();
-    }
-
     // 진행중인 챌린지 수 조회
     public Long countOngoingChallengesBy(Member member) {
-        LocalDateTime now = LocalDateTime.now();
         return queryFactory.select(challenge.count())
                 .from(challenge)
                 .where(challenge.member.eq(member)
-                        .and(challenge.status.ne(ChallengeStatus.REMOVED))
-                        .and(challenge.endDateTime.goe(now))
+                        .and(challenge.status.eq(ChallengeStatus.ONGOING))
                 )
                 .fetchOne();
     }
