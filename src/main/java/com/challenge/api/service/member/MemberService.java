@@ -7,7 +7,9 @@ import com.challenge.api.service.member.request.UpdateJobServiceRequest;
 import com.challenge.api.service.member.request.UpdateJobYearServiceRequest;
 import com.challenge.api.service.member.request.UpdateNicknameServiceRequest;
 import com.challenge.api.service.member.response.MemberInfoResponse;
+import com.challenge.api.service.member.response.MyPageResponse;
 import com.challenge.api.service.s3.S3ClientService;
+import com.challenge.domain.challenge.ChallengeQueryRepository;
 import com.challenge.domain.job.Job;
 import com.challenge.domain.job.JobRepository;
 import com.challenge.domain.member.JobYear;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final ChallengeQueryRepository challengeQueryRepository;
     private final JobRepository jobRepository;
     private final S3ClientService s3ClientService;
 
@@ -47,6 +50,19 @@ public class MemberService {
      */
     public String getMemberProfileImg(Member member) {
         return member.getProfileImg();
+    }
+
+    /**
+     * 회원 마이페이지 조회 메소드
+     *
+     * @param member
+     * @return
+     */
+    public MyPageResponse getMyPageInfo(Member member) {
+        Long ongoing = challengeQueryRepository.countOngoingChallengesBy(member);
+        Long succeed = challengeQueryRepository.countSucceedChallengesBy(member);
+        Long total = challengeQueryRepository.countAllChallengesBy(member);
+        return MyPageResponse.of(member, ongoing, succeed, total);
     }
 
     /**
