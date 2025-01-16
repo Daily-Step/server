@@ -32,7 +32,6 @@ public class NotificationScheduler {
     private static final String ACHIEVE_DAY_END_BODY = "님, 아직 달성할 수 있는 챌린지가 %d개 있어요!";
     private static final int MAX_TITLES = 3;
 
-
     /**
      * 새로운 챌린지 등록 알림 발송
      */

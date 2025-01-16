@@ -10,6 +10,7 @@ import com.challenge.api.controller.member.request.UpdateJobYearRequest;
 import com.challenge.api.controller.member.request.UpdateNicknameRequest;
 import com.challenge.api.service.member.MemberService;
 import com.challenge.api.service.member.response.MemberInfoResponse;
+import com.challenge.api.service.member.response.MyPageResponse;
 import com.challenge.domain.member.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,11 @@ public class MemberController {
     @GetMapping("/profile/img")
     public ApiResponse<String> getMemberProfileImg(@AuthMember Member member) {
         return ApiResponse.ok(memberService.getMemberProfileImg(member));
+    }
+
+    @GetMapping("/mypage")
+    public ApiResponse<MyPageResponse> getMyPageInfo(@AuthMember Member member) {
+        return ApiResponse.ok(memberService.getMyPageInfo(member));
     }
 
     @PostMapping("/nickname/valid")
