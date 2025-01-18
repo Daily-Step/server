@@ -43,6 +43,13 @@ public class ChallengeQueryRepository {
         return count != null && count > 0;
     }
 
+    // 진행중인 챌린지 조회
+    public List<Challenge> findOngoingChallengesBy() {
+        return queryFactory.selectFrom(challenge)
+                .where(challenge.status.eq(ChallengeStatus.ONGOING))
+                .fetch();
+    }
+
     // 진행중인 챌린지 수 조회
     public Long countOngoingChallengesBy(Member member) {
         return queryFactory.select(challenge.count())
