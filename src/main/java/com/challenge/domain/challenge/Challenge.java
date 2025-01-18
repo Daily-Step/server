@@ -123,6 +123,14 @@ public class Challenge extends BaseDateTimeEntity {
         this.challengeRecords.add(challengeRecord);
     }
 
+    public void success() {
+        this.status = ChallengeStatus.SUCCEED;
+    }
+
+    public void expire() {
+        this.status = ChallengeStatus.EXPIRED;
+    }
+
     public void delete() {
         this.status = ChallengeStatus.REMOVED;
     }
