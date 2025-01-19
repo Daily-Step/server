@@ -60,7 +60,7 @@ public class ChallengeService {
 
     @Transactional
     public ChallengeResponse createChallenge(Member member, ChallengeCreateServiceRequest request,
-            LocalDateTime startDateTime) {
+                                             LocalDateTime startDateTime) {
         // validation
         categoryValidator.categoryExistsBy(request.getCategoryId());
 
@@ -72,8 +72,7 @@ public class ChallengeService {
     }
 
     @Transactional
-    public ChallengeResponse achieveChallenge(Member member, Long challengeId,
-            ChallengeAchieveServiceRequest request) {
+    public ChallengeResponse achieveChallenge(Member member, Long challengeId, ChallengeAchieveServiceRequest request) {
         // validation
         validateChallengeAchieveOrCancel(member, challengeId, request.getAchieveDate());
 

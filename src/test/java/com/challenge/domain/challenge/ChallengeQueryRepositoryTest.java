@@ -134,6 +134,33 @@ class ChallengeQueryRepositoryTest {
         assertThat(result).isTrue();
     }
 
+    @DisplayName("진행중인 챌린지를 조회한다.")
+    @Test
+    void findOngoingChallengesBy() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Category category = createCategory();
+        categoryRepository.save(category);
+
+        Challenge challenge1 = createChallenge(member, category, 1, "제목1", ONGOING,
+                LocalDateTime.of(2024, 10, 1, 12, 30, 59));
+        Challenge challenge2 = createChallenge(member, category, 2, "제목2", ONGOING,
+                LocalDateTime.of(2024, 11, 11, 14, 0, 0));
+        Challenge challenge3 = createChallenge(member, category, 3, "제목3", SUCCEED,
+                LocalDateTime.of(2024, 12, 23, 0, 0, 0));
+        Challenge challenge4 = createChallenge(member, category, 1, "제목4", REMOVED,
+                LocalDateTime.of(2025, 1, 1, 0, 0, 0));
+        challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3, challenge4));
+
+        // when
+        List<Challenge> ongoingChallenges = challengeQueryRepository.findOngoingChallengesBy();
+
+        // then
+        assertThat(ongoingChallenges).hasSize(2);
+    }
+
     @DisplayName("진행중인 챌린지 수를 조회한다.")
     @Test
     void countOngoingChallenges() {
