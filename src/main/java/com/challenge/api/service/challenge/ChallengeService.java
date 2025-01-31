@@ -131,7 +131,7 @@ public class ChallengeService {
     private void validateChallengeAchieveOrCancel(Member member, Long challengeId, String actionDate) {
         challengeValidator.challengeExistsBy(member, challengeId);
         DateValidator.isLocalDateFormatter(actionDate);
-        DateValidator.isBeforeOrEqualToTodayFrom(actionDate);
+//        DateValidator.isBeforeOrEqualToTodayFrom(actionDate);
     }
 
 }
